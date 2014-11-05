@@ -27,8 +27,8 @@
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
  *   GNU General Public License for more details.                          *
  ***************************************************************************/
-#ifndef RUBUSCORE_H
-#define RUBUSCORE_H
+#ifndef CORE_H
+#define CORE_H
 
 #include <QObject>
 #include <QMap>
@@ -119,4 +119,4 @@ private:
 
 }
 
-#endif // RUBUSCORE_H
+#endif // CORE_H

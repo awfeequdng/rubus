@@ -44,14 +44,13 @@ User::User(QString rolename, QObject *parent) :
 bool User::load()
 {
     QSqlQuery sql;
-
-    //CONTACTS
     sql.exec(QString("SELECT up_name,up_contractor,up_params, up_gui "
                      "FROM user_params WHERE up_role = '%1'")
              .arg(rolename()));
 
     if (sql.lastError().isValid()) {
         qDebug() << sql.lastError();
+        m_errorString = sql.lastError().text();
         return false;
     }
 
@@ -63,13 +62,15 @@ bool User::load()
         m_jsonDoc = QJsonDocument::fromJson(sql.value(2).toString().toUtf8(), &err);
 
         if (err.error != QJsonParseError::NoError) {
-            qDebug() << "can't parce parameter's user: JsonError:" << err.error;
+            qDebug() << "can't parse parameter's user: JsonError:" << err.error;
         }
 
         m_gui = sql.value(3).toString();
         m_location = parameterValue("location").toVariant().toInt();
     } else {
-        qWarning() << "No record of user contacts";
+        m_errorString = tr("No record of user contacts");
+        qWarning() << m_errorString;
+        return false;
     }
 
     return true;

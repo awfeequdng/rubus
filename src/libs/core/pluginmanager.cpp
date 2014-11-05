@@ -144,13 +144,7 @@ bool PluginManager::initPlugin(QString pluginName)
     if (allDepsLoaded) {
         bool ok = plug->initialize();
         qDebug() << plug->name() << "initialized ok:" << ok;
-        m_pluginIsInit.insert(plug->name(), ok);
-        QMapIterator<QString, QAction*> iter(plug->actions());
-        while (iter.hasNext()) {
-            iter.next();
-            m_pluginActionById.insert(iter.key(),iter.value());
-        }
-
+        m_pluginIsInit.insert(plug->name(), ok);        
         return ok;
     }
 

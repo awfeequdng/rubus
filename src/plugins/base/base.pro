@@ -1,12 +1,8 @@
-#-------------------------------------------------
-#
-# Project created by QtCreator 2014-11-05T16:11:06
-#
-#-------------------------------------------------
+! include( ../plugins.pri ) {
+    error( Can not find the plugins.pri file! )
+}
 
-QT       -= core gui
-
-TARGET = base
+TARGET = Base
 TEMPLATE = lib
 
 DEFINES += BASE_LIBRARY

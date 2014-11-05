@@ -58,8 +58,6 @@ public:
 
     Core::ICore *core() const { return Core::ICore::instance(); }
 
-    virtual QMap<QString, QAction*> actions() const { return QMap<QString, QAction*>();}
-
     virtual QWidget * helper() const {return 0;}
 
 signals:

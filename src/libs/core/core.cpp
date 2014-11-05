@@ -236,7 +236,7 @@ void ICore::loadConfig(QString filename)
     m_configFile = filename;
     QSettings sett(filename,QSettings::IniFormat);
     m_databaseHost = sett.value("host","localhost").toString();
-    m_databaseName = sett.value("database","xdbm").toString();
+    m_databaseName = sett.value("database","rubus").toString();
     m_databasePort = sett.value("port",5432).toInt();
     m_canChangeDatabaseSettings = sett.value("canSettings",true).toBool();
 }

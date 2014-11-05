@@ -18,7 +18,11 @@ DEFINES += CORE_LIBRARY
 
 win32 {
     NCREPORT_PATH = C:/Qt/NCReport
-    LIBS += -L$$NCREPORT_PATH/bin -lNCReport2
+    CONFIG(debug, debug|release) {
+        LIBS += -L$$NCREPORT_PATH/bin -lNCReportDebug2
+    }else  {
+        LIBS += -L$$NCREPORT_PATH/bin  -lNCReport2
+    }
 }
 unix {
     NCREPORT_PATH = /home/wulff/NCReport2

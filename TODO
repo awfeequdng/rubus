@@ -1,4 +1,4 @@
-Version 0.6
+Version 0.2
     * Integration in QtCreator
     * QtCreator wizards
         * a new plugin
@@ -13,4 +13,12 @@ Version 0.6
     * Database
          * sql init script 
          * sql demo script
+
+    * Plugins
+        * Base
+            * Items
+            * Contractors
+            * Locations
+            * Users              
+
     

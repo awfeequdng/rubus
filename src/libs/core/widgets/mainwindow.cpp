@@ -31,7 +31,6 @@
 #include "user.h"
 #include "core.h"
 #include "coreconstants.h"
-#include "imainwidget.h"
 #include "pluginmanager.h"
 #include "reportmanager.h"
 
@@ -49,26 +48,36 @@ MainWindow::MainWindow(QString configFile, QWidget *parent) :
     m_core(new ICore(this, configFile)),
     m_configFile(configFile)
 {
-    QLocale::setDefault(QLocale::system());
+    setObjectName("MainWindow");
 
+    QLocale::setDefault(QLocale::system());
     QCoreApplication::setOrganizationName("WSoft");
     QCoreApplication::setOrganizationDomain("http://xdbm.com");
     QCoreApplication::setApplicationName("Rubus");
-
-    setObjectName("MainWindow");
+    QCoreApplication::setApplicationVersion(ICore::version());
 
     init();
 
-    m_core->loadPlugins();
-    registerMainWidgets();
+    ICore::loadPlugins();
 
+    m_acCloseSession = new QAction(tr("Close session"),this);
+    m_acCloseSession->setShortcut(Qt::ALT + Qt::Key_F3);
+    connect(m_acCloseSession,SIGNAL(triggered()),SLOT(closeSession()));
 
-    connect(m_core, SIGNAL(logged()),   SLOT(coreLogged()));
-    connect(m_core, SIGNAL(loggedOut()),SLOT(coreLoggedOut()));
+    m_acClose = new QAction(tr("Close"),this);
+    m_acClose->setShortcut(Qt::ALT + Qt::Key_F4);
+    connect(m_acClose, SIGNAL(triggered()), SLOT(close()));
+
+    ICore::registerAction("Core.CloseSession", m_acCloseSession);
+    ICore::registerAction("MainWindow.Close",m_acClose);
 
     QSettings sett;
     restoreGeometry(sett.value("MainGeometry").toByteArray());
     restoreState(sett.value("MainState").toByteArray());
+
+    connect(m_core, SIGNAL(logged()),   SLOT(coreLogged()));
+    connect(m_core, SIGNAL(loggedOut()),SLOT(coreLoggedOut()));
+
 }
 
 MainWindow::~MainWindow()
@@ -110,9 +119,14 @@ void MainWindow::init()
     setCentralWidget(m_mainWidgets);
 }
 
-IMainWidget *MainWindow::mainWidget(QString name) const
+QWidget *MainWindow::mainWidget(QString name) const
 {
     return m_widgetById.value(name, 0);
+}
+
+void MainWindow::registerWidget(QString name, QWidget *widget)
+{
+    m_widgetById.insert(name, widget);
 }
 
 void MainWindow::closeSession()
@@ -131,7 +145,7 @@ void MainWindow::coreLogged()
 {
     updateWindowTitle();
     setupWidgets();
-    populateMenu();
+    generateMenuFromXml(ICore::currentUser()->gui());
 
     if (m_tbMainWidget->actions().count() > 0) {
         setupWidgetActions(m_tbMainWidget->actions().at(0)->data().toString());
@@ -159,47 +173,22 @@ void MainWindow::closeEvent(QCloseEvent *event)
     QMainWindow::closeEvent(event);
 }
 
-void MainWindow::populateMenu()
-{
-    m_acCloseSession = new QAction(tr("Close session"),this);
-    m_acCloseSession->setShortcut(Qt::ALT + Qt::Key_F3);
-    connect(m_acCloseSession,SIGNAL(triggered()),SLOT(closeSession()));
-
-    m_acClose = new QAction(tr("Close"),this);
-    m_acClose->setShortcut(Qt::ALT + Qt::Key_F4);
-    connect(m_acClose, SIGNAL(triggered()), SLOT(close()));
-
-    QAction *aboutQt = new QAction(tr("About Qt..."),this);
-    aboutQt->setMenuRole(QAction::AboutQtRole);
-    connect(aboutQt,SIGNAL(triggered()),qApp, SLOT(aboutQt()));
-
-    registerAction("close_session", m_acCloseSession);
-    registerAction("close",m_acClose);
-    registerActions(PluginManager::instance()->pluginActions());
-
-
-
-    //m_pluginActionById
-
-    generateMenuFromXml(m_core->currentUser()->gui());
-}
-
 void MainWindow::setupWidgets()
 {
     m_tbMainWidget->clear();
     m_tbMainWidget->setVisible(false);
     m_widgetIndex.clear();
 
-    generateMainWidgetsFromXml(m_core->currentUser()->gui());
+    generateMainWidgetsFromXml(ICore::currentUser()->gui());
     m_tbMainWidget->setVisible(m_mainWidgets->count() > 1);
 }
 
 void MainWindow::updateWindowTitle()
 {
-    setWindowTitle(tr("Rubus v%1 | %2")
-                   .arg(Core::ICore::version())
-                   .arg(m_core->currentUser()->name()));
-
+    setWindowTitle(tr("%1 v%2 | %3")
+                   .arg(QApplication::applicationName())
+                   .arg(ICore::version())
+                   .arg(ICore::currentUser()->name()));
 
 }
 
@@ -209,71 +198,34 @@ void MainWindow::setupWidgetActions(QString name)
     m_tbMainWidgetActions->clear();
 
 
-    QListIterator<QAction*> iter(m_widgetById.value(name)->toolBarActions());
-    bool hasActions = iter.hasNext();
+//    QListIterator<QAction*> iter(m_widgetById.value(name));
+//    bool hasActions = iter.hasNext();
 
-    while (iter.hasNext()) {
-        QAction *act = iter.next();
-        m_tbMainWidgetActions->addAction(act);
-    }
+//    while (iter.hasNext()) {
+//        QAction *act = iter.next();
+//        m_tbMainWidgetActions->addAction(act);
+//    }
 
-    m_tbMainWidgetActions->setVisible(hasActions);
+//    m_tbMainWidgetActions->setVisible(hasActions);
 }
 
 void MainWindow::addWidget(const QDomNode &node)
 {
     QString name = node.toElement().attribute("id");
-    IMainWidget *mwidget = m_widgetById.value(name, 0);
+    QWidget *mwidget = m_widgetById.value(name, 0);
 
     if (mwidget) {
-        QWidget *wdg = mwidget->widget();
-        if (!wdg) {
-            qCritical() << "MainWindowPlugin " << name << "returned a not valid widget!";
-            return;
-        }
         QString title = node.toElement().text();
         if (title.isEmpty()) {
-            title = mwidget->name();
+            title = mwidget->windowTitle();
         }
 
-        int index = m_mainWidgets->addWidget(wdg);
-        QAction *ac = new QAction(mwidget->icon(), title, this);
+        int index = m_mainWidgets->addWidget(mwidget);
+        QAction *ac = new QAction(mwidget->windowIcon(), title, this);
         ac->setData(name);
         ac->setToolTip(title);
         m_tbMainWidget->addAction(ac);
         m_widgetIndex.insert(name, index);
-    }
-}
-
-void MainWindow::registerMainWidgets()
-{
-    QListIterator<IPlugin *> iter(m_core->pluginManager()->plugins());
-
-    while (iter.hasNext()) {
-        IMainWidget * wdg = static_cast<IMainWidget *>(iter.next());
-        if (wdg) {
-            registerMainWidget(wdg);
-        }
-    }
-}
-
-void MainWindow::registerMainWidget(IMainWidget *widget)
-{
-    m_widgetById.insert(widget->name(), widget);
-}
-
-void MainWindow::registerAction(QString id, QAction *action)
-{
-    m_pluginActionById.insert(id, action);
-}
-
-void Core::MainWindow::registerActions(QMap<QString, QAction *> map)
-{
-    QMapIterator<QString, QAction *> i(map);
-
-    while (i.hasNext()) {
-        i.next();
-        registerAction(i.key(), i.value());
     }
 }
 
@@ -330,7 +282,7 @@ QMenu *Core::MainWindow::getMenu(const QDomNode &node)
             menu->addMenu(getMenu(list.at(i)));
         } else if (name == "action") {
             QDomElement el = list.at(i).toElement();
-            QAction *action = m_pluginActionById.value(el.attribute("id"), 0);
+            QAction *action = ICore::actionById(el.attribute("id"));
 
             if (action) {
                 if (!el.text().isEmpty()) {

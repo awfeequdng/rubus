@@ -47,6 +47,8 @@
 #include <QSettings>
 #include "ncreportsource.h"
 
+using namespace Core;
+
 static ReportManager *__instance = 0;
 
 ReportManager::ReportManager(QObject *parent) :

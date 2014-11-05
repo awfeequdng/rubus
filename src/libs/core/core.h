@@ -31,13 +31,13 @@
 #define RUBUSCORE_H
 
 #include <QObject>
-#include <QHash>
+#include <QMap>
 
 #include "core_global.h"
 
 
 class EditWidgetInterface;
-class ReportManager;
+class QAction;
 
 namespace Core {
 
@@ -45,8 +45,7 @@ class User;
 class MainWindow;
 class IPlugin;
 class PluginManager;
-
-
+class ReportManager;
 
 class CORE_EXPORT ICore : public QObject
 {
@@ -69,6 +68,12 @@ public:
     bool login(QString username, QString password);
     bool logout();
 
+    static void registerWidget(QString name, QWidget *widget);
+
+    static void registerAction(QString id, QAction * action);
+    static void registerActions(QMap<QString, QAction *> map);
+    static QAction * actionById(QString id);
+
     QString databaseHost() const { return m_databaseHost; }
     void setDatabaseHost(QString host) { m_databaseHost = host; }
 
@@ -78,10 +83,10 @@ public:
     int databasePort() const { return m_databasePort; }
     void setDatabasePort(int port) { m_databasePort = port; }
 
-    QString lastError() const { return m_lastError; }
+    QString errorString() const { return m_errorString; }
     bool canChangeDatabaseSettings() { return m_canChangeDatabaseSettings; }
 
-    User *currentUser() const { return m_currentUser; }
+    static User *currentUser();
 
     void loadParameters();
     void saveParameters();
@@ -103,11 +108,13 @@ private:
     QString m_databaseHost;
     QString m_databaseName;
     int m_databasePort;
-    QString m_lastError;
+    QString m_errorString;
     bool m_canChangeDatabaseSettings;
     User *m_currentUser;
     QString m_reportStoragePath;
     QString m_configFile;
+
+    QMap<QString, QAction *> m_actionById;
 };
 
 }

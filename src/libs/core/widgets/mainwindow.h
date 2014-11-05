@@ -39,9 +39,7 @@
 #include "core_global.h"
 
 namespace Core {
-class User;
 class ICore;
-class IMainWidget;
 
 
 class CORE_EXPORT MainWindow : public QMainWindow
@@ -53,9 +51,8 @@ public:
 
     void init();
 
-    //ActionManager *actionManager() const { return m_actionManager; }
-
-    IMainWidget *mainWidget(QString name) const;
+    QWidget *mainWidget(QString name) const;
+    void registerWidget(QString name, QWidget *widget);
 
 private slots:
     void closeSession();
@@ -80,25 +77,18 @@ private:
     QAction *m_acChangePassword;
     QAction *m_acClose;
 
-    QMap<QString, IMainWidget *> m_widgetById;
+    QMap<QString, QWidget *> m_widgetById;
     QMap<QString, int> m_widgetIndex;
     QStackedWidget *m_mainWidgets;
     QString m_configFile;
-    QMap<QString, QAction *> m_pluginActionById;
 
 private:
-
-    void populateMenu();
     void setupWidgets();
 
     void updateWindowTitle();
     void setupWidgetActions(QString name);
 
     void addWidget(const QDomNode &node);
-    void registerMainWidgets();
-    void registerMainWidget(IMainWidget *widget);
-    void registerAction(QString id, QAction * action);
-    void registerActions(QMap<QString, QAction *> map);
 
     void parseAppArgs();
     void generateMenuFromXml(const QString &xml);

@@ -28,11 +28,6 @@
  *   GNU General Public License for more details.                          *
  ***************************************************************************/
 #include "core.h"
-#include <QDebug>
-#include <QDir>
-#include <QSettings>
-#include <QtSql>
-
 #include "iplugin.h"
 #include "user.h"
 #include "widgets/mainwindow.h"
@@ -40,6 +35,11 @@
 #include "reportmanager.h"
 #include "version.h"
 
+#include <QDebug>
+#include <QDir>
+#include <QSettings>
+#include <QtSql>
+#include <QAction>
 #include "qjsondocument.h"
 #include "qjsonobject.h"
 
@@ -101,7 +101,7 @@ ReportManager *Core::ICore::reportManager()
 bool ICore::login(QString username, QString password)
 {
     if (username.simplified().isEmpty()) {
-        m_lastError = tr("Username cannot be empty.");
+        m_errorString = tr("Username cannot be empty.");
         return false;
     }
 
@@ -122,6 +122,7 @@ bool ICore::login(QString username, QString password)
     if (db.open()) {
         m_currentUser = new User(username, this);
         if (!m_currentUser->load()) {
+            m_errorString = m_currentUser->errorString();
             return false;
         }
 
@@ -129,7 +130,7 @@ bool ICore::login(QString username, QString password)
         emit logged();
     } else {
         qDebug() << db.lastError();
-        m_lastError = db.lastError().text();
+        m_errorString = db.lastError().text();
     }
 
     return db.isOpen();
@@ -143,6 +144,36 @@ bool ICore::logout()
     QSqlDatabase::database().close();
     emit loggedOut();
     return true;
+}
+
+void ICore::registerWidget(QString name, QWidget *widget)
+{
+    m_mainWindow->registerWidget(name, widget);
+}
+
+void ICore::registerAction(QString id, QAction *action)
+{
+    m_instance->m_actionById.insert(id, action);
+}
+
+void ICore::registerActions(QMap<QString, QAction *> map)
+{
+    QMapIterator<QString, QAction *> i(map);
+
+    while (i.hasNext()) {
+        i.next();
+        registerAction(i.key(), i.value());
+    }
+}
+
+QAction *ICore::actionById(QString id)
+{
+    return m_instance->m_actionById.value(id, 0);
+}
+
+User *ICore::currentUser()
+{
+    return m_instance->m_currentUser;
 }
 
 void Core::ICore::loadParameters()

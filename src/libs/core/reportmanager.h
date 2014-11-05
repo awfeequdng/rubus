@@ -45,6 +45,8 @@ class Report;
 class NCReportSource;
 class NCReport;
 
+namespace Core {
+
 class CORE_EXPORT ReportManager : public QObject
 {
     Q_OBJECT
@@ -76,5 +78,7 @@ private:
     QString m_reportStoragePath;
 
 };
+
+}
 
 #endif // REPORTMANAGER_H

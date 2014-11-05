@@ -117,7 +117,7 @@ bool DlgAuthorise::authorise()
     if (!m_core->login(ui->edUsername->text(),
                        ui->edPassword->text())) {
 
-        QMessageBox::critical(this,tr("Error"),m_core->lastError());
+        QMessageBox::critical(this,tr("Error"),m_core->errorString());
         ui->edPassword->setFocus();
         return false;
     } else {

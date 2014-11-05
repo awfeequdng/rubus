@@ -46,8 +46,8 @@ bool User::load()
     QSqlQuery sql;
 
     //CONTACTS
-    sql.exec(QString("SELECT uc_name,uc_contractor "
-                     "FROM user_contacts WHERE uc_role = '%1'")
+    sql.exec(QString("SELECT up_name,up_contractor,up_params, up_gui "
+                     "FROM user_params WHERE up_role = '%1'")
              .arg(rolename()));
 
     if (sql.lastError().isValid()) {
@@ -58,29 +58,19 @@ bool User::load()
     if (sql.next()) {
         setName(sql.value(0).toString());
         m_contractorId = sql.value(1).isNull() ? -1 : sql.value(1).toInt();
-    } else {
-        qWarning() << "No record of user contacts";
-    }
 
-    sql.exec(QString("SELECT up_params, up_gui FROM user_params WHERE up_role = '%1'")
-             .arg(rolename()));
-
-    if (sql.lastError().isValid()) {
-        qDebug() << sql.lastError();
-    }
-
-    if (sql.next()) {
         QJsonParseError err;
-        m_jsonDoc = QJsonDocument::fromJson(sql.value(0).toString().toUtf8(), &err);
+        m_jsonDoc = QJsonDocument::fromJson(sql.value(2).toString().toUtf8(), &err);
 
         if (err.error != QJsonParseError::NoError) {
             qDebug() << "can't parce parameter's user: JsonError:" << err.error;
         }
 
-        m_gui = sql.value(1).toString();
+        m_gui = sql.value(3).toString();
+        m_location = parameterValue("location").toVariant().toInt();
+    } else {
+        qWarning() << "No record of user contacts";
     }
-
-    m_location = parameterValue("location").toVariant().toInt();
 
     return true;
 }

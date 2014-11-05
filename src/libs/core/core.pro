@@ -42,7 +42,6 @@ SOURCES += \
     widgets/dlgauthorise.cpp \
     widgets/dlgauthsettings.cpp \
     widgets/mainwindow.cpp \
-    imainwidget.cpp \
     iplugin.cpp
 
 HEADERS +=\
@@ -59,7 +58,6 @@ HEADERS +=\
     widgets/dlgauthsettings.h \
     widgets/mainwindow.h \
     version.h \
-    imainwidget.h \
     iplugin.h
 
 FORMS += \

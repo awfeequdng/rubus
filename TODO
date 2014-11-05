@@ -7,11 +7,8 @@ Version 0.2
         * AdvTableView
         * AdvSortFilterProxyModel
     
-    * Core
-        * add plugin interfaces: 
-    
     * Database
-         * sql init script 
+         + sql init script 
          * sql demo script
 
     * Plugins
@@ -19,6 +16,6 @@ Version 0.2
             * Items
             * Contractors
             * Locations
-            * Users              
+            * Users
 
     

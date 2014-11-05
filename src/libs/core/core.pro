@@ -16,19 +16,18 @@ TEMPLATE = lib
 
 DEFINES += CORE_LIBRARY
 
-NCREPORT_PATH = /home/wulff/NCReport2
-
-INCLUDEPATH += \
-               $$NCREPORT_PATH/include \
-
-
 win32 {
+    NCREPORT_PATH = C:/Qt/NCReport
     LIBS += -L$$NCREPORT_PATH/bin -lNCReport2
 }
 unix {
+    NCREPORT_PATH = /home/wulff/NCReport2
     LIBS += -L$$NCREPORT_PATH/lib -lNCReport
     QMAKE_LFLAGS += -Wl,--rpath=$$NCREPORT_PATH/lib
 }
+
+INCLUDEPATH += \
+               $$NCREPORT_PATH/include \
 
 DESTDIR = $$LIB_DIR
 

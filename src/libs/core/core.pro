@@ -1,0 +1,70 @@
+! include( ../../common.pri ) {
+    error( Can not find the common.pri file! )
+}
+
+QT       += sql xml core gui
+
+greaterThan(QT_MAJOR_VERSION, 4): {
+    QT += printsupport
+} else {
+    include(qjson/qjson-backport.pri)
+    INCLUDEPATH += qjson
+}
+
+TARGET = RubusCore
+TEMPLATE = lib
+
+DEFINES += CORE_LIBRARY
+
+NCREPORT_PATH = /home/wulff/NCReport2
+
+INCLUDEPATH += \
+               $$NCREPORT_PATH/include \
+
+
+win32 {
+    LIBS += -L$$NCREPORT_PATH/bin -lNCReport2
+}
+unix {
+    LIBS += -L$$NCREPORT_PATH/lib -lNCReport
+    QMAKE_LFLAGS += -Wl,--rpath=$$NCREPORT_PATH/lib
+}
+
+DESTDIR = $$LIB_DIR
+
+SOURCES += \
+    core.cpp \
+    oooreportbuilder.cpp \
+    pluginmanager.cpp \
+    report.cpp \
+    reportmanager.cpp \
+    user.cpp \
+    widgets/dlgauthorise.cpp \
+    widgets/dlgauthsettings.cpp \
+    widgets/mainwindow.cpp \
+    imainwidget.cpp \
+    iplugin.cpp
+
+HEADERS +=\
+    core.h \
+    coreconstants.h \
+    core_global.h \
+    cryptor.h \
+    oooreportbuilder.h \
+    pluginmanager.h \
+    report.h \
+    reportmanager.h \
+    user.h \
+    widgets/dlgauthorise.h \
+    widgets/dlgauthsettings.h \
+    widgets/mainwindow.h \
+    version.h \
+    imainwidget.h \
+    iplugin.h
+
+FORMS += \
+    widgets/dlgauthorise.ui \
+    widgets/dlgauthsettings.ui
+
+RESOURCES +=
+

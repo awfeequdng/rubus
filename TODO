@@ -1,0 +1,16 @@
+Version 0.6
+    * Integration in QtCreator
+    * QtCreator wizards
+        * a new plugin
+    
+    * Widgets
+        * AdvTableView
+        * AdvSortFilterProxyModel
+    
+    * Core
+        * add plugin interfaces: 
+    
+    * Database
+         * sql init script 
+         * sql demo script
+    

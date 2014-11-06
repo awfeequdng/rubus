@@ -32,7 +32,7 @@
 #include "editdialog.h"
 #include "reportmanager.h"
 #include "printbutton.h"
-#include "itemmodel.h"
+#include "advitemmodel.h"
 
 #include <QSortFilterProxyModel>
 
@@ -46,6 +46,8 @@ StandardTableDialog::StandardTableDialog(QWidget *parent) :
     ui->setupUi(this);
 
     m_proxyModel = new QSortFilterProxyModel(this);
+    m_proxyModel->setSortCaseSensitivity(Qt::CaseInsensitive);
+    m_proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
 
     connect(ui->btnAdd, SIGNAL(clicked()), SLOT(add()));
     connect(ui->btnEdit, SIGNAL(clicked()), SLOT(editCurrent()));
@@ -63,7 +65,7 @@ QAbstractItemModel *StandardTableDialog::model() const
     return m_model;
 }
 
-void StandardTableDialog::setModel(ItemModel *model, int keyColumn, int keyRole)
+void StandardTableDialog::setModel(AdvItemModel *model, int keyColumn, int keyRole)
 {
     m_model = model;
     m_keyColumn = keyColumn;

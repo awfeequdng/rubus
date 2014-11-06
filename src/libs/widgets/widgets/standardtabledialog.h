@@ -38,7 +38,7 @@ class StandardTableDialog;
 }
 
 class QSortFilterProxyModel;
-class ItemModel;
+class AdvItemModel;
 class EditWidgetInterface;
 class EditDialog;
 
@@ -51,7 +51,7 @@ public:
     ~StandardTableDialog();
 
     QAbstractItemModel *model() const;
-    void setModel(ItemModel *model, int keyColumn = 0, int keyRole = Qt::DisplayRole);
+    void setModel(AdvItemModel *model, int keyColumn = 0, int keyRole = Qt::DisplayRole);
 
     EditWidgetInterface *editWidget() const;
     void setEditWidget(EditWidgetInterface *widget);
@@ -70,7 +70,7 @@ public slots:
 
 private:
     Ui::StandardTableDialog *ui;
-    ItemModel *m_model;
+    AdvItemModel *m_model;
     QSortFilterProxyModel *m_proxyModel;
     EditWidgetInterface *m_editWidget;
     EditDialog *m_editDialog;

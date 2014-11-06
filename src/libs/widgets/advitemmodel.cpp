@@ -27,34 +27,34 @@
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
  *   GNU General Public License for more details.                          *
  ***************************************************************************/
-#include "itemmodel.h"
+#include "advitemmodel.h"
 
 #include <QSqlError>
 
-ItemModel::ItemModel(QObject *parent) :
+AdvItemModel::AdvItemModel(QObject *parent) :
     QAbstractItemModel(parent)
 {
 }
 
-bool ItemModel::populate()
+bool AdvItemModel::populate()
 {
     return false;
 }
 
 
-QModelIndex ItemModel::index(int row, int column, const QModelIndex &parent) const
+QModelIndex AdvItemModel::index(int row, int column, const QModelIndex &parent) const
 {
     Q_UNUSED(parent)
     return createIndex(row, column);
 }
 
-QModelIndex ItemModel::parent(const QModelIndex &child) const
+QModelIndex AdvItemModel::parent(const QModelIndex &child) const
 {
     Q_UNUSED(child)
     return QModelIndex();
 }
 
-QVariant ItemModel::data(const QModelIndex &index, int role) const
+QVariant AdvItemModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid()) {
         return QVariant();
@@ -67,17 +67,17 @@ QVariant ItemModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-QString ItemModel::lastError() const
+QString AdvItemModel::lastError() const
 {
     return m_lastError;
 }
 
-void ItemModel::setLastError(const QString &error)
+void AdvItemModel::setLastError(const QString &error)
 {
    m_lastError = error;
 }
 
-void ItemModel::setLastError(const QSqlError &error)
+void AdvItemModel::setLastError(const QSqlError &error)
 {
     m_lastError = error.text();
 }

@@ -27,8 +27,8 @@
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
  *   GNU General Public License for more details.                          *
  ***************************************************************************/
-#ifndef ITEMMODEL_H
-#define ITEMMODEL_H
+#ifndef ADVITEMMODEL_H
+#define ADVITEMMODEL_H
 
 #include <QAbstractItemModel>
 
@@ -36,11 +36,11 @@
 
 class QSqlError;
 
-class WIDGETS_EXPORT ItemModel : public QAbstractItemModel
+class WIDGETS_EXPORT AdvItemModel : public QAbstractItemModel
 {
     Q_OBJECT
 public:
-    explicit ItemModel(QObject *parent = 0);
+    explicit AdvItemModel(QObject *parent = 0);
 
     virtual bool populate();
 
@@ -63,4 +63,4 @@ private:
 
 };
 
-#endif // ITEMMODEL_H
+#endif // ADVITEMMODEL_H

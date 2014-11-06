@@ -15,7 +15,6 @@ INCLUDEPATH += \
                ../core
 
 HEADERS += \
-    itemmodel.h \
     widgets_global.h \
     widgets/advcombobox.h \
     widgets/advdateedit.h \
@@ -29,10 +28,10 @@ HEADERS += \
     widgets/printbutton.h \
     widgets/printcombobox.h \
     widgets/textformattoolbar.h \
-    widgets/standardtabledialog.h
+    widgets/standardtabledialog.h \
+    advitemmodel.h
 
 SOURCES += \
-    itemmodel.cpp \
     widgets/advcombobox.cpp \
     widgets/advdateedit.cpp \
     widgets/advlineedit.cpp \
@@ -45,7 +44,8 @@ SOURCES += \
     widgets/printbutton.cpp \
     widgets/printcombobox.cpp \
     widgets/textformattoolbar.cpp \
-    widgets/standardtabledialog.cpp
+    widgets/standardtabledialog.cpp \
+    advitemmodel.cpp
 
 FORMS += \
     widgets/standardtabledialog.ui

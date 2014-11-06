@@ -40,15 +40,9 @@ class WIDGETS_EXPORT EditWidgetInterface : public QWidget
 public:
     explicit EditWidgetInterface(QWidget *parent = 0);
 
-    virtual QVariant id() const { return m_id; }
-    virtual void setId(QVariant id) { m_id = id; }
+    bool isDataChanged() const { return m_changed; }
 
-    virtual bool isDataChanged() const { return m_changed; }
-
-    bool isReadOnly() const { return m_readOnly; }
-    void setReadOnly(bool readOnly) { m_readOnly = readOnly; }
-
-    QString lastError() const;
+    QString errorString() const;
 
     QString settingPrefix() const { return m_settingPrefix; }
     void setSettingPrefix(QString prefix) { m_settingPrefix = prefix; }
@@ -62,24 +56,22 @@ signals:
     void loaded();
 
 public slots:
-
-    virtual bool load(QVariant id = QVariant()) = 0;
+    virtual bool load(QVariant id) = 0;
     virtual bool save() = 0;
 
 protected:
-    void setLastError(QString lastError);
+    void setErrorString(QString error);
 
 protected slots:
     void setDataChanged(bool changed = true) { m_changed = changed; emit dataChanged(); }
 
 
 private:
-    QString m_lastError;
+    QString m_errorString;
     QString m_settingPrefix;
 
     QVariant m_id;
     bool m_changed;
-    bool m_readOnly;
 
 };
 #endif // EDITWIDGETINTERFACE_H

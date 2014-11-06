@@ -31,14 +31,13 @@
 
 EditWidgetInterface::EditWidgetInterface(QWidget *parent) :
     QWidget(parent),
-    m_changed(false),
-    m_readOnly(false)
+    m_changed(false)
 {
 }
 
-QString EditWidgetInterface::lastError() const
+QString EditWidgetInterface::errorString() const
 {
-    return m_lastError;
+    return m_errorString;
 }
 
 void EditWidgetInterface::setWindowTitle(const QString &s)
@@ -47,7 +46,7 @@ void EditWidgetInterface::setWindowTitle(const QString &s)
     emit windowTitleChanged(s);
 }
 
-void EditWidgetInterface::setLastError(QString lastError)
+void EditWidgetInterface::setErrorString(QString error)
 {
-    m_lastError = lastError;
+    m_errorString = error;
 }

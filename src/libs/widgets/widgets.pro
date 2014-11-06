@@ -28,8 +28,6 @@ HEADERS += \
     widgets/modelselectoredit.h \
     widgets/printbutton.h \
     widgets/printcombobox.h \
-    widgets/tableeditdialog.h \
-    widgets/tableeditinterface.h \
     widgets/textformattoolbar.h
 
 SOURCES += \
@@ -45,6 +43,4 @@ SOURCES += \
     widgets/modelselectoredit.cpp \
     widgets/printbutton.cpp \
     widgets/printcombobox.cpp \
-    widgets/tableeditdialog.cpp \
-    widgets/tableeditinterface.cpp \
     widgets/textformattoolbar.cpp

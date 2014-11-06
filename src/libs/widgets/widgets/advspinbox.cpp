@@ -29,6 +29,7 @@
  ***************************************************************************/
 #include "advspinbox.h"
 #include "advlineedit.h"
+#include <limits>
 
 AdvSpinBox::AdvSpinBox(QWidget *parent) :
     QSpinBox(parent)
@@ -36,5 +37,5 @@ AdvSpinBox::AdvSpinBox(QWidget *parent) :
     m_lineEdit = new AdvLineEdit(this);
     setLineEdit(m_lineEdit);
 
-    setMaximum(999999999);
+    setMaximum(std::numeric_limits<int>::max());
 }

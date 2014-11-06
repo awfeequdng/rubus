@@ -28,10 +28,11 @@
  *   GNU General Public License for more details.                          *
  ***************************************************************************/
 #include "doublespinbox.h"
+#include "advlineedit.h"
 
 #include <QKeyEvent>
+#include <limits>
 
-#include "advlineedit.h"
 
 DoubleSpinBox::DoubleSpinBox(QWidget *parent) :
     QDoubleSpinBox(parent)
@@ -46,7 +47,7 @@ DoubleSpinBox::DoubleSpinBox(QWidget *parent) :
     policy.setHorizontalPolicy(QSizePolicy::Minimum);
     setSizePolicy(policy);
 
-    setMaximum(9999999999.999);
+    setMaximum(std::numeric_limits<int>::max());
 }
 
 QSize DoubleSpinBox::sizeHint() const

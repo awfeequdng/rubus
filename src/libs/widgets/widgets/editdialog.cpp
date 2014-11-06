@@ -44,7 +44,6 @@ EditDialog::EditDialog(EditWidgetInterface *editWidget, QWidget *parent) :
     m_closeAfterSave(true),
     m_saved(false)
 {
-    setFont(QFont("Tahoma",10));
     setWindowTitle(editWidget->windowTitle());
 
     m_btnSave = new QPushButton(tr("Save"),this);

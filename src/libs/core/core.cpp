@@ -43,7 +43,7 @@
 #include "qjsondocument.h"
 #include "qjsonobject.h"
 
-#define CONFIG_FILENAME "xdbm.conf"
+#define CONFIG_FILENAME "rubus.conf"
 
 using namespace Core;
 
@@ -247,6 +247,5 @@ void ICore::saveConfig()
     sett.setValue("host",m_databaseHost);
     sett.setValue("database",m_databaseName);
     sett.setValue("port",m_databasePort);
-    sett.setValue("reportStoragePath",m_reportManager->reportStoragePath());
 }
 

@@ -194,6 +194,7 @@ void MainWindow::updateWindowTitle()
 
 void MainWindow::setupWidgetActions(QString name)
 {
+    Q_UNUSED(name)
     m_tbMainWidgetActions->setVisible(false);
     m_tbMainWidgetActions->clear();
 

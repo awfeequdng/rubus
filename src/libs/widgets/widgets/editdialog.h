@@ -44,11 +44,6 @@ public:
 
     EditWidgetInterface *editWidget() const { return m_editWidget; }
 
-    void setCloseAfterSave(bool close);
-    bool isCloseAfterSave() const;
-
-    void setDefaultButton(bool enabled);
-
 signals:
 
 public slots:
@@ -61,11 +56,7 @@ public slots:
 private:
 
     EditWidgetInterface *m_editWidget;
-    QPushButton *m_btnSave;
-    QPushButton *m_btnCancel;
-
-    bool m_closeAfterSave;
-    bool m_saved;
+    QVBoxLayout *m_centrLay;
 
     void showEvent(QShowEvent *e);
     void hideEvent(QHideEvent *e);

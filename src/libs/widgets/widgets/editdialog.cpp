@@ -36,70 +36,20 @@
 #include <QLayout>
 #include <QDebug>
 
-#define MIN_HEIGHT_BTN 30
-
 EditDialog::EditDialog(EditWidgetInterface *editWidget, QWidget *parent) :
     QDialog(parent),
-    m_editWidget(editWidget),
-    m_closeAfterSave(true),
-    m_saved(false)
+    m_editWidget(editWidget)
 {
     setWindowTitle(editWidget->windowTitle());
 
-    m_btnSave = new QPushButton(tr("Save"),this);
-    m_btnCancel = new QPushButton(tr("Cancel"),this);
-    m_btnSave->setMinimumHeight(MIN_HEIGHT_BTN);
-    m_btnCancel->setMinimumHeight(MIN_HEIGHT_BTN);
-
-    QHBoxLayout *objectActionsLay = new QHBoxLayout();
-    objectActionsLay->addStretch();
-    objectActionsLay->addWidget(m_btnSave);
-    objectActionsLay->addWidget(m_btnCancel);
-
-    m_btnSave->setAutoDefault(false);
-    m_btnCancel->setAutoDefault(false);
-    m_btnSave->setDefault(false);
-    m_btnCancel->setDefault(false);
-
-    QVBoxLayout *centrLay = new QVBoxLayout(this);
-    centrLay->addWidget(editWidget);
-
-    QShortcut *scSave = new QShortcut(this);
-    scSave->setKey(QKeySequence::Save);
-    connect(scSave, SIGNAL(activated()), m_editWidget, SLOT(save()));
-
-    QShortcut *scAccept = new QShortcut(this);
-    scAccept->setKey(Qt::CTRL + Qt::Key_Return);
-    connect(scAccept, SIGNAL(activated()), SLOT(accept()));
-
-
-    centrLay->addLayout(objectActionsLay);
-    centrLay->setMargin(4);
-    setLayout(centrLay);
+    m_centrLay = new QVBoxLayout(this);
+    m_centrLay->addWidget(editWidget);
+    m_centrLay->setMargin(4);
 
     setFocusProxy(editWidget);
 
-
-    connect(m_btnCancel,SIGNAL(clicked()),SLOT(reject()));
-    connect(editWidget,SIGNAL(windowTitleChanged(QString)),
-            SLOT(setWindowTitle(QString)));
     connect(editWidget, SIGNAL(saved()), SLOT(onEditWidgetSaved()));
-}
-
-void EditDialog::setCloseAfterSave(bool close)
-{
-    m_closeAfterSave = close;
-}
-
-bool EditDialog::isCloseAfterSave() const
-{
-    return m_closeAfterSave;
-}
-
-void EditDialog::setDefaultButton(bool enabled)
-{
-    m_btnSave->setDefault(enabled);
-    m_btnCancel->setDefault(enabled);
+    connect(editWidget, SIGNAL(windowTitleChanged(QString)), SLOT(setWindowTitle(QString)));
 }
 
 void EditDialog::accept()
@@ -116,8 +66,6 @@ int EditDialog::exec()
 
 int EditDialog::exec(QVariant id)
 {
-    m_btnSave->disconnect();
-    connect(m_btnSave,SIGNAL(clicked()),SLOT(accept()));
 
     if (!editWidget()) {
         qDebug() << "ObjectWidget is not set";
@@ -126,7 +74,7 @@ int EditDialog::exec(QVariant id)
 
     if (!editWidget()->load(id)) {
         qDebug() << "ObjectWidget is not loaded";
-        QMessageBox::critical(this,tr("Object load"),editWidget()->lastError());
+        QMessageBox::critical(this,tr("Object load"),editWidget()->errorString());
         return QDialog::Rejected;
     }
 
@@ -135,16 +83,12 @@ int EditDialog::exec(QVariant id)
 
 void EditDialog::show()
 {
-    m_btnSave->disconnect();
-    connect(m_btnSave,SIGNAL(clicked()), m_editWidget, SLOT(save()));
-
     QDialog::show();
 }
 
 void EditDialog::showEvent(QShowEvent *e)
 {
     QSettings sett;
-
     restoreGeometry(sett.value(editWidget()->settingPrefix() + "/geometry").toByteArray());
 
     QDialog::showEvent(e);
@@ -157,9 +101,7 @@ void EditDialog::hideEvent(QHideEvent *e)
     QDialog::hideEvent(e);
 
     QSettings sett;
-
     sett.setValue(editWidget()->settingPrefix() + "/geometry",saveGeometry());
-    //sett.setValue(editWidget()->settingPrefix() + "/pos", geometry().);
 }
 
 void EditDialog::closeEvent(QCloseEvent *e)
@@ -182,7 +124,7 @@ void EditDialog::closeEvent(QCloseEvent *e)
 
         if (result == QMessageBox::Yes) {
             if (!editWidget()->save()) {
-                QMessageBox::critical(this, tr("Save"), editWidget()->lastError());
+                QMessageBox::critical(this, tr("Save"), editWidget()->errorString());
                 e->ignore();
             } else {
                 e->accept();
@@ -195,7 +137,5 @@ void EditDialog::closeEvent(QCloseEvent *e)
 
 void EditDialog::onEditWidgetSaved()
 {
-    if (m_closeAfterSave) {
-        QDialog::accept();
-    }
+    QDialog::accept();
 }

@@ -7,11 +7,13 @@ TEMPLATE = lib
 
 DEFINES += BASE_LIBRARY
 
-SOURCES += base.cpp
+SOURCES += base.cpp \
+    models/itemmodel.cpp
 
 HEADERS += base.h\
         base_global.h \
-    constants.h
+    constants.h \
+    models/itemmodel.h
 
 unix {
     target.path = /usr/lib

@@ -5,6 +5,7 @@
 #include "iplugin.h"
 
 class QAction;
+class StandardTableDialog;
 
 class BASE_EXPORT Base : public Core::IPlugin
 {
@@ -38,6 +39,8 @@ private:
     QAction *m_acLocations;
     QAction *m_acContractors;
     QAction *m_acItems;
+
+    StandardTableDialog *m_itemDialog;
 };
 
 #endif // BASE_H

@@ -1,5 +1,6 @@
 #include "base.h"
 #include "constants.h"
+#include "widgets/standardtabledialog.h"
 
 #include <QtPlugin>
 #include <QAction>
@@ -48,6 +49,10 @@ bool Base::initialize()
     connect(m_acItems, SIGNAL(triggered()), SLOT(showItemTable()));
     ICore::registerAction(Constants::A_ITEMS, m_acItems);
 
+    m_itemDialog = new StandardTableDialog();
+    m_itemDialog->setWindowTitle(tr("Items"));
+    m_itemDialog->setReportMenu(Constants::A_ITEMS);
+
     return true;
 }
 
@@ -73,7 +78,8 @@ void Base::showContractorTable()
 
 void Base::showItemTable()
 {
-
+    m_instance->m_itemDialog->show();
+    m_instance->m_itemDialog->activateWindow();
 }
 
 #if QT_VERSION < 0x050000

@@ -31,12 +31,14 @@
 #define STANDARDTABLEDIALOG_H
 
 #include <QDialog>
+#include "report.h"
 
 namespace Ui {
 class StandardTableDialog;
 }
 
-class QAbstractItemModel;
+class QSortFilterProxyModel;
+class ItemModel;
 class EditWidgetInterface;
 class EditDialog;
 
@@ -49,17 +51,33 @@ public:
     ~StandardTableDialog();
 
     QAbstractItemModel *model() const;
-    void setModel(QAbstractItemModel *model);
+    void setModel(ItemModel *model, int keyColumn = 0, int keyRole = Qt::DisplayRole);
 
     EditWidgetInterface *editWidget() const;
     void setEditWidget(EditWidgetInterface *widget);
 
+    QString reportMenu() const;
+    void setReportMenu(const QString &menu);
+
+    QVariant currentId() const;
+    void setCurrentId(QVariant id);
+
+public slots:
+    void add();
+    void editCurrent();
+    void deleteSelected();
+    void slotPrint(Report & report);
 
 private:
     Ui::StandardTableDialog *ui;
-    QAbstractItemModel *m_model;
+    ItemModel *m_model;
+    QSortFilterProxyModel *m_proxyModel;
     EditWidgetInterface *m_editWidget;
     EditDialog *m_editDialog;
+    QString m_printMenu;
+
+    int m_keyColumn;
+    int m_keyRole;
 };
 
 #endif // STANDARDTABLEDIALOG_H

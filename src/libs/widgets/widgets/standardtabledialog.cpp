@@ -30,6 +30,11 @@
 #include "standardtabledialog.h"
 #include "ui_standardtabledialog.h"
 #include "editdialog.h"
+#include "reportmanager.h"
+#include "printbutton.h"
+#include "itemmodel.h"
+
+#include <QSortFilterProxyModel>
 
 StandardTableDialog::StandardTableDialog(QWidget *parent) :
     QDialog(parent),
@@ -39,6 +44,13 @@ StandardTableDialog::StandardTableDialog(QWidget *parent) :
     m_editDialog(0)
 {
     ui->setupUi(this);
+
+    m_proxyModel = new QSortFilterProxyModel(this);
+
+    connect(ui->btnAdd, SIGNAL(clicked()), SLOT(add()));
+    connect(ui->btnEdit, SIGNAL(clicked()), SLOT(editCurrent()));
+    connect(ui->btnDelete, SIGNAL(clicked()), SLOT(deleteSelected()));
+    connect(ui->btnPrint, SIGNAL(print(Report&)), SLOT(slotPrint(Report&)));
 }
 
 StandardTableDialog::~StandardTableDialog()
@@ -51,22 +63,95 @@ QAbstractItemModel *StandardTableDialog::model() const
     return m_model;
 }
 
-void StandardTableDialog::setModel(QAbstractItemModel *model)
+void StandardTableDialog::setModel(ItemModel *model, int keyColumn, int keyRole)
 {
     m_model = model;
-    ui->tableView->setModel(m_model);
+    m_keyColumn = keyColumn;
+    m_keyRole = keyRole;
+
+    m_proxyModel->setSourceModel(m_model);
+    ui->tableView->setModel(m_proxyModel);
 }
 
 EditWidgetInterface *StandardTableDialog::editWidget() const
 {
-
+    return m_editWidget;
 }
 
 void StandardTableDialog::setEditWidget(EditWidgetInterface *widget)
 {
+    m_editWidget = widget;
+
     if (m_editDialog) {
         delete m_editDialog;
     }
 
-    m_editDialog = new EditDialog()
+    m_editDialog = new EditDialog(m_editWidget, this);
+}
+
+QString StandardTableDialog::reportMenu() const
+{
+    return m_printMenu;
+}
+
+void StandardTableDialog::setReportMenu(const QString &menu)
+{
+    m_printMenu = menu;
+}
+
+QVariant StandardTableDialog::currentId() const
+{
+    if (!m_model || !ui->tableView->currentIndex().isValid()) {
+        return QVariant();
+    }
+
+    return m_proxyModel->index(ui->tableView->currentIndex().row(), m_keyColumn).data(m_keyRole);
+}
+
+void StandardTableDialog::setCurrentId(QVariant id)
+{
+    if (!m_model) {
+        return;
+    }
+
+    for (int i = 0; i < m_proxyModel->rowCount(); i++) {
+        if (m_proxyModel->index(i, m_keyColumn).data(m_keyRole) == id) {
+            ui->tableView->setCurrentIndex(m_proxyModel->index(i, m_keyColumn));
+            ui->tableView->selectRow(i);
+        }
+    }
+}
+
+void StandardTableDialog::add()
+{
+    if (!m_editDialog && !m_model) {
+        return;
+    }
+
+    if (m_editDialog->exec() == QDialog::Accepted) {
+        m_model->populate();
+    }
+}
+
+void StandardTableDialog::editCurrent()
+{
+    if (!m_editDialog && !m_model) {
+        return;
+    }
+
+    if (m_editDialog->exec(currentId()) == QDialog::Accepted) {
+        m_model->populate();
+    }
+}
+
+void StandardTableDialog::deleteSelected()
+{
+    if (!m_model) {
+        return;
+    }
+}
+
+void StandardTableDialog::slotPrint(Report &report)
+{
+    Core::ReportManager::showReport(report);
 }

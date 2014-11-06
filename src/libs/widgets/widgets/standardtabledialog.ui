@@ -121,7 +121,7 @@
   <customwidget>
    <class>PrintButton</class>
    <extends>QPushButton</extends>
-   <header>printbutton.h</header>
+   <header>widgets/printbutton.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   This file is part of the Xdbm project                                 *
+ *   This file is part of the Rubus project                                *
  *   Copyright (C) 2012-2014 by Ivan Volkov                                *
  *   wulff007@gmail.com                                                    *
  *                                                                         *
@@ -31,11 +31,11 @@
 #define ADVCOMBOBOX_H
 
 #include <QComboBox>
-#include "vedasdk_global.h"
+#include "widgets_global.h"
 
 class AdvLineEdit;
 
-class VEDASDK_EXPORT AdvComboBox : public QComboBox
+class WIDGETS_EXPORT AdvComboBox : public QComboBox
 {
     Q_OBJECT
 public:

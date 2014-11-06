@@ -1,5 +1,5 @@
 /***************************************************************************
- *   This file is part of the Xdbm project                                 *
+ *   This file is part of the Rubus project                                *
  *   Copyright (C) 2012-2014 by Ivan Volkov                                *
  *   wulff007@gmail.com                                                    *
  *                                                                         *
@@ -32,10 +32,10 @@
 
 #include <QDialog>
 
-#include "vedasdk_global.h"
+#include "widgets_global.h"
 #include "tableeditinterface.h"
 
-class VEDASDK_EXPORT TableEditDialog : public QDialog
+class WIDGETS_EXPORT TableEditDialog : public QDialog
 {
     Q_OBJECT
 public:

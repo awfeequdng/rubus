@@ -10,7 +10,8 @@ DEFINES += BASE_LIBRARY
 SOURCES += base.cpp
 
 HEADERS += base.h\
-        base_global.h
+        base_global.h \
+    constants.h
 
 unix {
     target.path = /usr/lib

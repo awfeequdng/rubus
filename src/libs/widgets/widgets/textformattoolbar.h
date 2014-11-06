@@ -1,5 +1,5 @@
 /***************************************************************************
- *   This file is part of the Xdbm project                                 *
+ *   This file is part of the Rubus project                                *
  *   Copyright (C) 2012-2014 by Ivan Volkov                                *
  *   wulff007@gmail.com                                                    *
  *                                                                         *
@@ -34,13 +34,13 @@
 #include <QTextCharFormat>
 #include <QToolBar>
 
-#include "vedasdk_global.h"
+#include "widgets_global.h"
 
 
 class QTextEdit;
 class QComboBox;
 
-class VEDASDK_EXPORT TextFormatToolBar : public QToolBar
+class WIDGETS_EXPORT TextFormatToolBar : public QToolBar
 {
     Q_OBJECT
 public:

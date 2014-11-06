@@ -1,5 +1,5 @@
 /***************************************************************************
- *   This file is part of the Xdbm project                                 *
+ *   This file is part of the Rubus project                                *
  *   Copyright (C) 2012-2014 by Ivan Volkov                                *
  *   wulff007@gmail.com                                                    *
  *                                                                         *
@@ -28,7 +28,7 @@
  *   GNU General Public License for more details.                          *
  ***************************************************************************/
 #include "tableeditdialog.h"
-#include "advtableview.h"
+//#include "advtableview.h"
 
 #include <QPushButton>
 #include <QLayout>
@@ -78,7 +78,7 @@ int TableEditDialog::exec()
 
     connect(m_btnAccept,SIGNAL(clicked()),SLOT(accept()));
     connect(m_btnCancel,SIGNAL(clicked()),SLOT(reject()));
-    connect(m_tableWidget->view(),SIGNAL(doubleClicked(QModelIndex)),SLOT(accept()));
+    //connect(m_tableWidget->view(),SIGNAL(doubleClicked(QModelIndex)),SLOT(accept()));
 
     m_tableWidget->populate();
 
@@ -91,7 +91,7 @@ int TableEditDialog::exec(QVariant selectId)
 
     connect(m_btnAccept,SIGNAL(clicked()),SLOT(accept()));
     connect(m_btnCancel,SIGNAL(clicked()),SLOT(reject()));
-    connect(m_tableWidget->view(),SIGNAL(doubleClicked(QModelIndex)),SLOT(accept()));
+    //connect(m_tableWidget->view(),SIGNAL(doubleClicked(QModelIndex)),SLOT(accept()));
 
     m_tableWidget->populate();
     m_tableWidget->setCurrentPrimaryKey(selectId);
@@ -105,7 +105,7 @@ void TableEditDialog::show()
 
     disconnect(m_btnAccept);
     disconnect(m_btnCancel);
-    disconnect(m_tableWidget->view(),0,this,0);
+    //disconnect(m_tableWidget->view(),0,this,0);
 
     m_tableWidget->populate();
 

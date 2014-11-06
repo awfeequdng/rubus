@@ -32,10 +32,10 @@
 
 #include <QtCore/qglobal.h>
 
-#if defined(VEDASDK_LIBRARY)
-#  define SDK_EXPORT Q_DECL_EXPORT
+#if defined(WIDGETS_LIBRARY)
+#  define WIDGETS_EXPORT Q_DECL_EXPORT
 #else
-#  define SDK_EXPORT Q_DECL_IMPORT
+#  define WIDGETS_EXPORT Q_DECL_IMPORT
 #endif
 
 #endif //SDK_GLOBAL_H

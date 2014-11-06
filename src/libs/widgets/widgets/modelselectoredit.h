@@ -1,5 +1,5 @@
 /***************************************************************************
- *   This file is part of the Xdbm project                                 *
+ *   This file is part of the Rubus project                                *
  *   Copyright (C) 2012-2014 by Ivan Volkov                                *
  *   wulff007@gmail.com                                                    *
  *                                                                         *
@@ -31,14 +31,14 @@
 #define MODELSELECTOREDIT_H
 
 #include <QWidget>
-#include <vedasdk_global.h>
+#include <widgets_global.h>
 
 class AdvLineEdit;
 class QLabel;
 class QAbstractItemModel;
 class AdvComboBox;
 
-class VEDASDK_EXPORT ModelSelectorEdit : public QWidget
+class WIDGETS_EXPORT ModelSelectorEdit : public QWidget
 {
     Q_OBJECT
 public:

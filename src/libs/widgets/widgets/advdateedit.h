@@ -1,5 +1,5 @@
 /***************************************************************************
- *   This file is part of the Xdbm project                                 *
+ *   This file is part of the Rubus project                                *
  *   Copyright (C) 2012-2014 by Ivan Volkov                                *
  *   wulff007@gmail.com                                                    *
  *                                                                         *
@@ -31,9 +31,9 @@
 #define ADVDATEEDIT_H
 
 #include <QDateEdit>
-#include "vedasdk_global.h"
+#include "widgets_global.h"
 
-class VEDASDK_EXPORT AdvDateEdit : public QDateEdit
+class WIDGETS_EXPORT AdvDateEdit : public QDateEdit
 {
     Q_OBJECT
 public:

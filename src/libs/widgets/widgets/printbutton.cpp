@@ -1,5 +1,5 @@
 /***************************************************************************
- *   This file is part of the Xdbm project                                 *
+ *   This file is part of the Rubus project                                *
  *   Copyright (C) 2012-2014 by Ivan Volkov                                *
  *   wulff007@gmail.com                                                    *
  *                                                                         *
@@ -51,7 +51,7 @@ void PrintButton::populateMenu(QString menuId)
 {
     m_menu->clear();
     m_reports.clear();
-    m_reports = ReportManager::instance()->reportsByMenuId(menuId);
+    m_reports = Core::ReportManager::instance()->reportsByMenuId(menuId);
 
     QListIterator<Report> iter(m_reports);
     while(iter.hasNext()) {

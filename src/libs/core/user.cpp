@@ -122,6 +122,10 @@ void User::setGui(const QString &gui)
 
 bool User::save()
 {
+    if (m_jsonDoc.isEmpty()) {
+        return true;
+    }
+
     QSqlQuery sql;
 
     if (!sql.exec(QString("UPDATE user_params SET up_params = '%1' WHERE up_role = '%2'")

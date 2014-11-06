@@ -1,5 +1,5 @@
 /***************************************************************************
- *   This file is part of the Xdbm project                                 *
+ *   This file is part of the Rubus project                                *
  *   Copyright (C) 2012-2014 by Ivan Volkov                                *
  *   wulff007@gmail.com                                                    *
  *                                                                         *
@@ -28,6 +28,7 @@
  *   GNU General Public License for more details.                          *
  ***************************************************************************/
 #include "advdateedit.h"
+
 #include <QLineEdit>
 #include <QDebug>
 #include <QKeyEvent>

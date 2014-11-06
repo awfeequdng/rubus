@@ -27,51 +27,39 @@
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
  *   GNU General Public License for more details.                          *
  ***************************************************************************/
-#ifndef REPORTMANAGER_H
-#define REPORTMANAGER_H
+#ifndef STANDARDTABLEDIALOG_H
+#define STANDARDTABLEDIALOG_H
 
-#include <QObject>
-#include <QVariant>
+#include <QDialog>
 
-#include "core_global.h"
-
-
-QT_BEGIN_NAMESPACE
-class QAbstractItemModel;
-QT_END_NAMESPACE
-
-class OOoReportBuilder;
-class Report;
-class NCReportSource;
-class NCReport;
-
-namespace Core {
-
-class CORE_EXPORT ReportManager : public QObject
-{
-    Q_OBJECT
-public:
-    explicit ReportManager(QObject *parent = 0);
-
-    static ReportManager *instance();
-    static Report loadReport(int id);
-
-    static void registerMenuId(QString id, QString title);
-    static void showReport(Report &rep);
-    void printReport(Report &rep, QString printerName, int copies, bool showDialog = false);
-
-    QList<Report> reportsByMenuId(QString menuId);
-    static NCReportSource reportDatabaseSource(int reportId);
-
-signals:
-
-private slots:
-
-private:
-    QHash<QString, QString> m_menus;
-
-};
-
+namespace Ui {
+class StandardTableDialog;
 }
 
-#endif // REPORTMANAGER_H
+class QAbstractItemModel;
+class EditWidgetInterface;
+class EditDialog;
+
+class StandardTableDialog : public QDialog
+{
+    Q_OBJECT
+
+public:
+    explicit StandardTableDialog(QWidget *parent = 0);
+    ~StandardTableDialog();
+
+    QAbstractItemModel *model() const;
+    void setModel(QAbstractItemModel *model);
+
+    EditWidgetInterface *editWidget() const;
+    void setEditWidget(EditWidgetInterface *widget);
+
+
+private:
+    Ui::StandardTableDialog *ui;
+    QAbstractItemModel *m_model;
+    EditWidgetInterface *m_editWidget;
+    EditDialog *m_editDialog;
+};
+
+#endif // STANDARDTABLEDIALOG_H

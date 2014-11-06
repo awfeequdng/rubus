@@ -118,17 +118,15 @@ QList<Report> ReportManager::reportsByMenuId(QString menuId)
     return reps;
 }
 
-void ReportManager::showReport(Report &rep, bool /*preview*/)
+void ReportManager::showReport(Report &rep)
 {
     if (rep.engine() == Report::OpenOfficeEngine) {
-        OOoReportBuilder *builder = new OOoReportBuilder(this);
-        builder->setModels(rep.models());
-        builder->setParameters(rep.paramentrs());
-        builder->setOutputDir(QDir::tempPath());
-        builder->loadReportFile(reportStoragePath() + '/' + rep.filename());
-        builder->parse(true);
-
-        delete builder;
+        OOoReportBuilder builder;
+        builder.setModels(rep.models());
+        builder.setParameters(rep.paramentrs());
+        builder.setOutputDir(QDir::tempPath());
+        builder.loadReportFile(rep.filename());
+        builder.parse(true);
         return;
     }
 
@@ -248,23 +246,7 @@ void ReportManager::printReport(Report &rep, QString printerName, int copies,  b
     }
 }
 
-QString ReportManager::reportStoragePath() const
-{
-    return m_reportStoragePath;
-}
-
-void ReportManager::setReportStoragePath(QString path)
-{
-    m_reportStoragePath = path;
-}
-
-QString ReportManager::toWords(int number)
-{
-    Q_UNUSED(number)
-    return QString();
-}
-
-NCReportSource ReportManager::reportDatabaseSource(int reportId) const
+NCReportSource ReportManager::reportDatabaseSource(int reportId)
 {
     NCReportSource rs;
     rs.setSourceType(NCReportSource::Database);

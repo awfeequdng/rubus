@@ -27,51 +27,46 @@
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
  *   GNU General Public License for more details.                          *
  ***************************************************************************/
-#ifndef REPORTMANAGER_H
-#define REPORTMANAGER_H
+#include "standardtabledialog.h"
+#include "ui_standardtabledialog.h"
+#include "editdialog.h"
 
-#include <QObject>
-#include <QVariant>
-
-#include "core_global.h"
-
-
-QT_BEGIN_NAMESPACE
-class QAbstractItemModel;
-QT_END_NAMESPACE
-
-class OOoReportBuilder;
-class Report;
-class NCReportSource;
-class NCReport;
-
-namespace Core {
-
-class CORE_EXPORT ReportManager : public QObject
+StandardTableDialog::StandardTableDialog(QWidget *parent) :
+    QDialog(parent),
+    ui(new Ui::StandardTableDialog),
+    m_model(0),
+    m_editWidget(0),
+    m_editDialog(0)
 {
-    Q_OBJECT
-public:
-    explicit ReportManager(QObject *parent = 0);
+    ui->setupUi(this);
+}
 
-    static ReportManager *instance();
-    static Report loadReport(int id);
+StandardTableDialog::~StandardTableDialog()
+{
+    delete ui;
+}
 
-    static void registerMenuId(QString id, QString title);
-    static void showReport(Report &rep);
-    void printReport(Report &rep, QString printerName, int copies, bool showDialog = false);
+QAbstractItemModel *StandardTableDialog::model() const
+{
+    return m_model;
+}
 
-    QList<Report> reportsByMenuId(QString menuId);
-    static NCReportSource reportDatabaseSource(int reportId);
+void StandardTableDialog::setModel(QAbstractItemModel *model)
+{
+    m_model = model;
+    ui->tableView->setModel(m_model);
+}
 
-signals:
-
-private slots:
-
-private:
-    QHash<QString, QString> m_menus;
-
-};
+EditWidgetInterface *StandardTableDialog::editWidget() const
+{
 
 }
 
-#endif // REPORTMANAGER_H
+void StandardTableDialog::setEditWidget(EditWidgetInterface *widget)
+{
+    if (m_editDialog) {
+        delete m_editDialog;
+    }
+
+    m_editDialog = new EditDialog()
+}

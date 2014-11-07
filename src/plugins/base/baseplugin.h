@@ -35,20 +35,21 @@
 
 class QAction;
 class StandardTableDialog;
+class ItemModel;
 
-class BASE_EXPORT Base : public Core::IPlugin
+class BASE_EXPORT BasePlugin : public Core::IPlugin
 {
     Q_OBJECT
     Q_INTERFACES(Core::IPlugin)
 
 #if QT_VERSION > 0x050000
-    Q_PLUGIN_METADATA(IID "Base")
+    Q_PLUGIN_METADATA(IID "BasePlugin")
 #endif
 
 public:
-    explicit Base(QObject *parent = 0);
+    explicit BasePlugin(QObject *parent = 0);
 
-    static Base *instance();
+    static BasePlugin *instance();
 
     QString name() const;
     int version() const;
@@ -70,6 +71,7 @@ private:
     QAction *m_acItems;
 
     StandardTableDialog *m_itemDialog;
+    ItemModel *m_itemModel;
 };
 
 #endif // BASE_H

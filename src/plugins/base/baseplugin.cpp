@@ -27,9 +27,11 @@
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
  *   GNU General Public License for more details.                          *
  ***************************************************************************/
-#include "base.h"
+#include "baseplugin.h"
 #include "constants.h"
 #include "widgets/standardtabledialog.h"
+#include "models/itemmodel.h"
+#include "widgets/itemeditwidget.h"
 
 #include <QtPlugin>
 #include <QAction>
@@ -37,26 +39,26 @@
 
 using namespace Core;
 
-static Base *m_instance = 0;
+static BasePlugin *m_instance = 0;
 
-Base::Base(QObject *parent) :
+BasePlugin::BasePlugin(QObject *parent) :
     IPlugin(parent)
 {
     m_instance = this;
 }
 
 
-QString Base::name() const
+QString BasePlugin::name() const
 {
     return "Base";
 }
 
-int Base::version() const
+int BasePlugin::version() const
 {
     return 1;
 }
 
-bool Base::initialize()
+bool BasePlugin::initialize()
 {
     m_acUserManager = new QAction(tr("Users"),this);
     connect(m_acUserManager, SIGNAL(triggered()), SLOT(showUserManager()));
@@ -81,37 +83,42 @@ bool Base::initialize()
     m_itemDialog = new StandardTableDialog();
     m_itemDialog->setWindowTitle(tr("Items"));
     m_itemDialog->setReportMenu(Constants::A_ITEMS);
+    ItemEditWidget *itemEditWdg = new ItemEditWidget(m_itemDialog);
+    m_itemDialog->setEditWidget(itemEditWdg);
+    m_itemModel = new ItemModel(this);
+    m_itemDialog->setModel(m_itemModel, ItemModel::IdCol);
 
     return true;
 }
 
-void Base::showUserManager()
+void BasePlugin::showUserManager()
 {
     qDebug() << "users";
 }
 
-void Base::showReportManager()
+void BasePlugin::showReportManager()
 {
     qDebug() << "reprots";
 }
 
-void Base::showLocationTable()
+void BasePlugin::showLocationTable()
 {
 
 }
 
-void Base::showContractorTable()
+void BasePlugin::showContractorTable()
 {
 
 }
 
-void Base::showItemTable()
+void BasePlugin::showItemTable()
 {
+    m_instance->m_itemModel->populate();
     m_instance->m_itemDialog->show();
     m_instance->m_itemDialog->activateWindow();
 }
 
 #if QT_VERSION < 0x050000
-Q_EXPORT_PLUGIN2(Base, Base)
+Q_EXPORT_PLUGIN2(Base, BasePlugin)
 #else
 #endif

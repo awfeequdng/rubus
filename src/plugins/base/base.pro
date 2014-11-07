@@ -7,15 +7,26 @@ TEMPLATE = lib
 
 DEFINES += BASE_LIBRARY
 
-SOURCES += base.cpp \
-    models/itemmodel.cpp
+SOURCES += \
+    models/itemmodel.cpp \
+    widgets/itemeditwidget.cpp \
+    baseplugin.cpp \
+    item.cpp \
+    models/itemtypemodel.cpp
 
-HEADERS += base.h\
+HEADERS +=\
         base_global.h \
     constants.h \
-    models/itemmodel.h
+    models/itemmodel.h \
+    widgets/itemeditwidget.h \
+    baseplugin.h \
+    item.h \
+    models/itemtypemodel.h
 
 unix {
     target.path = /usr/lib
     INSTALLS += target
 }
+
+FORMS += \
+    widgets/itemeditwidget.ui

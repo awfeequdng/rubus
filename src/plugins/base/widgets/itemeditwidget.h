@@ -19,6 +19,8 @@ public:
     explicit ItemEditWidget(QWidget *parent = 0);
     ~ItemEditWidget();
 
+    QVariant id() const { return m_id; }
+
     bool load(QVariant id);
     bool save();
 

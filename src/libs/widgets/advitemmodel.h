@@ -48,10 +48,10 @@ public:
     virtual QModelIndex parent(const QModelIndex &child) const;
     virtual QVariant data(const QModelIndex &index, int role) const;
 
-    QString lastError() const;
+    QString errorString() const;
 
 protected:
-    void setLastError(const QString & error);
+    void setErrorString(const QString & error);
     void setLastError(const QSqlError & error);
 
 signals:

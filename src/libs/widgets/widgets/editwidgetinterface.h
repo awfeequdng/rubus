@@ -40,6 +40,8 @@ class WIDGETS_EXPORT EditWidgetInterface : public QWidget
 public:
     explicit EditWidgetInterface(QWidget *parent = 0);
 
+    virtual QVariant id() const = 0;
+
     bool isDataChanged() const { return m_changed; }
 
     QString errorString() const;

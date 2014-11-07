@@ -67,12 +67,12 @@ QVariant AdvItemModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-QString AdvItemModel::lastError() const
+QString AdvItemModel::errorString() const
 {
     return m_lastError;
 }
 
-void AdvItemModel::setLastError(const QString &error)
+void AdvItemModel::setErrorString(const QString &error)
 {
    m_lastError = error;
 }

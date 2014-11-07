@@ -15,6 +15,7 @@ bool ItemModel::populate()
 
     qDeleteAll(m_items);
     m_items.clear();
+    m_removedIds.clear();
 
 
     QSqlQuery sql;
@@ -107,9 +108,40 @@ QVariant ItemModel::headerData(int section, Qt::Orientation orientation, int rol
 
 bool ItemModel::removeRows(int row, int count, const QModelIndex &parent)
 {
-    Q_UNUSED(parent)
-    Q_UNUSED(row)
-    Q_UNUSED(count)
-    return false;
+    emit beginRemoveRows(parent, row, row + count -1);
+
+    if (!m_removedIds.isEmpty()) {
+        m_removedIds.append(",");
+    }
+    m_removedIds += QString::number(m_items[row]->id);
+    m_items.removeAt(row);
+    emit endRemoveRows();
+
+    return true;
+}
+
+bool ItemModel::submit()
+{
+    if (!m_removedIds.isEmpty()) {
+        QSqlQuery sql;
+        sql.exec(QString("DELETE FROM items WHERE it_id IN (%1)").arg(m_removedIds));
+
+        if (sql.lastError().isValid()) {
+            setLastError(sql.lastError());
+            qCritical() << sql.lastError();
+            return false;
+        }
+
+        m_removedIds.clear();
+
+    }
+
+    return true;
+}
+
+Qt::ItemFlags ItemModel::flags(const QModelIndex &index) const
+{
+    Q_UNUSED(index)
+    return Qt::ItemIsSelectable | Qt::ItemIsEditable | Qt::ItemIsEnabled;
 }
 

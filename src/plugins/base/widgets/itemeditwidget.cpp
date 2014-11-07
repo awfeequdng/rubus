@@ -6,7 +6,8 @@
 
 ItemEditWidget::ItemEditWidget(QWidget *parent) :
     EditWidgetInterface(parent),
-    ui(new Ui::ItemEditWidget)
+    ui(new Ui::ItemEditWidget),
+    m_id(-1)
 {
     ui->setupUi(this);
 
@@ -75,5 +76,43 @@ bool ItemEditWidget::load(QVariant id)
 
 bool ItemEditWidget::save()
 {
-    return false;
+    QSqlQuery sql;
+    if (m_id == -1) {
+        sql.prepare("INSERT INTO items(it_name,it_desc,it_article,"
+                    "it_unit,it_type,it_active) "
+                    "VALUES (:name,:desc,:article,"
+                    ":unit,:type,:active)");
+    } else {
+        sql.prepare("UPDATE items SET it_name = :name,it_desc = :desc,it_article = :article,"
+                    "it_unit = :unit,it_type = :type,it_active = :active "
+                    "WHERE it_id = :id");
+        sql.bindValue(":id", m_id);
+    }
+
+    sql.bindValue(":name", ui->edName->text());
+    sql.bindValue(":desc", ui->edDesc->text());
+    sql.bindValue(":article", ui->edArticle->text());
+    sql.bindValue(":unit", ui->cmbUnit->currentKey().toString());
+    sql.bindValue(":type", ui->cmbType->currentKey().toString());
+    sql.bindValue(":active", ui->ckActive->isChecked());
+
+    if (!sql.exec()) {
+        qCritical() << sql.lastError();
+        setErrorString(sql.lastError().text());
+        QMessageBox::critical(this, "Error", sql.lastError().text());
+        return false;
+    }
+
+    if (m_id == -1) {
+        sql.exec("SELECT currval(pg_get_serial_sequence('items', 'it_id'))");
+
+        if (sql.next()) {
+            m_id = sql.value(0).toInt();
+        } else {
+            qWarning() << sql.lastError();
+        }
+    }
+
+    emit saved();
+    return true;
 }

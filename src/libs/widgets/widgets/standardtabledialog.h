@@ -31,6 +31,7 @@
 #define STANDARDTABLEDIALOG_H
 
 #include <QDialog>
+#include <QModelIndexList>
 #include "report.h"
 
 namespace Ui {
@@ -78,6 +79,8 @@ private:
 
     int m_keyColumn;
     int m_keyRole;
+
+    QList<int> sourceRowsFromProxy(QModelIndexList indexes) const;
 };
 
 #endif // STANDARDTABLEDIALOG_H

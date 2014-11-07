@@ -50,6 +50,7 @@ EditDialog::EditDialog(EditWidgetInterface *editWidget, QWidget *parent) :
 
     connect(editWidget, SIGNAL(saved()), SLOT(onEditWidgetSaved()));
     connect(editWidget, SIGNAL(windowTitleChanged(QString)), SLOT(setWindowTitle(QString)));
+    connect(editWidget, SIGNAL(rejected()), SLOT(reject()));
 }
 
 void EditDialog::accept()

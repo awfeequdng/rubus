@@ -132,6 +132,9 @@ void StandardTableDialog::add()
 
     if (m_editDialog->exec() == QDialog::Accepted) {
         m_model->populate();
+        setCurrentId(editWidget()->id());
+
+        ui->tableView->setFocus();
     }
 }
 
@@ -143,6 +146,10 @@ void StandardTableDialog::editCurrent()
 
     if (m_editDialog->exec(currentId()) == QDialog::Accepted) {
         m_model->populate();
+        ui->tableView->setFocus();
+
+        setCurrentId(editWidget()->id());
+        ui->tableView->setFocus();
     }
 }
 
@@ -151,9 +158,50 @@ void StandardTableDialog::deleteSelected()
     if (!m_model) {
         return;
     }
+
+    QModelIndexList rows = ui->tableView->selectionModel()->selectedRows();
+
+    if (rows.isEmpty()) {
+        return;
+    }
+
+    if (QMessageBox::warning(this,
+                             "Delete",
+                             tr("Are you sure you want to remove selected items(%1)").arg(rows.count()),
+                             QMessageBox::Cancel | QMessageBox::Ok)
+            == QMessageBox::Cancel) {
+        return;
+    }
+
+    QListIterator<int> iter(sourceRowsFromProxy(rows));
+    iter.toBack();
+    while(iter.hasPrevious()) {
+        if (!m_model->removeRow(iter.previous())) {
+            m_model->revert();
+            QMessageBox::critical(this, "Error", m_model->errorString());
+            return;
+        }
+    }
+
+    if (!m_model->submit()) {
+        QMessageBox::critical(this, "Error", m_model->errorString());
+    }
 }
 
 void StandardTableDialog::slotPrint(Report &report)
 {
     Core::ReportManager::showReport(report);
+}
+
+QList<int> StandardTableDialog::sourceRowsFromProxy(QModelIndexList indexes) const
+{
+    QListIterator<QModelIndex> iter(indexes);
+    QList<int> rows;
+
+    while(iter.hasNext()) {
+        rows << m_proxyModel->mapToSource(iter.next()).row();
+    }
+
+    qSort(rows);
+    return rows;
 }

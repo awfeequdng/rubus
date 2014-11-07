@@ -38,8 +38,12 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role) const;
     bool removeRows(int row, int count, const QModelIndex &parent);
 
+    bool submit();
+    Qt::ItemFlags flags(const QModelIndex &index) const;
+
 private:
     QList<Internal::Item *> m_items;
+    QString m_removedIds;
 };
 
 #endif // ITEMMODEL_H

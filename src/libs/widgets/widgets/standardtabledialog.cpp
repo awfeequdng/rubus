@@ -126,7 +126,7 @@ void StandardTableDialog::setCurrentId(QVariant id)
 
 void StandardTableDialog::add()
 {
-    if (!m_editDialog && !m_model) {
+    if (!m_editDialog || !m_model) {
         return;
     }
 
@@ -137,7 +137,7 @@ void StandardTableDialog::add()
 
 void StandardTableDialog::editCurrent()
 {
-    if (!m_editDialog && !m_model) {
+    if (!m_editDialog || !m_model) {
         return;
     }
 

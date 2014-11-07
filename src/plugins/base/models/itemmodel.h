@@ -13,7 +13,7 @@ struct Item {
     QString typeName;
     QString unitId;
     QString unitTitle;
-    bool visible;
+    bool active;
 };
 }
 

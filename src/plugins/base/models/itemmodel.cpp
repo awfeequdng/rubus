@@ -19,7 +19,7 @@ bool ItemModel::populate()
 
     QSqlQuery sql;
     sql.exec(QString("SELECT it_id, it_name, it_article, it_type, "
-                     "it_unit, un_name, it_visible FROM items "
+                     "it_unit, un_name, it_active FROM items "
                      "JOIN units ON un_id = it_unit "));
 
     if (sql.lastError().isValid()) {
@@ -36,7 +36,7 @@ bool ItemModel::populate()
         item->typeName = QString();
         item->unitId = sql.value(4).toString();
         item->unitTitle = sql.value(5).toString();
-        item->visible = sql.value(6).toBool();
+        item->active = sql.value(6).toBool();
 
         m_items.append(item);
     }

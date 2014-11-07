@@ -54,6 +54,7 @@ signals:
     void dataChanged();
     void saved();
     void loaded();
+    void rejected();
 
 public slots:
     virtual bool load(QVariant id) = 0;

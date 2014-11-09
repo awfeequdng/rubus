@@ -71,6 +71,7 @@ bool ItemEditWidget::load(QVariant id)
         ui->ckActive->setChecked(sql.value(5).toBool());
     }
 
+    setWindowTitle(m_id != -1 ? tr("Edit item #%1").arg(m_id) : tr("New item"));
     return true;
 }
 

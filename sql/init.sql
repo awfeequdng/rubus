@@ -1,6 +1,6 @@
 CREATE TABLE locations (
 lo_id	serial,
-lo_name	varchar(100) NOT NULL
+lo_name	varchar(100) NOT NULL,
 PRIMARY KEY (lo_id)
 );
 

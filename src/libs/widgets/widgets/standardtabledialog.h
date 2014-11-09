@@ -33,6 +33,7 @@
 #include <QDialog>
 #include <QModelIndexList>
 #include "report.h"
+#include "widgets_global.h"
 
 namespace Ui {
 class StandardTableDialog;
@@ -43,7 +44,7 @@ class AdvItemModel;
 class EditWidgetInterface;
 class EditDialog;
 
-class StandardTableDialog : public QDialog
+class WIDGETS_EXPORT StandardTableDialog : public QDialog
 {
     Q_OBJECT
 

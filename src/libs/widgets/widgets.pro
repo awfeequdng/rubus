@@ -31,7 +31,9 @@ HEADERS += \
     widgets/printcombobox.h \
     widgets/textformattoolbar.h \
     widgets/standardtabledialog.h \
-    advitemmodel.h
+    advitemmodel.h \
+    widgets/advheaderview.h \
+    widgets/advtableview.h
 
 SOURCES += \
     widgets/advcombobox.cpp \
@@ -47,7 +49,9 @@ SOURCES += \
     widgets/printcombobox.cpp \
     widgets/textformattoolbar.cpp \
     widgets/standardtabledialog.cpp \
-    advitemmodel.cpp
+    advitemmodel.cpp \
+    widgets/advheaderview.cpp \
+    widgets/advtableview.cpp
 
 FORMS += \
     widgets/standardtabledialog.ui

@@ -44,7 +44,7 @@
     </layout>
    </item>
    <item>
-    <widget class="QTableView" name="tableView">
+    <widget class="AdvTableView" name="tableView">
      <property name="selectionBehavior">
       <enum>QAbstractItemView::SelectRows</enum>
      </property>
@@ -126,6 +126,11 @@
    <class>PrintButton</class>
    <extends>QPushButton</extends>
    <header>widgets/printbutton.h</header>
+  </customwidget>
+  <customwidget>
+   <class>AdvTableView</class>
+   <extends>QTableView</extends>
+   <header>widgets/advtableview.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

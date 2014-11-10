@@ -16,13 +16,13 @@ void AdvHeaderView::onSectionResized(int logicalIndex, int oldSize, int newSize)
     if (!model())
         return;
 
-
-    if (newSize < 0) {
+    if (newSize <= 0) {
         m_colStretch.insert(logicalIndex, true);
     }
     else if (! m_resizingInProcess && colIsStretch(logicalIndex)) {
         m_colStretch.insert(logicalIndex, false);
     }
+
 
 
     if (m_resizingInProcess)
@@ -47,7 +47,7 @@ void AdvHeaderView::onSectionResized(int logicalIndex, int oldSize, int newSize)
             stretch.append(i);
     }
 
-    qDebug() << stretch << usedSpace;
+    qDebug() << stretch << usedSpace << viewport()->width();
 
     if(stretch.size() > 0)
     {
@@ -82,7 +82,8 @@ void AdvHeaderView::setModel(QAbstractItemModel *model)
 
 void AdvHeaderView::resizeSection(int logicalIndex, int size)
 {
+    qDebug() << logicalIndex << size;
+    QHeaderView::resizeSection(logicalIndex, size);
     m_colStretch.insert(logicalIndex, size <= 0);
 
-    QHeaderView::resizeSection(logicalIndex, size);
 }

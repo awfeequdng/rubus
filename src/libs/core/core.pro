@@ -30,6 +30,8 @@ unix {
     QMAKE_LFLAGS += -Wl,--rpath=$$NCREPORT_PATH/lib
 }
 
+warning($$LIBS)
+
 INCLUDEPATH += \
                $$NCREPORT_PATH/include \
 

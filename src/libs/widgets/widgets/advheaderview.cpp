@@ -10,7 +10,6 @@ AdvHeaderView::AdvHeaderView(QWidget *parent) :
 
 void AdvHeaderView::onSectionResized(int logicalIndex, int oldSize, int newSize)
 {
-    qDebug() << logicalIndex;
     Q_UNUSED(oldSize)
 
     if (!model())
@@ -47,8 +46,6 @@ void AdvHeaderView::onSectionResized(int logicalIndex, int oldSize, int newSize)
             stretch.append(i);
     }
 
-    qDebug() << stretch << usedSpace << viewport()->width();
-
     if(stretch.size() > 0)
     {
         int leftover = (viewport()->width() - usedSpace) / stretch.size();
@@ -82,8 +79,10 @@ void AdvHeaderView::setModel(QAbstractItemModel *model)
 
 void AdvHeaderView::resizeSection(int logicalIndex, int size)
 {
-    qDebug() << logicalIndex << size;
     QHeaderView::resizeSection(logicalIndex, size);
-    m_colStretch.insert(logicalIndex, size <= 0);
+
+    if (!m_resizingInProcess) {
+        m_colStretch.insert(logicalIndex, size <= 0);
+    }
 
 }

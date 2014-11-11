@@ -12,7 +12,8 @@ SOURCES += \
     widgets/itemeditwidget.cpp \
     baseplugin.cpp \
     item.cpp \
-    models/itemtypemodel.cpp
+    models/itemtypemodel.cpp \
+    contractortabledialog.cpp
 
 HEADERS +=\
         base_global.h \
@@ -21,7 +22,8 @@ HEADERS +=\
     widgets/itemeditwidget.h \
     baseplugin.h \
     item.h \
-    models/itemtypemodel.h
+    models/itemtypemodel.h \
+    contractortabledialog.h
 
 unix {
     target.path = /usr/lib

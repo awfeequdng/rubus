@@ -33,6 +33,7 @@
 #include "models/itemmodel.h"
 #include "widgets/itemeditwidget.h"
 #include "widgets/advtableview.h"
+#include "contractortabledialog.h"
 
 #include <QtPlugin>
 #include <QAction>
@@ -51,6 +52,7 @@ BasePlugin::BasePlugin(QObject *parent) :
 BasePlugin::~BasePlugin()
 {
     delete m_itemDialog;
+    delete m_contractorDialog;
 }
 
 
@@ -96,7 +98,7 @@ bool BasePlugin::initialize()
     m_itemDialog->view()->horizontalHeader()->setDefaultSectionSize(1, -1);
     m_itemDialog->setModel(m_itemModel, ItemModel::IdCol);
 
-    m_itemDialog->view()->horizontalHeader()->setSectionLocked(0, true);
+    m_contractorDialog = new ContractorTableDialog();
 
     return true;
 }
@@ -118,7 +120,8 @@ void BasePlugin::showLocationTable()
 
 void BasePlugin::showContractorTable()
 {
-
+    m_instance->m_contractorDialog->show();
+    m_instance->m_contractorDialog->activateWindow();
 }
 
 void BasePlugin::showItemTable()

@@ -36,6 +36,7 @@
 class QAction;
 class StandardTableDialog;
 class ItemModel;
+class ContractorTableDialog;
 
 class BASE_EXPORT BasePlugin : public Core::IPlugin
 {
@@ -73,6 +74,7 @@ private:
 
     StandardTableDialog *m_itemDialog;
     ItemModel *m_itemModel;
+    ContractorTableDialog *m_contractorDialog;
 };
 
 #endif // BASE_H

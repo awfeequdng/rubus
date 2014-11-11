@@ -142,6 +142,6 @@ bool ItemModel::submit()
 Qt::ItemFlags ItemModel::flags(const QModelIndex &index) const
 {
     Q_UNUSED(index)
-    return Qt::ItemIsSelectable | Qt::ItemIsEditable | Qt::ItemIsEnabled;
+    return Qt::ItemIsSelectable | Qt::ItemIsEnabled;
 }
 

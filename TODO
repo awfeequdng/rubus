@@ -1,19 +1,24 @@
 Version 0.2
     * Integration in QtCreator
-    * QtCreator wizards
-        * a new plugin
+        - QtCreator wizards
+            - a new plugin
+        QtCretaor templates
+            * TableDialog
+            * EditWidget
+            * TableDialog
+    
     
     * Widgets
-        * AdvTableView
+        + AdvTableView
         * AdvSortFilterProxyModel
     
     * Database
          + sql init script 
-         * sql demo script
+         + sql demo script
 
     * Plugins
         * Base
-            * Items
+            + Items
             * Contractors
             * Locations
             * Users

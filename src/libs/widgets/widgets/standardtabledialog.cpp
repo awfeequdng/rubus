@@ -49,6 +49,11 @@ StandardTableDialog::StandardTableDialog(QWidget *parent) :
     m_proxyModel->setSortCaseSensitivity(Qt::CaseInsensitive);
     m_proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
 
+    ui->tableView->setSortingEnabled(true);
+    ui->tableView->horizontalHeader()->setClickable(true);
+    ui->tableView->horizontalHeader()->setMovable(true);
+    ui->tableView->horizontalHeader()->setSortIndicatorShown(true);
+
     QSettings sett;
     ui->tableView->horizontalHeader()->restoreState(sett.value(objectName() + "/view/state").toByteArray());
     ui->tableView->restoreHeaderGeometry(sett.value(objectName() + "/view/geometry").toByteArray());
@@ -59,6 +64,7 @@ StandardTableDialog::StandardTableDialog(QWidget *parent) :
     connect(ui->btnEdit, SIGNAL(clicked()), SLOT(editCurrent()));
     connect(ui->btnDelete, SIGNAL(clicked()), SLOT(deleteSelected()));
     connect(ui->btnPrint, SIGNAL(print(Report&)), SLOT(slotPrint(Report&)));
+    connect(ui->tableView, SIGNAL(doubleClicked(QModelIndex)), SLOT(slotTableViewDoubleClicked(QModelIndex)));
 }
 
 StandardTableDialog::~StandardTableDialog()
@@ -208,6 +214,16 @@ void StandardTableDialog::deleteSelected()
 void StandardTableDialog::slotPrint(Report &report)
 {
     Core::ReportManager::showReport(report);
+}
+
+void StandardTableDialog::slotTableViewDoubleClicked(QModelIndex index)
+{
+    qDebug() << index;
+    if (index.flags() & Qt::ItemIsEditable) {
+        return;
+    }
+
+    editCurrent();
 }
 
 QList<int> StandardTableDialog::sourceRowsFromProxy(QModelIndexList indexes) const

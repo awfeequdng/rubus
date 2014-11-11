@@ -96,6 +96,8 @@ bool BasePlugin::initialize()
     m_itemDialog->view()->horizontalHeader()->setDefaultSectionSize(1, -1);
     m_itemDialog->setModel(m_itemModel, ItemModel::IdCol);
 
+    m_itemDialog->view()->horizontalHeader()->setSectionLocked(0, true);
+
     return true;
 }
 

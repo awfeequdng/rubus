@@ -72,6 +72,7 @@ public slots:
     void editCurrent();
     void deleteSelected();
     void slotPrint(Report & report);
+    void slotTableViewDoubleClicked(QModelIndex index);
 
 private:
     Ui::StandardTableDialog *ui;

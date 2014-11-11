@@ -13,6 +13,10 @@ public:
     explicit AdvTableView(QWidget *parent = 0);
 
     void setModel(QAbstractItemModel *model);
+
+    QByteArray saveHeaderGeometry() const;
+    bool restoreHeaderGeometry(const QByteArray &geometry);
+
 signals:
 
 public slots:

@@ -49,6 +49,10 @@ StandardTableDialog::StandardTableDialog(QWidget *parent) :
     m_proxyModel->setSortCaseSensitivity(Qt::CaseInsensitive);
     m_proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
 
+    QSettings sett;
+    ui->tableView->horizontalHeader()->restoreState(sett.value(objectName() + "/view/state").toByteArray());
+    ui->tableView->restoreHeaderGeometry(sett.value(objectName() + "/view/geometry").toByteArray());
+
     connect(ui->btnAdd, SIGNAL(clicked()), SLOT(add()));
     connect(ui->btnEdit, SIGNAL(clicked()), SLOT(editCurrent()));
     connect(ui->btnDelete, SIGNAL(clicked()), SLOT(deleteSelected()));
@@ -57,6 +61,9 @@ StandardTableDialog::StandardTableDialog(QWidget *parent) :
 
 StandardTableDialog::~StandardTableDialog()
 {
+    QSettings sett;
+    sett.setValue(objectName() + "/view/state", ui->tableView->horizontalHeader()->saveState());
+    sett.setValue(objectName() + "/view/geometry", ui->tableView->saveHeaderGeometry());
     delete ui;
 }
 

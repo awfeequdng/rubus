@@ -66,7 +66,7 @@ void AdvHeaderView::resizeEvent(QResizeEvent *e)
     onSectionResized(-1, 0, 0);
 }
 
-bool AdvHeaderView::colIsStretch(int index)
+bool AdvHeaderView::colIsStretch(int index) const
 {
     return m_colStretch.value(index, true);
 }
@@ -75,6 +75,10 @@ bool AdvHeaderView::colIsStretch(int index)
 void AdvHeaderView::setModel(QAbstractItemModel *model)
 {
     QHeaderView::setModel(model);
+
+    for (int i = 0; i < count(); i++) {
+        resizeSection(i, m_savedSize.value(i));
+    }
 }
 
 void AdvHeaderView::resizeSection(int logicalIndex, int size)
@@ -85,4 +89,47 @@ void AdvHeaderView::resizeSection(int logicalIndex, int size)
         m_colStretch.insert(logicalIndex, size <= 0);
     }
 
+}
+
+QByteArray AdvHeaderView::saveGeometry() const
+{
+    QByteArray data;
+    QDataStream stream(&data, QIODevice::WriteOnly);
+
+    stream << int(count());
+
+    for (int i = 0; i < count(); i++) {
+        if (colIsStretch(i)) {
+            stream << int(-1);
+        } else {
+            stream << int(sectionSize(i));
+        }
+    }
+
+    return data;
+}
+
+bool AdvHeaderView::restoreGeometry(const QByteArray &geometry)
+{
+    if (geometry.isEmpty()) {
+        return false;
+    }
+
+    QByteArray data = geometry;
+    QDataStream stream(&data, QIODevice::ReadOnly);
+
+    int sectionCount = 0;
+    stream >> sectionCount;
+
+    if (sectionCount != count()) {
+        return false;
+    }
+
+    for (int i = 0; i < count(); i++) {
+        int size;
+        stream >> size;
+        m_savedSize.insert(i, size);
+    }
+
+    return true;
 }

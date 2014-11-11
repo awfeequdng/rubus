@@ -13,6 +13,10 @@ public:
     void setModel(QAbstractItemModel *model);
 
     void resizeSection(int logicalIndex, int size);
+
+
+    QByteArray saveGeometry() const;
+    bool restoreGeometry(const QByteArray &geometry);
 signals:
 
 private slots:
@@ -22,12 +26,13 @@ private:
     bool m_resizingInProcess;
 
    QMap<int, bool> m_colStretch;
+   QMap<int, int> m_savedSize;
 
 protected:
    void resizeEvent(QResizeEvent *e);
 
 private:
-   bool colIsStretch(int index);
+   bool colIsStretch(int index) const;
 
 };
 

@@ -80,8 +80,12 @@ private:
 
     int m_keyColumn;
     int m_keyRole;
+    QPoint m_pos;
 
     QList<int> sourceRowsFromProxy(QModelIndexList indexes) const;
+
+protected:
+    void hideEvent(QHideEvent *e);
 };
 
 #endif // STANDARDTABLEDIALOG_H

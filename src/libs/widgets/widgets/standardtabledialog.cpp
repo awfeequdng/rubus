@@ -52,6 +52,8 @@ StandardTableDialog::StandardTableDialog(QWidget *parent) :
     QSettings sett;
     ui->tableView->horizontalHeader()->restoreState(sett.value(objectName() + "/view/state").toByteArray());
     ui->tableView->restoreHeaderGeometry(sett.value(objectName() + "/view/geometry").toByteArray());
+    move(sett.value(objectName() + "/pos").toPoint());
+    resize(sett.value(objectName() + "/size").toSize());
 
     connect(ui->btnAdd, SIGNAL(clicked()), SLOT(add()));
     connect(ui->btnEdit, SIGNAL(clicked()), SLOT(editCurrent()));
@@ -64,6 +66,9 @@ StandardTableDialog::~StandardTableDialog()
     QSettings sett;
     sett.setValue(objectName() + "/view/state", ui->tableView->horizontalHeader()->saveState());
     sett.setValue(objectName() + "/view/geometry", ui->tableView->saveHeaderGeometry());
+    sett.setValue(objectName() + "/pos", m_pos);
+    sett.setValue(objectName() + "/size", size());
+
     delete ui;
 }
 
@@ -211,4 +216,11 @@ QList<int> StandardTableDialog::sourceRowsFromProxy(QModelIndexList indexes) con
 
     qSort(rows);
     return rows;
+}
+
+void StandardTableDialog::hideEvent(QHideEvent *e)
+{
+    m_pos = pos();
+
+    QDialog::hideEvent(e);
 }

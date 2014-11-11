@@ -29,186 +29,30 @@
  ***************************************************************************/
 #include "standardtabledialog.h"
 #include "ui_standardtabledialog.h"
-#include "editdialog.h"
 #include "reportmanager.h"
-#include "printbutton.h"
-#include "advitemmodel.h"
 
-#include <QSortFilterProxyModel>
+#include <QSettings>
 
 StandardTableDialog::StandardTableDialog(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::StandardTableDialog),
-    m_model(0),
-    m_editWidget(0),
-    m_editDialog(0)
+    TableDialog(parent),
+    ui(new Ui::StandardTableDialog)
 {
     ui->setupUi(this);
 
-    m_proxyModel = new QSortFilterProxyModel(this);
-    m_proxyModel->setSortCaseSensitivity(Qt::CaseInsensitive);
-    m_proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
+    setView(ui->tableView);
 
-    ui->tableView->setSortingEnabled(true);
-    ui->tableView->horizontalHeader()->setClickable(true);
-    ui->tableView->horizontalHeader()->setMovable(true);
-    ui->tableView->horizontalHeader()->setSortIndicatorShown(true);
-
-    QSettings sett;
-    ui->tableView->horizontalHeader()->restoreState(sett.value(objectName() + "/view/state").toByteArray());
-    ui->tableView->restoreHeaderGeometry(sett.value(objectName() + "/view/geometry").toByteArray());
-    move(sett.value(objectName() + "/pos").toPoint());
-    resize(sett.value(objectName() + "/size").toSize());
+    restoreSettings();
 
     connect(ui->btnAdd, SIGNAL(clicked()), SLOT(add()));
     connect(ui->btnEdit, SIGNAL(clicked()), SLOT(editCurrent()));
     connect(ui->btnDelete, SIGNAL(clicked()), SLOT(deleteSelected()));
-    connect(ui->btnPrint, SIGNAL(print(Report&)), SLOT(slotPrint(Report&)));
-    connect(ui->tableView, SIGNAL(doubleClicked(QModelIndex)), SLOT(slotTableViewDoubleClicked(QModelIndex)));
+    connect(ui->btnPrint, SIGNAL(print(Report&)), SLOT(slotPrint(Report&)));    
 }
 
 StandardTableDialog::~StandardTableDialog()
 {
-    QSettings sett;
-    sett.setValue(objectName() + "/view/state", ui->tableView->horizontalHeader()->saveState());
-    sett.setValue(objectName() + "/view/geometry", ui->tableView->saveHeaderGeometry());
-    sett.setValue(objectName() + "/pos", m_pos);
-    sett.setValue(objectName() + "/size", size());
-
+    saveSettings();
     delete ui;
-}
-
-QAbstractItemModel *StandardTableDialog::model() const
-{
-    return m_model;
-}
-
-void StandardTableDialog::setModel(AdvItemModel *model, int keyColumn, int keyRole)
-{
-    m_model = model;
-    m_keyColumn = keyColumn;
-    m_keyRole = keyRole;
-
-    m_proxyModel->setSourceModel(m_model);
-    ui->tableView->setModel(m_proxyModel);
-}
-
-EditWidgetInterface *StandardTableDialog::editWidget() const
-{
-    return m_editWidget;
-}
-
-void StandardTableDialog::setEditWidget(EditWidgetInterface *widget)
-{
-    m_editWidget = widget;
-
-    if (m_editDialog) {
-        delete m_editDialog;
-    }
-
-    m_editDialog = new EditDialog(m_editWidget, this);
-}
-
-QString StandardTableDialog::reportMenu() const
-{
-    return m_printMenu;
-}
-
-void StandardTableDialog::setReportMenu(const QString &menu)
-{
-    m_printMenu = menu;
-}
-
-QVariant StandardTableDialog::currentId() const
-{
-    if (!m_model || !ui->tableView->currentIndex().isValid()) {
-        return QVariant();
-    }
-
-    return m_proxyModel->index(ui->tableView->currentIndex().row(), m_keyColumn).data(m_keyRole);
-}
-
-void StandardTableDialog::setCurrentId(QVariant id)
-{
-    if (!m_model) {
-        return;
-    }
-
-    for (int i = 0; i < m_proxyModel->rowCount(); i++) {
-        if (m_proxyModel->index(i, m_keyColumn).data(m_keyRole) == id) {
-            ui->tableView->setCurrentIndex(m_proxyModel->index(i, m_keyColumn));
-            ui->tableView->selectRow(i);
-        }
-    }
-}
-
-AdvTableView *StandardTableDialog::view() const
-{
-    return ui->tableView;
-}
-
-void StandardTableDialog::add()
-{
-    if (!m_editDialog || !m_model) {
-        return;
-    }
-
-    if (m_editDialog->exec() == QDialog::Accepted) {
-        m_model->populate();
-        setCurrentId(editWidget()->id());
-
-        ui->tableView->setFocus();
-    }
-}
-
-void StandardTableDialog::editCurrent()
-{
-    if (!m_editDialog || !m_model) {
-        return;
-    }
-
-    if (m_editDialog->exec(currentId()) == QDialog::Accepted) {
-        m_model->populate();
-        ui->tableView->setFocus();
-
-        setCurrentId(editWidget()->id());
-        ui->tableView->setFocus();
-    }
-}
-
-void StandardTableDialog::deleteSelected()
-{
-    if (!m_model) {
-        return;
-    }
-
-    QModelIndexList rows = ui->tableView->selectionModel()->selectedRows();
-
-    if (rows.isEmpty()) {
-        return;
-    }
-
-    if (QMessageBox::warning(this,
-                             "Delete",
-                             tr("Are you sure you want to remove selected items(%1)").arg(rows.count()),
-                             QMessageBox::Cancel | QMessageBox::Ok)
-            == QMessageBox::Cancel) {
-        return;
-    }
-
-    QListIterator<int> iter(sourceRowsFromProxy(rows));
-    iter.toBack();
-    while(iter.hasPrevious()) {
-        if (!m_model->removeRow(iter.previous())) {
-            m_model->revert();
-            QMessageBox::critical(this, "Error", m_model->errorString());
-            return;
-        }
-    }
-
-    if (!m_model->submit()) {
-        QMessageBox::critical(this, "Error", m_model->errorString());
-    }
 }
 
 void StandardTableDialog::slotPrint(Report &report)
@@ -216,32 +60,3 @@ void StandardTableDialog::slotPrint(Report &report)
     Core::ReportManager::showReport(report);
 }
 
-void StandardTableDialog::slotTableViewDoubleClicked(QModelIndex index)
-{
-    qDebug() << index;
-    if (index.flags() & Qt::ItemIsEditable) {
-        return;
-    }
-
-    editCurrent();
-}
-
-QList<int> StandardTableDialog::sourceRowsFromProxy(QModelIndexList indexes) const
-{
-    QListIterator<QModelIndex> iter(indexes);
-    QList<int> rows;
-
-    while(iter.hasNext()) {
-        rows << m_proxyModel->mapToSource(iter.next()).row();
-    }
-
-    qSort(rows);
-    return rows;
-}
-
-void StandardTableDialog::hideEvent(QHideEvent *e)
-{
-    m_pos = pos();
-
-    QDialog::hideEvent(e);
-}

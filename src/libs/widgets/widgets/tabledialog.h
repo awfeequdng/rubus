@@ -27,34 +27,75 @@
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
  *   GNU General Public License for more details.                          *
  ***************************************************************************/
-#ifndef STANDARDTABLEDIALOG_H
-#define STANDARDTABLEDIALOG_H
+#ifndef TABLEDIALOG_H
+#define TABLEDIALOG_H
+
+#include "widgets_global.h"
 
 #include <QDialog>
-#include "widgets_global.h"
-#include "tabledialog.h"
-#include "report.h"
+#include <QModelIndexList>
 
-namespace Ui {
-class StandardTableDialog;
-}
+class QSortFilterProxyModel;
+class AdvItemModel;
+class EditWidgetInterface;
+class EditDialog;
+class AdvTableView;
 
-
-class WIDGETS_EXPORT StandardTableDialog : public TableDialog
+class WIDGETS_EXPORT TableDialog : public QDialog
 {
     Q_OBJECT
-
 public:
-    explicit StandardTableDialog(QWidget *parent = 0);
-    ~StandardTableDialog();
+    explicit TableDialog(QWidget *parent = 0);
+
+    QAbstractItemModel *model() const;
+    void setModel(AdvItemModel *model, int keyColumn = 0, int keyRole = Qt::DisplayRole);
+
+    EditWidgetInterface *editWidget() const;
+    void setEditWidget(EditWidgetInterface *widget);
+
+    QString reportMenu() const;
+    void setReportMenu(const QString &menu);
+
+    QVariant currentId() const;
+    void setCurrentId(QVariant id);
+
+    AdvTableView *view() const;
+    void setView(AdvTableView *view);
+
+
+    void saveSettings(const QString &prefix = QString());
+    void restoreSettings(const QString &prefix = QString());
+
+signals:
 
 public slots:
-    void slotPrint(Report & report);
+    void add();
+    void editCurrent();
+    void deleteSelected();
+
+private slots:
+    void slotTableViewDoubleClicked(QModelIndex index);
+
+
+protected:
+    void hideEvent(QHideEvent *e);
 
 private:
-    Ui::StandardTableDialog *ui;
+    AdvItemModel *m_model;
+    QSortFilterProxyModel *m_proxyModel;
+    EditWidgetInterface *m_editWidget;
+    EditDialog *m_editDialog;
+    QString m_printMenu;
+    AdvTableView *m_view;
 
+    int m_keyColumn;
+    int m_keyRole;
     QPoint m_pos;
+
+    QList<int> sourceRowsFromProxy(QModelIndexList indexes) const;
+
+
+
 };
 
-#endif // STANDARDTABLEDIALOG_H
+#endif // TABLEDIALOG_H

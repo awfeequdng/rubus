@@ -33,7 +33,7 @@
 #include "models/itemmodel.h"
 #include "widgets/itemeditwidget.h"
 #include "widgets/advtableview.h"
-#include "contractortabledialog.h"
+#include "widgets/contractortabledialog.h"
 
 #include <QtPlugin>
 #include <QAction>

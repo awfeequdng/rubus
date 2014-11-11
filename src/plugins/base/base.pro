@@ -13,7 +13,8 @@ SOURCES += \
     baseplugin.cpp \
     item.cpp \
     models/itemtypemodel.cpp \
-    contractortabledialog.cpp
+    widgets/contractortabledialog.cpp \
+    models/contractormodel.cpp
 
 HEADERS +=\
         base_global.h \
@@ -23,7 +24,8 @@ HEADERS +=\
     baseplugin.h \
     item.h \
     models/itemtypemodel.h \
-    contractortabledialog.h
+    widgets/contractortabledialog.h \
+    models/contractormodel.h
 
 unix {
     target.path = /usr/lib
@@ -31,4 +33,5 @@ unix {
 }
 
 FORMS += \
-    widgets/itemeditwidget.ui
+    widgets/itemeditwidget.ui \
+    widgets/contractortabledialog.ui

@@ -3,8 +3,7 @@
 
 #include <QTableView>
 #include "widgets_global.h"
-
-class AdvHeaderView;
+#include "advheaderview.h"
 
 class WIDGETS_EXPORT AdvTableView : public QTableView
 {
@@ -13,6 +12,8 @@ public:
     explicit AdvTableView(QWidget *parent = 0);
 
     void setModel(QAbstractItemModel *model);
+
+    AdvHeaderView *horizontalHeader() const;
 
     QByteArray saveHeaderGeometry() const;
     bool restoreHeaderGeometry(const QByteArray &geometry);

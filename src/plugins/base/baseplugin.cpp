@@ -32,6 +32,7 @@
 #include "widgets/standardtabledialog.h"
 #include "models/itemmodel.h"
 #include "widgets/itemeditwidget.h"
+#include "widgets/advtableview.h"
 
 #include <QtPlugin>
 #include <QAction>
@@ -91,6 +92,8 @@ bool BasePlugin::initialize()
     ItemEditWidget *itemEditWdg = new ItemEditWidget(m_itemDialog);
     m_itemDialog->setEditWidget(itemEditWdg);
     m_itemModel = new ItemModel(this);
+    m_itemDialog->view()->horizontalHeader()->setDefaultSectionSize(0, 100);
+    m_itemDialog->view()->horizontalHeader()->setDefaultSectionSize(1, -1);
     m_itemDialog->setModel(m_itemModel, ItemModel::IdCol);
 
     return true;

@@ -16,6 +16,11 @@ void AdvTableView::setModel(QAbstractItemModel *model)
     QTableView::setModel(model);
 }
 
+AdvHeaderView *AdvTableView::horizontalHeader() const
+{
+    return m_horisontalHeader;
+}
+
 QByteArray AdvTableView::saveHeaderGeometry() const
 {
     return m_horisontalHeader->saveGeometry();

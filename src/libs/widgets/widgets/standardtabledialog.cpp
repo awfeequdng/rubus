@@ -136,6 +136,11 @@ void StandardTableDialog::setCurrentId(QVariant id)
     }
 }
 
+AdvTableView *StandardTableDialog::view() const
+{
+    return ui->tableView;
+}
+
 void StandardTableDialog::add()
 {
     if (!m_editDialog || !m_model) {

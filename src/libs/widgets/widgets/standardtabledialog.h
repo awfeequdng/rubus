@@ -43,6 +43,7 @@ class QSortFilterProxyModel;
 class AdvItemModel;
 class EditWidgetInterface;
 class EditDialog;
+class AdvTableView;
 
 class WIDGETS_EXPORT StandardTableDialog : public QDialog
 {
@@ -63,6 +64,8 @@ public:
 
     QVariant currentId() const;
     void setCurrentId(QVariant id);
+
+    AdvTableView *view() const;
 
 public slots:
     void add();

@@ -13,6 +13,8 @@ public:
     void setModel(QAbstractItemModel *model);
 
     void resizeSection(int logicalIndex, int size);
+    void setDefaultSectionSize(int section, int size);
+    int defaultSectionSize(int section) const;
 
 
     QByteArray saveGeometry() const;
@@ -21,12 +23,19 @@ signals:
 
 private slots:
     void onSectionResized ( int logicalIndex, int oldSize, int newSize );
+    void slotCustomContextMenuRequested(const QPoint &p);
+    void resetWidth();
+    void resetAllWidths();
+    void popupMenuActionTriggered(QAction *pAction);
 
 private:
     bool m_resizingInProcess;
 
    QMap<int, bool> m_colStretch;
    QMap<int, int> m_savedSize;
+   QMap<int, int> m_defaultSectionSize;
+   int m_resetWhichWidth;
+   QMenu *m_menu;
 
 protected:
    void resizeEvent(QResizeEvent *e);

@@ -9,6 +9,7 @@ AdvHeaderView::AdvHeaderView(QWidget *parent) :
     m_resetWhichWidth(-1)
 {
     m_menu = new QMenu(this);
+
     setContextMenuPolicy(Qt::CustomContextMenu);
     connect(this, SIGNAL(sectionResized(int,int,int)), SLOT(onSectionResized(int,int,int)));
     connect(this, SIGNAL(customContextMenuRequested(QPoint)), SLOT(slotCustomContextMenuRequested(QPoint)));
@@ -84,11 +85,12 @@ void AdvHeaderView::slotCustomContextMenuRequested(const QPoint &p)
 
     for(int i = 0; i < count(); i++)
     {
+        if (isSectionLocked(i))
+            continue;
+
         QAction *act = m_menu->addAction(model()->headerData(i, Qt::Horizontal).toString());
         act->setCheckable(true);
         act->setChecked(!isSectionHidden(i));
-
-        //act->setVisible(tmp ?  ! tmp->locked() : true);
 
         QMap<QString,QVariant> m;
         m.insert("command", QVariant("toggleColumnHidden"));
@@ -180,6 +182,20 @@ void AdvHeaderView::setDefaultSectionSize(int section, int size)
 int AdvHeaderView::defaultSectionSize(int section) const
 {
     return m_defaultSectionSize.value(section, -1);
+}
+
+void AdvHeaderView::setSectionLocked(int section, bool lock)
+{
+    m_lockedSection.insert(section, lock);
+
+    if (lock && !isSectionHidden(section)) {
+        setSectionHidden(section, true);
+    }
+}
+
+bool AdvHeaderView::isSectionLocked(int section) const
+{
+    return m_lockedSection.value(section, false);
 }
 
 QByteArray AdvHeaderView::saveGeometry() const

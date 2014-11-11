@@ -5,9 +5,10 @@ AdvTableView::AdvTableView(QWidget *parent) :
     QTableView(parent),
     m_horisontalHeader(new AdvHeaderView(this))
 {
+    //setSortingEnabled(true);
     setHorizontalHeader(m_horisontalHeader);
-    m_horisontalHeader->setMovable(true);
-    m_horisontalHeader->setClickable(true);
+    verticalHeader()->setDefaultSectionSize(25);
+
 }
 
 

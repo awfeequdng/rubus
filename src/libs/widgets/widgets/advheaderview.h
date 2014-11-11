@@ -13,8 +13,12 @@ public:
     void setModel(QAbstractItemModel *model);
 
     void resizeSection(int logicalIndex, int size);
+
     void setDefaultSectionSize(int section, int size);
     int defaultSectionSize(int section) const;
+
+    void setSectionLocked(int section, bool lock);
+    bool isSectionLocked(int section) const;
 
 
     QByteArray saveGeometry() const;
@@ -34,6 +38,7 @@ private:
    QMap<int, bool> m_colStretch;
    QMap<int, int> m_savedSize;
    QMap<int, int> m_defaultSectionSize;
+   QMap<int, int> m_lockedSection;
    int m_resetWhichWidth;
    QMenu *m_menu;
 

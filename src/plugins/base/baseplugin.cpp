@@ -47,6 +47,11 @@ BasePlugin::BasePlugin(QObject *parent) :
     m_instance = this;
 }
 
+BasePlugin::~BasePlugin()
+{
+    delete m_itemDialog;
+}
+
 
 QString BasePlugin::name() const
 {

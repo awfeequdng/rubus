@@ -48,6 +48,7 @@ class BASE_EXPORT BasePlugin : public Core::IPlugin
 
 public:
     explicit BasePlugin(QObject *parent = 0);
+    ~BasePlugin();
 
     static BasePlugin *instance();
 

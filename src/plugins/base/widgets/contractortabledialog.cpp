@@ -31,6 +31,8 @@
 #include "ui_contractortabledialog.h"
 #include "models/contractormodel.h"
 
+#include <QMessageBox>
+
 ContractorTableDialog::ContractorTableDialog(QWidget *parent) :
     TableDialog(parent),
     ui(new Ui::ContractorTableDialog)
@@ -38,8 +40,10 @@ ContractorTableDialog::ContractorTableDialog(QWidget *parent) :
     ui->setupUi(this);
 
     m_model = new ContractorModel(this);
-    setModel(m_model, ContractorModel::IdCol, Qt::DisplayRole);
 
+    ui->tableView->horizontalHeader()->setDefaultSectionSize(ContractorModel::IdCol, 50);
+    ui->tableView->horizontalHeader()->setDefaultSectionSize(ContractorModel::TypeCol, 150);
+    setModel(m_model, ContractorModel::IdCol, Qt::DisplayRole);
     setView(ui->tableView);
 
     restoreSettings();
@@ -49,4 +53,13 @@ ContractorTableDialog::~ContractorTableDialog()
 {
     saveSettings();
     delete ui;
+}
+
+void ContractorTableDialog::showEvent(QShowEvent *e)
+{
+    if (!m_model->populate()) {
+        QMessageBox::critical(this, tr("Error"), m_model->errorString());
+    }
+
+    TableDialog::showEvent(e);
 }

@@ -17,6 +17,9 @@ public:
     explicit ContractorTableDialog(QWidget *parent = 0);
     ~ContractorTableDialog();
 
+protected:
+    void showEvent(QShowEvent *e);
+
 private:
     Ui::ContractorTableDialog *ui;
     ContractorModel *m_model;

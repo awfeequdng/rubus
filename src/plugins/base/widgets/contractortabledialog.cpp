@@ -30,6 +30,8 @@
 #include "contractortabledialog.h"
 #include "ui_contractortabledialog.h"
 #include "models/contractormodel.h"
+#include "constants.h"
+#include "reportmanager.h"
 
 #include <QMessageBox>
 
@@ -46,6 +48,13 @@ ContractorTableDialog::ContractorTableDialog(QWidget *parent) :
     setModel(m_model, ContractorModel::IdCol, Qt::DisplayRole);
     setView(ui->tableView);
 
+    connect(ui->btnAdd, SIGNAL(clicked()), SLOT(add()));
+    connect(ui->btnEdit, SIGNAL(clicked()), SLOT(editCurrent()));
+    connect(ui->btnDelete, SIGNAL(clicked()), SLOT(deleteSelected()));
+    connect(ui->btnPrint, SIGNAL(print(Report&)), SLOT(slotPrint(Report&)));
+
+
+
     restoreSettings();
 }
 
@@ -55,11 +64,19 @@ ContractorTableDialog::~ContractorTableDialog()
     delete ui;
 }
 
+void ContractorTableDialog::slotPrint(Report &r)
+{
+    r.appendModel(m_model);
+    Core::ReportManager::showReport(r);
+}
+
 void ContractorTableDialog::showEvent(QShowEvent *e)
 {
     if (!m_model->populate()) {
         QMessageBox::critical(this, tr("Error"), m_model->errorString());
     }
+
+    ui->btnPrint->populateMenu(Constants::A_CONTRACTORS);
 
     TableDialog::showEvent(e);
 }

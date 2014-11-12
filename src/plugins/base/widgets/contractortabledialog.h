@@ -2,6 +2,7 @@
 #define CONTRACTORTABLEDIALOG_H
 
 #include "widgets/tabledialog.h"
+#include "report.h"
 
 namespace Ui {
 class ContractorTableDialog;
@@ -16,6 +17,9 @@ class ContractorTableDialog : public TableDialog
 public:
     explicit ContractorTableDialog(QWidget *parent = 0);
     ~ContractorTableDialog();
+
+public slots:
+    void slotPrint(Report &r);
 
 protected:
     void showEvent(QShowEvent *e);

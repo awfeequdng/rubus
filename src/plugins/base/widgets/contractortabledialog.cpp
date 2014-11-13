@@ -43,9 +43,9 @@ ContractorTableDialog::ContractorTableDialog(QWidget *parent) :
 
     m_model = new ContractorModel(this);
 
+    setModel(m_model, ContractorModel::IdCol, Qt::DisplayRole);
     ui->tableView->horizontalHeader()->setDefaultSectionSize(ContractorModel::IdCol, 50);
     ui->tableView->horizontalHeader()->setDefaultSectionSize(ContractorModel::TypeCol, 150);
-    setModel(m_model, ContractorModel::IdCol, Qt::DisplayRole);
     setView(ui->tableView);
 
     connect(ui->btnAdd, SIGNAL(clicked()), SLOT(add()));

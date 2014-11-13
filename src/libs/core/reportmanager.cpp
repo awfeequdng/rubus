@@ -93,7 +93,7 @@ void ReportManager::registerMenuId(QString id, QString title)
 QList<Report> ReportManager::reportsByMenuId(QString menuId)
 {
     QSqlQuery sql;
-    sql.exec(QString("SELECT re_id,re_name,re_type,re_filename,re_note "
+    sql.exec(QString("SELECT re_id,re_name,re_type,re_note "
                      "FROM reports "
                      "WHERE re_menu = '%1'")
              .arg(menuId));
@@ -110,7 +110,6 @@ QList<Report> ReportManager::reportsByMenuId(QString menuId)
         rep.setId(sql.value(0).toInt());
         rep.setTitle(sql.value(1).toString());
         rep.setMenuId(menuId);
-        rep.setFilename(sql.value(3).toString());
 
         reps.append(rep);
     }

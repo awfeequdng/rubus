@@ -27,38 +27,35 @@
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
  *   GNU General Public License for more details.                          *
  ***************************************************************************/
-#ifndef ITEMEDITWIDGET_H
-#define ITEMEDITWIDGET_H
+#ifndef CONTRACTOREDITWIDGET_H
+#define CONTRACTOREDITWIDGET_H
 
 #include <QWidget>
 #include "widgets/editwidgetinterface.h"
 
 namespace Ui {
-class ItemEditWidget;
+class ContractorEditWidget;
 }
 
-class ItemTypeModel;
-class QSqlQueryModel;
+class ContractorTypeModel;
 
-class ItemEditWidget : public EditWidgetInterface
+class ContractorEditWidget : public EditWidgetInterface
 {
     Q_OBJECT
-
 public:
-    explicit ItemEditWidget(QWidget *parent = 0);
-    ~ItemEditWidget();
+    explicit ContractorEditWidget(QWidget *parent = 0);
+    ~ContractorEditWidget();
 
-    QVariant id() const { return m_id; }
+    QVariant id() const;
 
+public slots:
     bool load(QVariant id);
     bool save();
-
 private:
-    Ui::ItemEditWidget *ui;
-    ItemTypeModel *m_typeModel;
-    QSqlQueryModel *m_unitModel;
-
+    Ui::ContractorEditWidget *ui;
     int m_id;
+    ContractorTypeModel *m_typeModel;
+
 };
 
-#endif // ITEMEDITWIDGET_H
+#endif // CONTRACTOREDITWIDGET_H

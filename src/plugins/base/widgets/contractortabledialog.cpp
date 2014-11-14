@@ -32,6 +32,7 @@
 #include "models/contractormodel.h"
 #include "constants.h"
 #include "reportmanager.h"
+#include "contractoreditwidget.h"
 
 #include <QMessageBox>
 
@@ -42,18 +43,18 @@ ContractorTableDialog::ContractorTableDialog(QWidget *parent) :
     ui->setupUi(this);
 
     m_model = new ContractorModel(this);
+    m_editWdg = new ContractorEditWidget();
+    setEditWidget(m_editWdg);
 
-    setModel(m_model, ContractorModel::IdCol, Qt::DisplayRole);
+    setView(ui->tableView);
     ui->tableView->horizontalHeader()->setDefaultSectionSize(ContractorModel::IdCol, 50);
     ui->tableView->horizontalHeader()->setDefaultSectionSize(ContractorModel::TypeCol, 150);
-    setView(ui->tableView);
+    setModel(m_model, ContractorModel::IdCol, Qt::DisplayRole);
 
     connect(ui->btnAdd, SIGNAL(clicked()), SLOT(add()));
     connect(ui->btnEdit, SIGNAL(clicked()), SLOT(editCurrent()));
     connect(ui->btnDelete, SIGNAL(clicked()), SLOT(deleteSelected()));
     connect(ui->btnPrint, SIGNAL(print(Report&)), SLOT(slotPrint(Report&)));
-
-
 
     restoreSettings();
 }

@@ -15,7 +15,9 @@ SOURCES += \
     models/itemtypemodel.cpp \
     widgets/contractortabledialog.cpp \
     models/contractormodel.cpp \
-    contractor.cpp
+    contractor.cpp \
+    widgets/contractoreditwidget.cpp \
+    models/contractortypemodel.cpp
 
 HEADERS +=\
         base_global.h \
@@ -27,7 +29,9 @@ HEADERS +=\
     models/itemtypemodel.h \
     widgets/contractortabledialog.h \
     models/contractormodel.h \
-    contractor.h
+    contractor.h \
+    widgets/contractoreditwidget.h \
+    models/contractortypemodel.h
 
 unix {
     target.path = /usr/lib
@@ -36,4 +40,5 @@ unix {
 
 FORMS += \
     widgets/itemeditwidget.ui \
-    widgets/contractortabledialog.ui
+    widgets/contractortabledialog.ui \
+    widgets/contractoreditwidget.ui

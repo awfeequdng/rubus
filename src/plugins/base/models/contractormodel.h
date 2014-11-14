@@ -4,7 +4,7 @@
 #include "advitemmodel.h"
 
 namespace Internal {
-    struct Item {
+    struct ItemContractor {
         int id;
         QString name;
         int type;
@@ -38,7 +38,8 @@ public slots:
     bool submit();
 
 private:
-    QList<Internal::Item *> m_items;
+    QList<Internal::ItemContractor *> m_items;
+    QString m_removedIds;
 };
 
 #endif // CONTRACTORMODEL_H

@@ -29,6 +29,7 @@
  ***************************************************************************/
 #include "contractormodel.h"
 #include "contractor.h"
+
 #include <QtSql>
 
 using namespace Internal;
@@ -42,6 +43,7 @@ bool ContractorModel::populate()
 {
     emit beginResetModel();
 
+    m_removedIds.clear();
     qDeleteAll(m_items);
     m_items.clear();
 
@@ -55,7 +57,7 @@ bool ContractorModel::populate()
     }
 
     while(sql.next()) {
-        Item *item = new Item;
+        ItemContractor *item = new ItemContractor;
         item->id = sql.value(0).toInt();
         item->name = sql.value(1).toString();
         item->type = sql.value(2).toInt();
@@ -86,7 +88,7 @@ QVariant ContractorModel::data(const QModelIndex &index, int role) const
         return QVariant();
     }
 
-    Item *item = m_items[index.row()];
+    ItemContractor *item = m_items[index.row()];
 
     if (role == Qt::DisplayRole || role == Qt::EditRole) {
         switch(index.column()) {;
@@ -123,13 +125,33 @@ QVariant ContractorModel::headerData(int section, Qt::Orientation orientation, i
 
 bool ContractorModel::removeRows(int row, int count, const QModelIndex &parent)
 {
-    Q_UNUSED(parent)
-    Q_UNUSED(row)
-    Q_UNUSED(count)
-    return false;
+    emit beginRemoveRows(parent, row, row + count -1);
+
+    if (!m_removedIds.isEmpty()) {
+        m_removedIds.append(",");
+    }
+    m_removedIds += QString::number(m_items[row]->id);
+    m_items.removeAt(row);
+    emit endRemoveRows();
+
+    return true;
 }
 
 bool ContractorModel::submit()
 {
-    return false;
+    if (!m_removedIds.isEmpty()) {
+        QSqlQuery sql;
+        sql.exec(QString("DELETE FROM contractors WHERE co_id IN (%1)").arg(m_removedIds));
+
+        if (sql.lastError().isValid()) {
+            setLastError(sql.lastError());
+            qCritical() << sql.lastError();
+            return false;
+        }
+
+        m_removedIds.clear();
+
+    }
+
+    return true;
 }

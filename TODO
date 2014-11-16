@@ -19,8 +19,8 @@ Version 0.2
     * Plugins
         * Base
             + Items
-            * Contractors
-            * Locations
+            + Contractors
+            - Locations
             * Users
             * Reports
 

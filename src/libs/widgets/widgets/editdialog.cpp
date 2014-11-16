@@ -90,8 +90,7 @@ void EditDialog::show()
 void EditDialog::showEvent(QShowEvent *e)
 {
     QSettings sett;
-    restoreGeometry(sett.value(editWidget()->settingPrefix() + "/geometry").toByteArray());
-
+    resize(sett.value(editWidget()->settingPrefix() + "/size").toSize());
     QDialog::showEvent(e);
 
     editWidget()->setFocus();
@@ -102,7 +101,7 @@ void EditDialog::hideEvent(QHideEvent *e)
     QDialog::hideEvent(e);
 
     QSettings sett;
-    sett.setValue(editWidget()->settingPrefix() + "/geometry",saveGeometry());
+    sett.setValue(editWidget()->settingPrefix() + "/size",editWidget()->size());
 }
 
 void EditDialog::closeEvent(QCloseEvent *e)

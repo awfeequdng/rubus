@@ -12,8 +12,10 @@ AdvTableView::AdvTableView(QWidget *parent) :
 }
 
 
-void AdvTableView::setModel(QAbstractItemModel *model)
+void AdvTableView::setModel(QAbstractItemModel *model, int keyColumn, int keyRole)
 {
+    m_keyColumn = keyColumn;
+    m_keyRole = keyRole;
     QTableView::setModel(model);
 }
 
@@ -30,4 +32,27 @@ QByteArray AdvTableView::saveHeaderGeometry() const
 bool AdvTableView::restoreHeaderGeometry(const QByteArray &geometry)
 {
     return m_horisontalHeader->restoreGeometry(geometry);
+}
+
+QVariant AdvTableView::currentId() const
+{
+    if (!currentIndex().isValid()) {
+        return QVariant();
+    }
+
+    return model()->index(currentIndex().row(), m_keyColumn).data(m_keyRole);
+}
+
+void AdvTableView::setCurrentId(const QVariant &id)
+{
+    if (!model()) {
+        return;
+    }
+
+    for (int i = 0; i < model()->rowCount(); i++) {
+        if (model()->index(i, m_keyColumn).data(m_keyRole) == id) {
+            setCurrentIndex(model()->index(i, m_keyColumn));
+            selectRow(i);
+        }
+    }
 }

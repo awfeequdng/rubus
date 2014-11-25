@@ -8,11 +8,11 @@ Version 0.2
             * TableDialog
     
     
-    * Widgets
+    + Widgets
         + AdvTableView
-        * AdvSortFilterProxyModel
+        - AdvSortFilterProxyModel
     
-    * Database
+    + Database
          + sql init script 
          + sql demo script
 

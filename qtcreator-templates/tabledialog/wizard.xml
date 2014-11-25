@@ -51,7 +51,7 @@
             <fielddescription>Model class:</fielddescription>
         </field>
         <field name="ModelClassHeader">
-            <fieldcontrol class="QLineEdit" validator="^[a-zA-Z0-9_]+$" defaulttext="customermodel.h" placeholdertext="Enter a class name"/>
+            <fieldcontrol class="QLineEdit" validator="" defaulttext="customermodel.h" placeholdertext="Enter a class name"/>
             <fielddescription>Model class header filename:</fielddescription>
         </field>
 		<field name="EditWidgetClass">
@@ -59,12 +59,11 @@
             <fielddescription>Edit widget:</fielddescription>
         </field>
         <field name="EditWidgetHeader">
-            <fieldcontrol class="QLineEdit" validator="^[a-zA-Z0-9_]+$" defaulttext="customereditwidget.h" placeholdertext="Enter a class name"/>
+            <fieldcontrol class="QLineEdit" validator="" defaulttext="customereditwidget.h" placeholdertext="Enter a class name"/>
             <fielddescription>Edit widget header filename:</fielddescription>
         </field>
 	</fields>
 
-    <!-- Example of a validation rule -->
     <validationrules>
         <validationrule condition='"%ClassName%" != "QDialog"'>
             <message>%ClassName% cannot be used as class name.</message>

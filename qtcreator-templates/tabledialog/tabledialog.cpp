@@ -1,50 +1,21 @@
-/***************************************************************************
- *   This file is part of the Rubus project                                *
- *   Copyright (C) 2012-2014 by Ivan Volkov                                *
- *   wulff007@gmail.com                                                    *
- *                                                                         *
- **                   GNU General Public License Usage                    **
- *                                                                         *
- *   This library is free software: you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation, either version 3 of the License, or     *
- *   (at your option) any later version.                                   *
- *   You should have received a copy of the GNU General Public License     *
- *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
- *                                                                         *
- **                  GNU Lesser General Public License                    **
- *                                                                         *
- *   This library is free software: you can redistribute it and/or modify  *
- *   it under the terms of the GNU Lesser General Public License as        *
- *   published by the Free Software Foundation, either version 3 of the    *
- *   License, or (at your option) any later version.                       *
- *   You should have received a copy of the GNU Lesser General Public      *
- *   License along with this library.                                      *
- *   If not, see <http://www.gnu.org/licenses/>.                           *
- *                                                                         *
- *   This library is distributed in the hope that it will be useful,       *
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
- *   GNU General Public License for more details.                          *
- ***************************************************************************/
-#include "contractortabledialog.h"
-#include "ui_contractortabledialog.h"
-#include "models/contractormodel.h"
+#include "%ClassName:l%.%CppHeaderSuffix%"
+#include "ui_%ClassName:l%.%CppHeaderSuffix%"
+#include "%ModelClassHeader%"
+#include "%EditWidgetHeader%"
 #include "reportmanager.h"
-#include "contractoreditwidget.h"
 #include "widgets/editdialog.h"
 
 #include <QMessageBox>
 
-ContractorTableDialog::ContractorTableDialog(QWidget *parent) :
+%ClassName%::%ClassName%(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::ContractorTableDialog)
+    ui(new Ui::%ClassName%)
 {
     ui->setupUi(this);
 
-    m_model = new ContractorModel(this);
+    m_model = new %ModelClass%(this);
     m_proxyModel = new QSortFilterProxyModel(this);
-    m_editWdg = new ContractorEditWidget();
+    m_editWdg = new %EditWidgetClass%();
     m_editDialog = new EditDialog(m_editWdg, this);
     m_proxyModel->setSortCaseSensitivity(Qt::CaseInsensitive);
     m_proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
@@ -52,9 +23,8 @@ ContractorTableDialog::ContractorTableDialog(QWidget *parent) :
     m_proxyModel->setFilterKeyColumn(ContractorModel::NameCol);
 
 
-    ui->tableView->horizontalHeader()->setDefaultSectionSize(ContractorModel::IdCol, 50);
-    ui->tableView->horizontalHeader()->setDefaultSectionSize(ContractorModel::TypeCol, 150);
-    ui->tableView->setModel(m_proxyModel, ContractorModel::IdCol, Qt::DisplayRole);
+    ui->tableView->horizontalHeader()->setDefaultSectionSize(%ModelClass%::IdCol, 50);
+    ui->tableView->setModel(m_proxyModel, %ModelClass%::IdCol, Qt::DisplayRole);
 
     connect(ui->btnAdd, SIGNAL(clicked()), SLOT(add()));
     connect(ui->btnEdit, SIGNAL(clicked()), SLOT(editCurrent()));
@@ -66,35 +36,18 @@ ContractorTableDialog::ContractorTableDialog(QWidget *parent) :
     restoreSettings();
 }
 
-ContractorTableDialog::~ContractorTableDialog()
+%ClassName%::~%ClassName%()
 {
     saveSettings();
     delete ui;
 }
 
-AdvTableView *ContractorTableDialog::view() const
+AdvTableView *%ClassName%::view() const
 {
     return ui->tableView;
 }
 
-void ContractorTableDialog::saveSettings(const QString &prefix)
-{
-    QString p = prefix.isEmpty() ? objectName() : prefix;
-
-    if (p.isEmpty()) {
-        qDebug() << "Opps, setting prefix is empty!";
-        return;
-    }
-    p += "/";
-    QSettings sett;
-    sett.setValue(p + "viewState", view()->horizontalHeader()->saveState());
-    sett.setValue(p + "viewGeometry", view()->saveHeaderGeometry());
-    sett.setValue(p + "pos", m_pos);
-    sett.setValue(p + "size", size());
-}
-
-
-void ContractorTableDialog::restoreSettings(const QString &prefix)
+void %ClassName%::saveSettings(const QString &prefix)
 {
     QString p = prefix.isEmpty() ? objectName() : prefix;
 
@@ -103,15 +56,31 @@ void ContractorTableDialog::restoreSettings(const QString &prefix)
         return;
     }
 
-    p += "/";
     QSettings sett;
-    view()->horizontalHeader()->restoreState(sett.value(p + "viewState").toByteArray());
-    view()->restoreHeaderGeometry(sett.value(p + "viewGeometry").toByteArray());
-    move(sett.value(p + "pos").toPoint());
-    resize(sett.value(p + "size").toSize());
+    sett.setValue(p + "/viewState", view()->horizontalHeader()->saveState());
+    sett.setValue(p + "/viewGeometry", view()->saveHeaderGeometry());
+    sett.setValue(p + "/pos", m_pos);
+    sett.setValue(p + "/size", size());
 }
 
-void ContractorTableDialog::add()
+
+void %ClassName%::restoreSettings(const QString &prefix)
+{
+    QString p = prefix.isEmpty() ? objectName() : prefix;
+
+    if (p.isEmpty()) {
+        qDebug() << "Opps, setting prefix is empty!";
+        return;
+    }
+
+    QSettings sett;
+    view()->horizontalHeader()->restoreState(sett.value(p + "/viewState").toByteArray());
+    view()->restoreHeaderGeometry(sett.value(p + "/viewGeometry").toByteArray());
+    move(sett.value(p + "/pos").toPoint());
+    resize(sett.value(p + "/size").toSize());
+}
+
+void %ClassName%::add()
 {
     if (m_editDialog->exec() == QDialog::Accepted) {
         m_model->populate();
@@ -120,7 +89,7 @@ void ContractorTableDialog::add()
     }
 }
 
-void ContractorTableDialog::editCurrent()
+void %ClassName%::editCurrent()
 {
     if (m_editDialog->exec(view()->currentId()) == QDialog::Accepted) {
         m_model->populate();
@@ -131,7 +100,7 @@ void ContractorTableDialog::editCurrent()
     }
 }
 
-void ContractorTableDialog::deleteSelected()
+void %ClassName%::deleteSelected()
 {
     QModelIndexList rows = view()->selectionModel()->selectedRows();
 
@@ -162,13 +131,13 @@ void ContractorTableDialog::deleteSelected()
     }
 }
 
-void ContractorTableDialog::slotPrint(Report &r)
+void %ClassName%::slotPrint(Report &r)
 {
     r.appendModel(m_model);
     Core::ReportManager::showReport(r);
 }
 
-void ContractorTableDialog::viewDoubleClicked(QModelIndex index)
+void %ClassName%::viewDoubleClicked(QModelIndex index)
 {
     if (index.flags() & Qt::ItemIsEditable) {
         return;
@@ -177,24 +146,21 @@ void ContractorTableDialog::viewDoubleClicked(QModelIndex index)
     editCurrent();
 }
 
-void ContractorTableDialog::showEvent(QShowEvent *e)
+void %ClassName%::showEvent(QShowEvent *e)
 {
     if (!m_model->populate()) {
         QMessageBox::critical(this, tr("Error"), m_model->errorString());
     }
-
-    ui->btnPrint->populateMenu(Constants::A_CONTRACTORS);
-
     QDialog::showEvent(e);
 }
 
-void ContractorTableDialog::hideEvent(QHideEvent *e)
+void %ClassName%::hideEvent(QHideEvent *e)
 {
     m_pos = pos();
     QDialog::hideEvent(e);
 }
 
-QList<int> ContractorTableDialog::sourceRowsFromProxy(QModelIndexList indexes) const
+QList<int> %ClassName%::sourceRowsFromProxy(QModelIndexList indexes) const
 {
     QListIterator<QModelIndex> iter(indexes);
     QList<int> rows;

@@ -1,12 +1,12 @@
-#include "%ClassName:l%.%CppHeaderSuffix%"
-#include "ui_%ClassName:l%.%CppHeaderSuffix%"
+#include "%EditWidgetClassName:l%.%CppHeaderSuffix%"
+#include "ui_%EditWidgetClassName:l%.%CppHeaderSuffix%"
 
 #include <QtSql>
 #include <QDebug>
 
-%ClassName%::%ClassName%(QWidget *parent) :
+%EditWidgetClassName%::%EditWidgetClassName%(QWidget *parent) :
     EditWidgetInterface(parent),
-    ui(new Ui::%ClassName%)
+    ui(new Ui::%EditWidgetClassName%)
 {
     ui->setupUi(this);
 
@@ -14,18 +14,18 @@
     connect(ui->btnCancel, SIGNAL(clicked()), SIGNAL(rejected()));
 }
 
-%ClassName%::~%ClassName%()
+%EditWidgetClassName%::~%EditWidgetClassName%()
 {
     delete ui;
 }
 
 
-QVariant %ClassName%::id() const
+QVariant %EditWidgetClassName%::id() const
 {
     return m_id;
 }
 
-bool %ClassName%::load(QVariant id)
+bool %EditWidgetClassName%::load(QVariant id)
 {
     m_id = id.isValid() ? id.toInt() : -1;
 
@@ -50,7 +50,7 @@ bool %ClassName%::load(QVariant id)
     return true;
 }
 
-bool %ClassName%::save()
+bool %EditWidgetClassName%::save()
 {
     QSqlQuery sql;
 

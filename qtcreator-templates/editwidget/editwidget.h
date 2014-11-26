@@ -1,19 +1,19 @@
-#ifndef %ClassName:u%_H
-#define %ClassName:u%_H
+#ifndef %EditWidgetClassName:u%_H
+#define %EditWidgetClassName:u%_H
 
 #include <QWidget>
 #include "widgets/editwidgetinterface.h"
 
 namespace Ui {
-class %ClassName%;
+class %EditWidgetClassName%;
 }
 
-class %ClassName% : public EditWidgetInterface
+class %EditWidgetClassName% : public EditWidgetInterface
 {
     Q_OBJECT
 public:
-    explicit %ClassName%(QWidget *parent = 0);
-    ~%ClassName%();
+    explicit %EditWidgetClassName%(QWidget *parent = 0);
+    ~%EditWidgetClassName%();
 
     QVariant id() const;
 
@@ -21,9 +21,9 @@ public slots:
     bool load(QVariant id);
     bool save();
 private:
-    Ui::%ClassName% *ui;
+    Ui::%EditWidgetClassName% *ui;
     int m_id;
 
 };
 
-#endif // %ClassName:u%_H
+#endif // %EditWidgetClassName:u%_H

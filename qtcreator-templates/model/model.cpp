@@ -1,13 +1,13 @@
-#include "%ClassName:l%.%CppHeaderSuffix%"
+#include "%ModelClassName:l%.%CppHeaderSuffix%"
 
 #include <QtSql>
 
-%ClassName% ::%ClassName%(QObject *parent) :
+%ModelClassName% ::%ModelClassName%(QObject *parent) :
     AdvItemModel(parent)
 {
 }
 
-bool %ClassName%::populate()
+bool %ModelClassName%::populate()
 {
     emit beginResetModel();
 
@@ -37,19 +37,19 @@ bool %ClassName%::populate()
 }
 
 
-int %ClassName%::rowCount(const QModelIndex &parent) const
+int %ModelClassName%::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent)
     return m_items.count();
 }
 
-int %ClassName%::columnCount(const QModelIndex &parent) const
+int %ModelClassName%::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent)
     return 2;
 }
 
-QVariant %ClassName%::data(const QModelIndex &index, int role) const
+QVariant %ModelClassName%::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid()) {
         return QVariant();
@@ -67,7 +67,7 @@ QVariant %ClassName%::data(const QModelIndex &index, int role) const
     return AdvItemModel::data(index, role);
 }
 
-QVariant %ClassName%::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant %ModelClassName%::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal) {
         if (role == Qt::DisplayRole) {
@@ -87,7 +87,7 @@ QVariant %ClassName%::headerData(int section, Qt::Orientation orientation, int r
     return AdvItemModel::headerData(section, orientation, role);
 }
 
-bool %ClassName%::removeRows(int row, int count, const QModelIndex &parent)
+bool %ModelClassName%::removeRows(int row, int count, const QModelIndex &parent)
 {
     emit beginRemoveRows(parent, row, row + count -1);
 
@@ -101,7 +101,7 @@ bool %ClassName%::removeRows(int row, int count, const QModelIndex &parent)
     return true;
 }
 
-bool %ClassName%::submit()
+bool %ModelClassName%::submit()
 {
     if (!m_removedIds.isEmpty()) {
         QSqlQuery sql;

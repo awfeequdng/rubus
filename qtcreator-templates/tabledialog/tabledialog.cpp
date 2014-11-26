@@ -1,5 +1,5 @@
-#include "%ClassName:l%.%CppHeaderSuffix%"
-#include "ui_%ClassName:l%.%CppHeaderSuffix%"
+#include "%TableClassName:l%.%CppHeaderSuffix%"
+#include "ui_%TableClassName:l%.%CppHeaderSuffix%"
 #include "%ModelClassHeader%"
 #include "%EditWidgetHeader%"
 #include "reportmanager.h"
@@ -7,15 +7,15 @@
 
 #include <QMessageBox>
 
-%ClassName%::%ClassName%(QWidget *parent) :
+%TableClassName%::%TableClassName%(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::%ClassName%)
+    ui(new Ui::%TableClassName%)
 {
     ui->setupUi(this);
 
-    m_model = new %ModelClass%(this);
+    m_model = new %ModelClassName%(this);
     m_proxyModel = new QSortFilterProxyModel(this);
-    m_editWdg = new %EditWidgetClass%();
+    m_editWdg = new %EditWidgetClassName%();
     m_editDialog = new EditDialog(m_editWdg, this);
     m_proxyModel->setSortCaseSensitivity(Qt::CaseInsensitive);
     m_proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
@@ -23,8 +23,8 @@
     m_proxyModel->setFilterKeyColumn(ContractorModel::NameCol);
 
 
-    ui->tableView->horizontalHeader()->setDefaultSectionSize(%ModelClass%::IdCol, 50);
-    ui->tableView->setModel(m_proxyModel, %ModelClass%::IdCol, Qt::DisplayRole);
+    ui->tableView->horizontalHeader()->setDefaultSectionSize(%ModelClassName%::IdCol, 50);
+    ui->tableView->setModel(m_proxyModel, %ModelClassName%::IdCol, Qt::DisplayRole);
 
     connect(ui->btnAdd, SIGNAL(clicked()), SLOT(add()));
     connect(ui->btnEdit, SIGNAL(clicked()), SLOT(editCurrent()));
@@ -36,18 +36,18 @@
     restoreSettings();
 }
 
-%ClassName%::~%ClassName%()
+%TableClassName%::~%TableClassName%()
 {
     saveSettings();
     delete ui;
 }
 
-AdvTableView *%ClassName%::view() const
+AdvTableView *%TableClassName%::view() const
 {
     return ui->tableView;
 }
 
-void %ClassName%::saveSettings(const QString &prefix)
+void %TableClassName%::saveSettings(const QString &prefix)
 {
     QString p = prefix.isEmpty() ? objectName() : prefix;
 
@@ -64,7 +64,7 @@ void %ClassName%::saveSettings(const QString &prefix)
 }
 
 
-void %ClassName%::restoreSettings(const QString &prefix)
+void %TableClassName%::restoreSettings(const QString &prefix)
 {
     QString p = prefix.isEmpty() ? objectName() : prefix;
 
@@ -80,7 +80,7 @@ void %ClassName%::restoreSettings(const QString &prefix)
     resize(sett.value(p + "/size").toSize());
 }
 
-void %ClassName%::add()
+void %TableClassName%::add()
 {
     if (m_editDialog->exec() == QDialog::Accepted) {
         m_model->populate();
@@ -89,7 +89,7 @@ void %ClassName%::add()
     }
 }
 
-void %ClassName%::editCurrent()
+void %TableClassName%::editCurrent()
 {
     if (m_editDialog->exec(view()->currentId()) == QDialog::Accepted) {
         m_model->populate();
@@ -100,7 +100,7 @@ void %ClassName%::editCurrent()
     }
 }
 
-void %ClassName%::deleteSelected()
+void %TableClassName%::deleteSelected()
 {
     QModelIndexList rows = view()->selectionModel()->selectedRows();
 
@@ -131,13 +131,13 @@ void %ClassName%::deleteSelected()
     }
 }
 
-void %ClassName%::slotPrint(Report &r)
+void %TableClassName%::slotPrint(Report &r)
 {
     r.appendModel(m_model);
     Core::ReportManager::showReport(r);
 }
 
-void %ClassName%::viewDoubleClicked(QModelIndex index)
+void %TableClassName%::viewDoubleClicked(QModelIndex index)
 {
     if (index.flags() & Qt::ItemIsEditable) {
         return;
@@ -146,7 +146,7 @@ void %ClassName%::viewDoubleClicked(QModelIndex index)
     editCurrent();
 }
 
-void %ClassName%::showEvent(QShowEvent *e)
+void %TableClassName%::showEvent(QShowEvent *e)
 {
     if (!m_model->populate()) {
         QMessageBox::critical(this, tr("Error"), m_model->errorString());
@@ -154,13 +154,13 @@ void %ClassName%::showEvent(QShowEvent *e)
     QDialog::showEvent(e);
 }
 
-void %ClassName%::hideEvent(QHideEvent *e)
+void %TableClassName%::hideEvent(QHideEvent *e)
 {
     m_pos = pos();
     QDialog::hideEvent(e);
 }
 
-QList<int> %ClassName%::sourceRowsFromProxy(QModelIndexList indexes) const
+QList<int> %TableClassName%::sourceRowsFromProxy(QModelIndexList indexes) const
 {
     QListIterator<QModelIndex> iter(indexes);
     QList<int> rows;

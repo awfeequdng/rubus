@@ -1,5 +1,5 @@
-#ifndef %ClassName:u%_H
-#define %ClassName:u%_H
+#ifndef %ModelClassName:u%_H
+#define %ModelClassName:u%_H
 
 #include "advitemmodel.h"
 
@@ -10,7 +10,7 @@ namespace Internal {
     };
 }
 
-class %ClassName% : public AdvItemModel
+class %ModelClassName% : public AdvItemModel
 {
     Q_OBJECT
 public:
@@ -19,7 +19,7 @@ public:
         NameCol = 1
     };
 
-    explicit %ClassName%(QObject *parent = 0);
+    explicit %ModelClassName%(QObject *parent = 0);
 
     bool populate();
 
@@ -39,4 +39,4 @@ private:
     QString m_removedIds;
 };
 
-#endif //  %ClassName:u%_H
+#endif //  %ModelClassName:u%_H

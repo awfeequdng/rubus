@@ -35,18 +35,18 @@
     <displayname>QDialog implementation with CRUD interface</displayname>;
     <displaycategory>Rubus</displaycategory>
     <files>
-        <file source="tabledialog.cpp" target="%ClassName:l%.%CppSourceSuffix%" openeditor="true"/>
-		<file source="tabledialog.h" target="%ClassName:l%.%CppHeaderSuffix%" openeditor="true"/>
-        <file source="tabledialog.ui" target="%ClassName:l%.ui" openeditor="true"/>
+        <file source="tabledialog.cpp" target="%TableClassName:l%.%CppSourceSuffix%" openeditor="true"/>
+	<file source="tabledialog.h" target="%TableClassName:l%.%CppHeaderSuffix%" openeditor="true"/>
+        <file source="tabledialog.ui" target="%TableClassName:l%.ui" openeditor="true"/>
     </files>
     <!-- Create parameter wizard page -->
     <fieldpagetitle>TableDialog parameters</fieldpagetitle>
     <fields>
-        <field name="ClassName">
+        <field name="TableClassName">
             <fieldcontrol class="QLineEdit" validator="^[a-zA-Z0-9_]+$" defaulttext="CustomerTableDialog" placeholdertext="Enter a class name"/>
             <fielddescription>Class name:</fielddescription>
         </field>
-        <field name="ModelClass">
+        <field name="ModelClassName">
             <fieldcontrol class="QLineEdit" validator="^[a-zA-Z0-9_]+$" defaulttext="CustomerModel" placeholdertext="Enter a class name"/>
             <fielddescription>Model class:</fielddescription>
         </field>
@@ -54,7 +54,7 @@
             <fieldcontrol class="QLineEdit" validator="" defaulttext="customermodel.h" placeholdertext="Enter a class name"/>
             <fielddescription>Model class header filename:</fielddescription>
         </field>
-		<field name="EditWidgetClass">
+		<field name="EditWidgetClassName">
             <fieldcontrol class="QLineEdit" validator="^[a-zA-Z0-9_]+$" defaulttext="CustomerEditWidget" placeholdertext="Enter a class name"/>
             <fielddescription>Edit widget:</fielddescription>
         </field>
@@ -65,7 +65,7 @@
 	</fields>
 
     <validationrules>
-        <validationrule condition='"%ClassName%" != "QDialog"'>
+        <validationrule condition='"%TableClassName%" != "QDialog"'>
             <message>%ClassName% cannot be used as class name.</message>
         </validationrule>
     </validationrules>

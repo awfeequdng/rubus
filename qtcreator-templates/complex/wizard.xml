@@ -30,25 +30,33 @@
  *   GNU General Public License for more details.                          *
  ***************************************************************************/
  -->
-<wizard version="1" kind="class" id="A.Model" category="B.Rubus">
-    <description>Creates a AdvItemModel implementation</description>
-    <displayname>AdvItemModel implementation</displayname>;
+<wizard version="1" kind="class" id="A.Complex" category="B.Rubus">
+    <description>Creates all CRUD interface - TableDialog, EditWidget and Model.</description>
+    <displayname>Complex implementation CRUD interface</displayname>;
     <displaycategory>Rubus</displaycategory>
     <files>
-        <file source="model.cpp" target="%ModelClassName:l%.%CppSourceSuffix%" openeditor="true"/>
-	<file source="model.h" target="%ModelClassName:l%.%CppHeaderSuffix%" openeditor="true"/>
+        <file source="../tabledialog/tabledialog.cpp" target="%TableClassName:l%.%CppSourceSuffix%" openeditor="true"/>
+	<file source="../tabledialog/tabledialog.h" target="%TableClassName:l%.%CppHeaderSuffix%" openeditor="true"/>
+        <file source="../tabledialog/tabledialog.ui" target="%TableClassName:l%.ui" openeditor="true"/>
+	<file source="../editwidget/editwidget.cpp" target="%EditWidgetClassName:l%.%CppSourceSuffix%" openeditor="false"/>
+	<file source="../editwidget/editwidget.h" target="%EditWidgetClassName:l%.%CppHeaderSuffix%" openeditor="false"/>
+        <file source="../editwidget/editwidget.ui" target="%EditWidgetClassName:l%.ui" openeditor="false"/>
+        <file source="../model/model.cpp" target="%ModelClassName:l%.%CppSourceSuffix%" openeditor="false"/>
+	<file source="../model/model.h" target="%ModelClassName:l%.%CppHeaderSuffix%" openeditor="false"/>
     </files>
-    <fieldpagetitle>Model parameters</fieldpagetitle>
+    <fieldpagetitle>Complex CRUD parameters</fieldpagetitle>
     <fields>
+        <field name="TableClassName">
+            <fieldcontrol class="QLineEdit" validator="^[a-zA-Z0-9_]+$" defaulttext="CustomerTableDialog" placeholdertext="Enter a class name"/>
+            <fielddescription>Table class name:</fielddescription>
+        </field>
         <field name="ModelClassName">
             <fieldcontrol class="QLineEdit" validator="^[a-zA-Z0-9_]+$" defaulttext="CustomerModel" placeholdertext="Enter a class name"/>
-            <fielddescription>Class name:</fielddescription>
+            <fielddescription>Model class name:</fielddescription>
+        </field>       
+            <field name="EditWidgetClassName">
+            <fieldcontrol class="QLineEdit" validator="^[a-zA-Z0-9_]+$" defaulttext="CustomerEditWidget" placeholdertext="Enter a class name"/>
+            <fielddescription>Edit widget class name:</fielddescription>
         </field>
 	</fields>
-
-    <validationrules>
-        <validationrule condition='"%ModelClassName%" != "AdvItemModel"'>
-            <message>%ModelClassName% cannot be used as class name.</message>
-        </validationrule>
-    </validationrules>
 </wizard>

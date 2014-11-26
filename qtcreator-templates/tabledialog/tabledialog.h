@@ -1,22 +1,22 @@
-#ifndef %ClassName:u%_H
-#define %ClassName:u%_H
+#ifndef %TableClassName:u%_H
+#define %TableClassName:u%_H
 
 #include "widgets/tabledialog.h"
 #include "report.h"
 
 namespace Ui {
-class %ClassName%;
+class %TableClassName%;
 }
 
-class %ModelClass%;
-class %EditWidgetClass%;
+class %ModelClassName%;
+class %EditWidgetClassName%;
 
-class %ClassName% : public QDialog
+class %TableClassName% : public QDialog
 {
     Q_OBJECT
 public:
-    explicit %ClassName%(QWidget *parent = 0);
-    ~%ClassName%();
+    explicit %TableClassName%(QWidget *parent = 0);
+    ~%TableClassName%();
 
     AdvTableView *view() const;
 
@@ -37,10 +37,10 @@ protected:
     void hideEvent(QHideEvent *e);
 
 private:
-    Ui::%ClassName% *ui;
-    %ModelClass% *m_model;
+    Ui::%TableClassName% *ui;
+    %ModelClassName% *m_model;
     QSortFilterProxyModel *m_proxyModel;
-    %EditWidgetClass% *m_editWdg;
+    %EditWidgetClassName% *m_editWdg;
     EditDialog *m_editDialog;
     QPoint m_pos;
 
@@ -49,4 +49,4 @@ private:
 
 };
 
-#endif //%ClassName:u%_H
+#endif //%TableClassName:u%_H

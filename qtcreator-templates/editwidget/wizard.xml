@@ -35,21 +35,21 @@
     <displayname>EditWidget</displayname>;
     <displaycategory>Rubus</displaycategory>
     <files>
-        <file source="editwidget.cpp" target="%ClassName:l%.%CppSourceSuffix%" openeditor="true"/>
-		<file source="editwidget.h" target="%ClassName:l%.%CppHeaderSuffix%" openeditor="true"/>
-        <file source="editwidget.ui" target="%ClassName:l%.ui" openeditor="true"/>
+        <file source="editwidget.cpp" target="%EditWidgetClassName:l%.%CppSourceSuffix%" openeditor="true"/>
+	<file source="editwidget.h" target="%EditWidgetClassName:l%.%CppHeaderSuffix%" openeditor="true"/>
+        <file source="editwidget.ui" target="%EditWidgetClassName:l%.ui" openeditor="true"/>
     </files>
     <fieldpagetitle>EditWidget parameters</fieldpagetitle>
     <fields>
-        <field name="ClassName">
+        <field name="EditWidgetClassName">
             <fieldcontrol class="QLineEdit" validator="^[a-zA-Z0-9_]+$" defaulttext="CustomerEditWidget" placeholdertext="Enter a class name"/>
             <fielddescription>Class name:</fielddescription>
         </field>
 	</fields>
 
     <validationrules>
-        <validationrule condition='"%ClassName%" != "QWidget"'>
-            <message>%ClassName% cannot be used as class name.</message>
+        <validationrule condition='"%EditWidgetClassName%" != "EditWidgetInterface"'>
+            <message>%EditWidgetClassName% cannot be used as class name.</message>
         </validationrule>
     </validationrules>
 </wizard>

@@ -1,7 +1,7 @@
 #include "%TableClassName:l%.%CppHeaderSuffix%"
 #include "ui_%TableClassName:l%.%CppHeaderSuffix%"
-#include "%ModelClassHeader%"
-#include "%EditWidgetHeader%"
+#include "%ModelClassName:l%.%CppHeaderSuffix%"
+#include "%EditWidgetClassName:l%.%CppHeaderSuffix%"
 #include "reportmanager.h"
 #include "widgets/editdialog.h"
 

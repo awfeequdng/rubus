@@ -38,11 +38,11 @@
         <file source="../tabledialog/tabledialog.cpp" target="%TableClassName:l%.%CppSourceSuffix%" openeditor="true"/>
 	<file source="../tabledialog/tabledialog.h" target="%TableClassName:l%.%CppHeaderSuffix%" openeditor="true"/>
         <file source="../tabledialog/tabledialog.ui" target="%TableClassName:l%.ui" openeditor="true"/>
-	<file source="../editwidget/editwidget.cpp" target="%EditWidgetClassName:l%.%CppSourceSuffix%" openeditor="false"/>
-	<file source="../editwidget/editwidget.h" target="%EditWidgetClassName:l%.%CppHeaderSuffix%" openeditor="false"/>
-        <file source="../editwidget/editwidget.ui" target="%EditWidgetClassName:l%.ui" openeditor="false"/>
-        <file source="../model/model.cpp" target="%ModelClassName:l%.%CppSourceSuffix%" openeditor="false"/>
-	<file source="../model/model.h" target="%ModelClassName:l%.%CppHeaderSuffix%" openeditor="false"/>
+	<file source="../editwidget/editwidget.cpp" target="widgets/%EditWidgetClassName:l%.%CppSourceSuffix%" openeditor="false"/>
+	<file source="../editwidget/editwidget.h" target="widgets/%EditWidgetClassName:l%.%CppHeaderSuffix%" openeditor="false"/>
+        <file source="../editwidget/editwidget.ui" target="widgets/%EditWidgetClassName:l%.ui" openeditor="false"/>
+        <file source="../model/model.cpp" target="models/%ModelClassName:l%.%CppSourceSuffix%" openeditor="false"/>
+	<file source="../model/model.h" target="models/%ModelClassName:l%.%CppHeaderSuffix%" openeditor="false"/>
     </files>
     <fieldpagetitle>Complex CRUD parameters</fieldpagetitle>
     <fields>

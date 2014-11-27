@@ -1,7 +1,7 @@
 #include "%TableClassName:l%.%CppHeaderSuffix%"
 #include "ui_%TableClassName:l%.%CppHeaderSuffix%"
-#include "%ModelClassName:l%.%CppHeaderSuffix%"
-#include "%EditWidgetClassName:l%.%CppHeaderSuffix%"
+#include "models/%ModelClassName:l%.%CppHeaderSuffix%"
+#include "widgets/%EditWidgetClassName:l%.%CppHeaderSuffix%"
 #include "reportmanager.h"
 #include "widgets/editdialog.h"
 
@@ -20,7 +20,7 @@
     m_proxyModel->setSortCaseSensitivity(Qt::CaseInsensitive);
     m_proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
     m_proxyModel->setSourceModel(m_model);
-    m_proxyModel->setFilterKeyColumn(ContractorModel::NameCol);
+    m_proxyModel->setFilterKeyColumn(%ModelClassName%::NameCol);
 
 
     ui->tableView->horizontalHeader()->setDefaultSectionSize(%ModelClassName%::IdCol, 50);

@@ -45,6 +45,10 @@ class Report;
 class NCReportSource;
 class NCReport;
 
+namespace CuteReport {
+class ReportCore;
+}
+
 class CORE_EXPORT ReportManager : public QObject
 {
     Q_OBJECT

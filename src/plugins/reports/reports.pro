@@ -14,9 +14,17 @@ unix {
     NCREPORT_PATH = /home/wulff/NCReport2
     LIBS += -L$$NCREPORT_PATH/lib -lNCReport
     QMAKE_LFLAGS += -Wl,--rpath=$$NCREPORT_PATH/lib
+
+    CUTEREPORT_PATH = /home/wulff/projects/cutereport
+    LIBS += -lCuteReport -lCuteReportWidgets
 }
 
-INCLUDEPATH += $$NCREPORT_PATH/include
+
+
+
+INCLUDEPATH += $$NCREPORT_PATH/include \
+               $$CUTEREPORT_PATH/src/core \
+               $$CUTEREPORT_PATH/src/widgets/widgets \
 
 TARGET = Reports
 TEMPLATE = lib

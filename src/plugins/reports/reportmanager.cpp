@@ -28,26 +28,31 @@
  *   GNU General Public License for more details.                          *
  ***************************************************************************/
 #include "reportmanager.h"
-#include "oooreportbuilder.h"
 #include "report.h"
 
-//#include "cutereport.h"
-//#include "reportcore.h"
-//#include "reportinterface.h"
-//#include "reportpreview.h"
+//OpenOffice
+#include "oooreportbuilder.h"
 
+//CuteReport
+#include "cutereport.h"
+#include "reportcore.h"
+#include "reportinterface.h"
+#include "reportpreview.h"
+
+//NcReport
 #include "ncreport.h"
 #include "ncreportoutput.h"
 #include "ncreportpreviewoutput.h"
 #include "ncreportpreviewwindow.h"
 #include "ncreportprinteroutput.h"
+#include "ncreportsource.h"
 
 #include <QAbstractItemModel>
 #include <QtSql>
 #include <QSettings>
-#include "ncreportsource.h"
 
 static ReportManager *m_instance = 0;
+static CuteReport::ReportCore *m_cuteReport = 0;
 
 ReportManager::ReportManager(QObject *parent) :
     QObject(parent)
@@ -64,7 +69,7 @@ Report ReportManager::loadReport(int id)
 {
     QSqlQuery sql;
     Report rep;
-    sql.exec(QString("SELECT re_name, re_type,re_menu, re_filename FROM reports WHERE re_id = %1")
+    sql.exec(QString("SELECT re_name, re_type,re_menu FROM reports WHERE re_id = %1")
              .arg(id));
 
     if (sql.lastError().isValid()) {
@@ -165,47 +170,55 @@ void ReportManager::showReport(Report &rep)
     }
 
 
-//    if (rep.engine() == Report::CuteReportEngine) {
-//        if (!m_cuteReport) {
-//            QSettings sett("cutereport.ini", QSettings::IniFormat);
-
-//            m_cuteReport =  new CuteReport::ReportCore(&sett);
-//        }
-
-//        QString err;
-//        CuteReport::ReportInterface * report = m_cuteReport->loadReport(rep.filename(), &err);
-
-//        if (!report) {
-//            qDebug() << QString("Can't load report %1, error: ").arg(rep.filename()) << err;
-//            return;
-//        }
-
-//        int i = 0;
-//        QListIterator<QAbstractItemModel*> iter(rep.models());
-//        while (iter.next()) {
-//            i++;
-//            QAbstractItemModel *model = iter.next();
-//            report->setVariableValue(QString("model%1").arg(i), qlonglong(model));
-//        }
+    if (rep.engine() == Report::CuteReportEngine) {
+        if (!m_cuteReport) {
+            QSettings sett("cutereport.ini", QSettings::IniFormat);
+            sett.setValue("CuteReport/PluginsPath","plugins/cutereport");
+            sett.setValue("Log/enabled", true);
+            sett.setValue("Log/synchronously", true);
+            sett.setValue("CuteReport/Storage_Standard_Sql_options",
+                          QString("tableName=reports,"
+                          "columnId=re_id,"
+                          "columnName=re_name,"
+                          "columnData=re_data,"
+                          "useAsDefaultConnection=true,"
+                          "connectionId=%1").arg(QSqlDatabase::database().connectionName()));
 
 
-//       report->setVariables(rep.paramentrs());
+            m_cuteReport =  new CuteReport::ReportCore(&sett);
+        }
+        QString err;
+        CuteReport::ReportInterface * report = m_cuteReport->loadReport(QString("sql:<%1>").arg(rep.id()), &err);
 
-//        if (preview) {
-//            CuteReport::ReportPreview * preview = new CuteReport::ReportPreview(m_cuteReport);
-//            if (report) {
-//                preview->setReportCore(m_cuteReport);
-//                preview->connectReport(report);
-//                preview->run();
+        if (!report) {
+            qDebug() << QString("Can't load report %1, error: ").arg(rep.filename()) << err;
+            return;
+        }
 
-//                preview->show();
-//            }
-//        } else {
-//            m_cuteReport->print(report);
-//        }
+        int i = 0;
+        QListIterator<QAbstractItemModel*> iter(rep.models());
+        while (iter.next()) {
+            i++;
+            QAbstractItemModel *model = iter.next();
+            report->setVariableValue(QString("model%1").arg(i), qlonglong(model));
+        }
 
-//        return;
-    //    }
+
+        report->setVariables(rep.paramentrs());
+
+
+        CuteReport::ReportPreview * preview = new CuteReport::ReportPreview(m_cuteReport);
+        if (report) {
+            preview->setReportCore(m_cuteReport);
+            preview->connectReport(report);
+            preview->run();
+
+            preview->show();
+        }
+
+
+        return;
+    }
 }
 
 void ReportManager::printReport(Report &rep, QString printerName, int copies,  bool showDialog)

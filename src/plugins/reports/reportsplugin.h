@@ -27,36 +27,42 @@
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
  *   GNU General Public License for more details.                          *
  ***************************************************************************/
-#include "standardtabledialog.h"
-#include "ui_standardtabledialog.h"
-#include "../../plugins/reports/reportmanager.h"
+#ifndef REPORTSPLUGIN_H
+#define REPORTSPLUGIN_H
 
-#include <QSettings>
+#include "reports_global.h"
+#include "iplugin.h"
 
-StandardTableDialog::StandardTableDialog(QWidget *parent) :
-    TableDialog(parent),
-    ui(new Ui::StandardTableDialog)
+class ReportManager;
+class ReportsDialog;
+
+class REPORTS_EXPORT ReportsPlugin : public Core::IPlugin
 {
-    ui->setupUi(this);
+    Q_OBJECT
+    Q_INTERFACES(Core::IPlugin)
+#if QT_VERSION > 0x050000
+    Q_PLUGIN_METADATA(IID "ReportsPlugin")
+#endif
 
-    setView(ui->tableView);
+public:
+    explicit ReportsPlugin(QObject *parent = 0);
+    ~ReportsPlugin();
 
-    restoreSettings();
+    static ReportsPlugin *instance();
 
-    connect(ui->btnAdd, SIGNAL(clicked()), SLOT(add()));
-    connect(ui->btnEdit, SIGNAL(clicked()), SLOT(editCurrent()));
-    connect(ui->btnDelete, SIGNAL(clicked()), SLOT(deleteSelected()));
-    connect(ui->btnPrint, SIGNAL(print(Report&)), SLOT(slotPrint(Report&)));    
-}
+    QString name() const;
+    int version() const;
+    bool initialize();
 
-StandardTableDialog::~StandardTableDialog()
-{
-    saveSettings();
-    delete ui;
-}
+public slots:
+    static void showReportManager();
 
-void StandardTableDialog::slotPrint(Report &report)
-{
-    ReportManager::showReport(report);
-}
+private:
+    QAction *m_acReportManager;
+
+    ReportManager *m_reportManager;
+    ReportsDialog *m_reportDlg;
+};
+
+#endif // REPORTSPLUGIN_H
 

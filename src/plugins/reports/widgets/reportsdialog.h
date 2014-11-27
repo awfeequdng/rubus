@@ -27,36 +27,49 @@
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
  *   GNU General Public License for more details.                          *
  ***************************************************************************/
-#include "standardtabledialog.h"
-#include "ui_standardtabledialog.h"
-#include "../../plugins/reports/reportmanager.h"
+#ifndef REPORTSDIALOG_H
+#define REPORTSDIALOG_H
 
-#include <QSettings>
+#include <QDialog>
 
-StandardTableDialog::StandardTableDialog(QWidget *parent) :
-    TableDialog(parent),
-    ui(new Ui::StandardTableDialog)
-{
-    ui->setupUi(this);
-
-    setView(ui->tableView);
-
-    restoreSettings();
-
-    connect(ui->btnAdd, SIGNAL(clicked()), SLOT(add()));
-    connect(ui->btnEdit, SIGNAL(clicked()), SLOT(editCurrent()));
-    connect(ui->btnDelete, SIGNAL(clicked()), SLOT(deleteSelected()));
-    connect(ui->btnPrint, SIGNAL(print(Report&)), SLOT(slotPrint(Report&)));    
+namespace Ui {
+class ReportsDialog;
 }
 
-StandardTableDialog::~StandardTableDialog()
-{
-    saveSettings();
-    delete ui;
-}
+class ReportModel;
+class QSortFilterProxyModel;
 
-void StandardTableDialog::slotPrint(Report &report)
+class ReportsDialog : public QDialog
 {
-    ReportManager::showReport(report);
-}
+    Q_OBJECT
 
+public:
+    explicit ReportsDialog(QWidget *parent = 0);
+    ~ReportsDialog();
+
+    void populate();
+
+    int currentId() const;
+    void setCurrentId(int id);
+
+private:
+    Ui::ReportsDialog *ui;
+
+    ReportModel *m_model;
+    QSortFilterProxyModel *m_proxyModel;
+
+protected:
+    void showEvent(QShowEvent *event);
+    void hideEvent(QHideEvent *event);
+
+private slots:
+    void add();
+    void editCurrent();
+    void removeSelected();
+    void previewCurrent();
+
+    void slotToTable();
+    void slotOnSaved();
+};
+
+#endif // REPORTSDIALOG_H

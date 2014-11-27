@@ -27,36 +27,48 @@
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
  *   GNU General Public License for more details.                          *
  ***************************************************************************/
-#include "standardtabledialog.h"
-#include "ui_standardtabledialog.h"
-#include "../../plugins/reports/reportmanager.h"
+#ifndef REPORTMODEL_H
+#define REPORTMODEL_H
 
-#include <QSettings>
+#include "advitemmodel.h"
 
-StandardTableDialog::StandardTableDialog(QWidget *parent) :
-    TableDialog(parent),
-    ui(new Ui::StandardTableDialog)
+struct Item {
+    int id;
+    QString name;
+    int type;
+    QString menu;
+};
+
+class ReportModel : public AdvItemModel
 {
-    ui->setupUi(this);
+    Q_OBJECT
+public:
+    enum Cols {
+        IdCol = 0,
+        NameCol = 1,
+        TypeCol = 2,
+        MenuCol = 3
+    };
 
-    setView(ui->tableView);
+    explicit ReportModel(QObject *parent = 0);
+    bool populate();
 
-    restoreSettings();
+signals:
 
-    connect(ui->btnAdd, SIGNAL(clicked()), SLOT(add()));
-    connect(ui->btnEdit, SIGNAL(clicked()), SLOT(editCurrent()));
-    connect(ui->btnDelete, SIGNAL(clicked()), SLOT(deleteSelected()));
-    connect(ui->btnPrint, SIGNAL(print(Report&)), SLOT(slotPrint(Report&)));    
-}
+public slots:
 
-StandardTableDialog::~StandardTableDialog()
-{
-    saveSettings();
-    delete ui;
-}
 
-void StandardTableDialog::slotPrint(Report &report)
-{
-    ReportManager::showReport(report);
-}
+    // QAbstractItemModel interface
+public:
+    int rowCount(const QModelIndex &parent) const;
+    int columnCount(const QModelIndex &parent) const;
+    QVariant data(const QModelIndex &index, int role) const;
+    QVariant headerData(int section, Qt::Orientation orientation, int role) const;
 
+private:
+    QList<Item *> m_items;
+    QMap<int, QString> m_typeTitleById;
+
+};
+
+#endif // REPORTMODEL_H

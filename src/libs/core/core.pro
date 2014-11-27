@@ -16,20 +16,6 @@ TEMPLATE = lib
 
 DEFINES += CORE_LIBRARY
 
-win32 {
-    NCREPORT_PATH = C:/Qt/NCReport
-    CONFIG(debug, debug|release) {
-        LIBS += -L$$NCREPORT_PATH/bin -lNCReportDebug2
-    }else  {
-        LIBS += -L$$NCREPORT_PATH/bin  -lNCReport2
-    }
-}
-unix {
-    NCREPORT_PATH = /home/wulff/NCReport2
-    LIBS += -L$$NCREPORT_PATH/lib -lNCReport
-    QMAKE_LFLAGS += -Wl,--rpath=$$NCREPORT_PATH/lib
-}
-
 INCLUDEPATH += \
                $$NCREPORT_PATH/include \
 
@@ -37,10 +23,8 @@ DESTDIR = $$LIB_DIR
 
 SOURCES += \
     core.cpp \
-    oooreportbuilder.cpp \
     pluginmanager.cpp \
     report.cpp \
-    reportmanager.cpp \
     user.cpp \
     widgets/dlgauthorise.cpp \
     widgets/dlgauthsettings.cpp \
@@ -52,10 +36,8 @@ HEADERS +=\
     coreconstants.h \
     core_global.h \
     cryptor.h \
-    oooreportbuilder.h \
     pluginmanager.h \
     report.h \
-    reportmanager.h \
     user.h \
     widgets/dlgauthorise.h \
     widgets/dlgauthsettings.h \

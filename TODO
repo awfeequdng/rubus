@@ -1,11 +1,13 @@
 Version 0.2
-    * Integration in QtCreator
-        - QtCreator wizards
-            - a new plugin
+    + Integration in QtCreator
+        + QtCreator wizards
+            + a new plugin
         QtCretaor templates
-            * TableDialog
-            * EditWidget
-            * TableDialog
+            + TableDialog
+            + EditWidget
+            + TableDialog
+            + Complex
+            
     
     
     + Widgets
@@ -22,7 +24,8 @@ Version 0.2
             + Contractors
             - Locations
             * Users
-            * Reports
+
+        * Reports
 
 
     

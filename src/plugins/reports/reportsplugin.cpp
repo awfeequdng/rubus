@@ -27,36 +27,61 @@
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
  *   GNU General Public License for more details.                          *
  ***************************************************************************/
-#include "standardtabledialog.h"
-#include "ui_standardtabledialog.h"
-#include "../../plugins/reports/reportmanager.h"
+#include "reportsplugin.h"
+#include "reportsconstants.h"
+#include "reportmanager.h"
+#include "widgets/reportsdialog.h"
 
-#include <QSettings>
+#include <QtPlugin>
+#include <QDebug>
+#include <QAction>
 
-StandardTableDialog::StandardTableDialog(QWidget *parent) :
-    TableDialog(parent),
-    ui(new Ui::StandardTableDialog)
+using namespace Core;
+
+static ReportsPlugin *m_instance = 0;
+
+ReportsPlugin::ReportsPlugin(QObject *parent) :
+    IPlugin(parent)
 {
-    ui->setupUi(this);
-
-    setView(ui->tableView);
-
-    restoreSettings();
-
-    connect(ui->btnAdd, SIGNAL(clicked()), SLOT(add()));
-    connect(ui->btnEdit, SIGNAL(clicked()), SLOT(editCurrent()));
-    connect(ui->btnDelete, SIGNAL(clicked()), SLOT(deleteSelected()));
-    connect(ui->btnPrint, SIGNAL(print(Report&)), SLOT(slotPrint(Report&)));    
+    m_instance = this;
+    m_reportManager = new ReportManager(this);
 }
 
-StandardTableDialog::~StandardTableDialog()
+ReportsPlugin::~ReportsPlugin()
 {
-    saveSettings();
-    delete ui;
+    delete m_reportManager;
 }
 
-void StandardTableDialog::slotPrint(Report &report)
+
+QString ReportsPlugin::name() const
 {
-    ReportManager::showReport(report);
+    return "Reports";
 }
+
+int ReportsPlugin::version() const
+{
+    return 1;
+}
+
+bool ReportsPlugin::initialize()
+{
+    m_reportDlg = new ReportsDialog(ICore::mainWindow());
+
+    m_acReportManager = new QAction(tr("Report manager"),this);
+    connect(m_acReportManager, SIGNAL(triggered()), SLOT(showReportManager()));
+    ICore::registerAction(Constants::A_REPORTMANAGER, m_acReportManager);
+
+
+    return true;
+}
+
+void ReportsPlugin::showReportManager()
+{
+    m_instance->m_reportDlg->show();
+}
+
+#if QT_VERSION < 0x050000
+Q_EXPORT_PLUGIN2(Reports, ReportsPlugin)
+#else
+#endif
 

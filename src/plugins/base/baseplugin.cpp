@@ -72,10 +72,6 @@ bool BasePlugin::initialize()
     connect(m_acUserManager, SIGNAL(triggered()), SLOT(showUserManager()));
     ICore::registerAction(Constants::A_USERMANAGER, m_acUserManager);
 
-    m_acReportManager = new QAction(tr("Report manager"),this);
-    connect(m_acReportManager, SIGNAL(triggered()), SLOT(showReportManager()));
-    ICore::registerAction(Constants::A_REPORTMANAGER, m_acReportManager);
-
     m_acLocations = new QAction(tr("Locations"),this);
     connect(m_acLocations, SIGNAL(triggered()), SLOT(showLocationTable()));
     ICore::registerAction(Constants::A_LOCATIONS, m_acLocations);

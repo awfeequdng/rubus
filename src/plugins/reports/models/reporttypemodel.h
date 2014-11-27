@@ -27,36 +27,31 @@
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
  *   GNU General Public License for more details.                          *
  ***************************************************************************/
-#include "standardtabledialog.h"
-#include "ui_standardtabledialog.h"
-#include "../../plugins/reports/reportmanager.h"
+#ifndef REPORTTYPEMODEL_H
+#define REPORTTYPEMODEL_H
 
-#include <QSettings>
+#include "advitemmodel.h"
 
-StandardTableDialog::StandardTableDialog(QWidget *parent) :
-    TableDialog(parent),
-    ui(new Ui::StandardTableDialog)
+class ReportTypeModel : public AdvItemModel
 {
-    ui->setupUi(this);
+    Q_OBJECT
+public:
+    explicit ReportTypeModel(QObject *parent = 0);
 
-    setView(ui->tableView);
+signals:
 
-    restoreSettings();
+public slots:
 
-    connect(ui->btnAdd, SIGNAL(clicked()), SLOT(add()));
-    connect(ui->btnEdit, SIGNAL(clicked()), SLOT(editCurrent()));
-    connect(ui->btnDelete, SIGNAL(clicked()), SLOT(deleteSelected()));
-    connect(ui->btnPrint, SIGNAL(print(Report&)), SLOT(slotPrint(Report&)));    
-}
 
-StandardTableDialog::~StandardTableDialog()
-{
-    saveSettings();
-    delete ui;
-}
+    // QAbstractItemModel interface
+public:
+    int rowCount(const QModelIndex &parent) const;
+    int columnCount(const QModelIndex &parent) const;
+    QVariant data(const QModelIndex &index, int role) const;
 
-void StandardTableDialog::slotPrint(Report &report)
-{
-    ReportManager::showReport(report);
-}
+private:
+    QMap <int, QString> m_nameById;
+    QList<int> m_items;
+};
 
+#endif // REPORTTYPEMODEL_H

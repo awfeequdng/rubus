@@ -27,36 +27,44 @@
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
  *   GNU General Public License for more details.                          *
  ***************************************************************************/
-#include "standardtabledialog.h"
-#include "ui_standardtabledialog.h"
-#include "../../plugins/reports/reportmanager.h"
+#include "reporttypemodel.h"
+#include "report.h"
 
-#include <QSettings>
-
-StandardTableDialog::StandardTableDialog(QWidget *parent) :
-    TableDialog(parent),
-    ui(new Ui::StandardTableDialog)
+ReportTypeModel::ReportTypeModel(QObject *parent) :
+    AdvItemModel(parent)
 {
-    ui->setupUi(this);
+    m_nameById.insert(Report::OpenOfficeEngine, tr("OO Calc"));
+    m_nameById.insert(Report::NcReportEngine, tr("NcReport"));
+    m_nameById.insert(Report::CuteReportEngine, tr("CuteReport"));
 
-    setView(ui->tableView);
-
-    restoreSettings();
-
-    connect(ui->btnAdd, SIGNAL(clicked()), SLOT(add()));
-    connect(ui->btnEdit, SIGNAL(clicked()), SLOT(editCurrent()));
-    connect(ui->btnDelete, SIGNAL(clicked()), SLOT(deleteSelected()));
-    connect(ui->btnPrint, SIGNAL(print(Report&)), SLOT(slotPrint(Report&)));    
+    m_items = m_nameById.keys();
 }
 
-StandardTableDialog::~StandardTableDialog()
+
+int ReportTypeModel::rowCount(const QModelIndex &parent) const
 {
-    saveSettings();
-    delete ui;
+    Q_UNUSED(parent)
+    return m_items.count();
 }
 
-void StandardTableDialog::slotPrint(Report &report)
+int ReportTypeModel::columnCount(const QModelIndex &parent) const
 {
-    ReportManager::showReport(report);
+    Q_UNUSED(parent)
+    return 2;
 }
 
+QVariant ReportTypeModel::data(const QModelIndex &index, int role) const
+{
+    if (!index.isValid()) {
+        return QVariant();
+    }
+
+    if (role == Qt::DisplayRole || role == Qt::EditRole) {
+        switch(index.column()) {
+        case 0 : return m_items.at(index.row());
+        case 1 : return m_nameById.value(m_items.at(index.row()));
+        }
+    }
+
+    return AdvItemModel::data(index, role);
+}

@@ -27,36 +27,47 @@
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
  *   GNU General Public License for more details.                          *
  ***************************************************************************/
-#include "standardtabledialog.h"
-#include "ui_standardtabledialog.h"
-#include "../../plugins/reports/reportmanager.h"
+#ifndef REPORTMANAGER_H
+#define REPORTMANAGER_H
 
-#include <QSettings>
+#include <QObject>
+#include <QVariant>
 
-StandardTableDialog::StandardTableDialog(QWidget *parent) :
-    TableDialog(parent),
-    ui(new Ui::StandardTableDialog)
+#include "core_global.h"
+
+
+QT_BEGIN_NAMESPACE
+class QAbstractItemModel;
+QT_END_NAMESPACE
+
+class OOoReportBuilder;
+class Report;
+class NCReportSource;
+class NCReport;
+
+class CORE_EXPORT ReportManager : public QObject
 {
-    ui->setupUi(this);
+    Q_OBJECT
+public:
+    explicit ReportManager(QObject *parent = 0);
 
-    setView(ui->tableView);
+    static ReportManager *instance();
+    static Report loadReport(int id);
 
-    restoreSettings();
+    static void registerMenuId(QString id, QString title);
+    static void showReport(Report &rep);
+    void printReport(Report &rep, QString printerName, int copies, bool showDialog = false);
 
-    connect(ui->btnAdd, SIGNAL(clicked()), SLOT(add()));
-    connect(ui->btnEdit, SIGNAL(clicked()), SLOT(editCurrent()));
-    connect(ui->btnDelete, SIGNAL(clicked()), SLOT(deleteSelected()));
-    connect(ui->btnPrint, SIGNAL(print(Report&)), SLOT(slotPrint(Report&)));    
-}
+    QList<Report> reportsByMenuId(QString menuId);
+    static NCReportSource reportDatabaseSource(int reportId);
 
-StandardTableDialog::~StandardTableDialog()
-{
-    saveSettings();
-    delete ui;
-}
+signals:
 
-void StandardTableDialog::slotPrint(Report &report)
-{
-    ReportManager::showReport(report);
-}
+private slots:
 
+private:
+    QHash<QString, QString> m_menus;
+
+};
+
+#endif // REPORTMANAGER_H

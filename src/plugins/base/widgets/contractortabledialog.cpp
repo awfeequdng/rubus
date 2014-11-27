@@ -31,7 +31,7 @@
 #include "ui_contractortabledialog.h"
 #include "models/contractormodel.h"
 #include "constants.h"
-#include "reportmanager.h"
+#include "../../plugins/reports/reportmanager.h"
 #include "contractoreditwidget.h"
 #include "widgets/editdialog.h"
 
@@ -166,7 +166,7 @@ void ContractorTableDialog::deleteSelected()
 void ContractorTableDialog::slotPrint(Report &r)
 {
     r.appendModel(m_model);
-    Core::ReportManager::showReport(r);
+    ReportManager::showReport(r);
 }
 
 void ContractorTableDialog::viewDoubleClicked(QModelIndex index)

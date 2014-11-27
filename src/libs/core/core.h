@@ -34,6 +34,7 @@
 #include <QMap>
 
 #include "core_global.h"
+#include "widgets/mainwindow.h"
 
 
 class EditWidgetInterface;
@@ -45,7 +46,6 @@ class User;
 class MainWindow;
 class IPlugin;
 class PluginManager;
-class ReportManager;
 
 class CORE_EXPORT ICore : public QObject
 {
@@ -63,7 +63,6 @@ public:
     static void loadPlugins();
 
     static MainWindow *mainWindow();
-    static ReportManager *reportManager();
 
     bool login(QString username, QString password);
     bool logout();

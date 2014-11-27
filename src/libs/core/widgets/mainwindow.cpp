@@ -32,7 +32,6 @@
 #include "core.h"
 #include "coreconstants.h"
 #include "pluginmanager.h"
-#include "reportmanager.h"
 
 #include "qjsondocument.h"
 #include <QToolBar>

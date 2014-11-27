@@ -27,51 +27,50 @@
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
  *   GNU General Public License for more details.                          *
  ***************************************************************************/
-#ifndef REPORTMANAGER_H
-#define REPORTMANAGER_H
+#ifndef REPORTEDITWIDGET_H
+#define REPORTEDITWIDGET_H
 
-#include <QObject>
-#include <QVariant>
+#include <QWidget>
 
-#include "core_global.h"
-
-
-QT_BEGIN_NAMESPACE
-class QAbstractItemModel;
-QT_END_NAMESPACE
-
-class OOoReportBuilder;
-class Report;
-class NCReportSource;
-class NCReport;
-
-namespace Core {
-
-class CORE_EXPORT ReportManager : public QObject
-{
-    Q_OBJECT
-public:
-    explicit ReportManager(QObject *parent = 0);
-
-    static ReportManager *instance();
-    static Report loadReport(int id);
-
-    static void registerMenuId(QString id, QString title);
-    static void showReport(Report &rep);
-    void printReport(Report &rep, QString printerName, int copies, bool showDialog = false);
-
-    QList<Report> reportsByMenuId(QString menuId);
-    static NCReportSource reportDatabaseSource(int reportId);
-
-signals:
-
-private slots:
-
-private:
-    QHash<QString, QString> m_menus;
-
-};
-
+namespace Ui {
+class ReportEditWidget;
 }
 
-#endif // REPORTMANAGER_H
+class QSqlQueryModel;
+class ReportTypeModel;
+
+class ReportEditWidget : public QWidget
+{
+    Q_OBJECT
+
+public:
+    explicit ReportEditWidget(QWidget *parent = 0);
+    ~ReportEditWidget();
+
+    bool load(int id);
+
+    int id() const { return m_id; }
+
+public slots:
+    bool save();
+
+signals:
+    void saved();
+    void closed();
+
+private slots:
+    void chooseFile();
+    void saveToFile();
+
+private:
+    Ui::ReportEditWidget *ui;
+    int m_id;
+    QString m_data;
+    QSqlQueryModel *m_menuModel;
+    ReportTypeModel *m_typeModel;
+
+    void populate();
+    bool isValid();
+};
+
+#endif // REPORTEDITWIDGET_H

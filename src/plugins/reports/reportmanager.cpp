@@ -47,19 +47,17 @@
 #include <QSettings>
 #include "ncreportsource.h"
 
-using namespace Core;
-
-static ReportManager *__instance = 0;
+static ReportManager *m_instance = 0;
 
 ReportManager::ReportManager(QObject *parent) :
     QObject(parent)
 {
-    __instance = this;
+    m_instance = this;
 }
 
 ReportManager *ReportManager::instance()
 {
-    return __instance;
+    return m_instance;
 }
 
 Report ReportManager::loadReport(int id)

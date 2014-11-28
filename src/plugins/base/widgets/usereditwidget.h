@@ -27,75 +27,46 @@
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
  *   GNU General Public License for more details.                          *
  ***************************************************************************/
+#ifndef USEREDITWIDGET_H
+#define USEREDITWIDGET_H
 
-#ifndef USER_H
-#define USER_H
+#include <QWidget>
+#include "widgets/editwidgetinterface.h"
 
-#include <QObject>
-#include <QSet>
-#include <QtSql>
-#include <QHashIterator>
+namespace Ui {
+class UserEditWidget;
+}
 
-#include "core_global.h"
-#include "qjson/qjsondocument.h"
+class QSqlQueryModel;
 
 namespace Core {
+    class User;
+}
 
-struct TableRecordPrefStruct {
-    QString table;
-    int recordId;
-    QString value;
-};
-
-class CORE_EXPORT User : public QObject
+class UserEditWidget : public EditWidgetInterface
 {
     Q_OBJECT
 public:
-    explicit User(QString rolename, QObject *parent = 0);
+    explicit UserEditWidget(QWidget *parent = 0);
+    ~UserEditWidget();
 
-    bool load();
+    QVariant id() const;
 
-    QString rolename() const { return m_rolename; }
-    void setRoleName(const QString &role);
-
-    QString name() const { return m_name; }
-    void setName(const QString &value);
-
-    int contractorId() const { return m_contractorId; }
-    void setContractor(int id);
-
-    int location() const;
-
-
-    QJsonObject parameters() const;
-    QJsonObject parameter(const QString &name) const;
-    QJsonValue parameterValue(const QString &name) const;
-    void setParameter(const QString &name, QVariant &value);
-    void setParameter(const QString &name, QVariantMap &value);
-
-    QString gui() const;
-    void setGui(const QString &gui);
-
-    QString errorString() const { return m_errorString; }
-
-
-signals:
-    
 public slots:
+    bool load(QVariant id);
     bool save();
+private:
+    Ui::UserEditWidget *ui;
+    QString m_role;
+    Core::User *m_user;
 
-protected:
-    QString m_rolename;
-    QString m_name;
-    int m_contractorId;
-    QVariantMap m_paramsMap;
-    QJsonDocument m_jsonDoc;
-    int m_location;
-    QString m_gui;
-    QString m_errorString;
-    
+    QSqlQueryModel *m_contractorModel;
+
+private:
+    void populate();
+    bool isValid();
+
 };
 
-}
+#endif // USEREDITWIDGET_H
 
-#endif // USER_H

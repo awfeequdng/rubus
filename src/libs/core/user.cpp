@@ -76,6 +76,16 @@ bool User::load()
     return true;
 }
 
+void User::setRoleName(const QString &role)
+{
+    m_rolename = role;
+}
+
+void User::setName(const QString &name)
+{
+    m_name = name;
+}
+
 int Core::User::location() const
 {
     return m_location;

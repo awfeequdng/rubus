@@ -1,30 +1,59 @@
-#include "%TableClassName:l%.%CppHeaderSuffix%"
-#include "ui_%TableClassName:l%.%CppHeaderSuffix%"
-#include "models/%ModelClassName:l%.%CppHeaderSuffix%"
-#include "widgets/%EditWidgetClassName:l%.%CppHeaderSuffix%"
+/***************************************************************************
+ *   This file is part of the Rubus project                                *
+ *   Copyright (C) 2012-2014 by Ivan Volkov                                *
+ *   wulff007@gmail.com                                                    *
+ *                                                                         *
+ **                   GNU General Public License Usage                    **
+ *                                                                         *
+ *   This library is free software: you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation, either version 3 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
+ *                                                                         *
+ **                  GNU Lesser General Public License                    **
+ *                                                                         *
+ *   This library is free software: you can redistribute it and/or modify  *
+ *   it under the terms of the GNU Lesser General Public License as        *
+ *   published by the Free Software Foundation, either version 3 of the    *
+ *   License, or (at your option) any later version.                       *
+ *   You should have received a copy of the GNU Lesser General Public      *
+ *   License along with this library.                                      *
+ *   If not, see <http://www.gnu.org/licenses/>.                           *
+ *                                                                         *
+ *   This library is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ ***************************************************************************/
+#include "usertabledialog.h"
+#include "ui_usertabledialog.h"
+#include "models/usermodel.h"
+#include "widgets/usereditwidget.h"
 #include "../../plugins/reports/reportmanager.h"
 #include "widgets/editdialog.h"
 
 #include <QMessageBox>
 
-%TableClassName%::%TableClassName%(QWidget *parent) :
+UserTableDialog::UserTableDialog(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::%TableClassName%)
+    ui(new Ui::UserTableDialog)
 {
     ui->setupUi(this);
 
-    m_model = new %ModelClassName%(this);
+    m_model = new UserModel(this);
     m_proxyModel = new QSortFilterProxyModel(this);
-    m_editWdg = new %EditWidgetClassName%();
+    m_editWdg = new UserEditWidget();
     m_editDialog = new EditDialog(m_editWdg, this);
     m_proxyModel->setSortCaseSensitivity(Qt::CaseInsensitive);
     m_proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
     m_proxyModel->setSourceModel(m_model);
-    m_proxyModel->setFilterKeyColumn(%ModelClassName%::NameCol);
+    m_proxyModel->setFilterKeyColumn(UserModel::NameCol);
 
 
-    ui->tableView->horizontalHeader()->setDefaultSectionSize(%ModelClassName%::IdCol, 50);
-    ui->tableView->setModel(m_proxyModel, %ModelClassName%::IdCol, Qt::DisplayRole);
+    ui->tableView->horizontalHeader()->setDefaultSectionSize(UserModel::RoleCol, 180);
+    ui->tableView->setModel(m_proxyModel, UserModel::RoleCol, Qt::DisplayRole);
 
     connect(ui->btnAdd, SIGNAL(clicked()), SLOT(add()));
     connect(ui->btnEdit, SIGNAL(clicked()), SLOT(editCurrent()));
@@ -36,18 +65,18 @@
     restoreSettings();
 }
 
-%TableClassName%::~%TableClassName%()
+UserTableDialog::~UserTableDialog()
 {
     saveSettings();
     delete ui;
 }
 
-AdvTableView *%TableClassName%::view() const
+AdvTableView *UserTableDialog::view() const
 {
     return ui->tableView;
 }
 
-void %TableClassName%::saveSettings(const QString &prefix)
+void UserTableDialog::saveSettings(const QString &prefix)
 {
     QString p = prefix.isEmpty() ? objectName() : prefix;
 
@@ -64,7 +93,7 @@ void %TableClassName%::saveSettings(const QString &prefix)
 }
 
 
-void %TableClassName%::restoreSettings(const QString &prefix)
+void UserTableDialog::restoreSettings(const QString &prefix)
 {
     QString p = prefix.isEmpty() ? objectName() : prefix;
 
@@ -80,7 +109,7 @@ void %TableClassName%::restoreSettings(const QString &prefix)
     resize(sett.value(p + "/size").toSize());
 }
 
-void %TableClassName%::add()
+void UserTableDialog::add()
 {
     if (m_editDialog->exec() == QDialog::Accepted) {
         m_model->populate();
@@ -89,7 +118,7 @@ void %TableClassName%::add()
     }
 }
 
-void %TableClassName%::editCurrent()
+void UserTableDialog::editCurrent()
 {
     if (m_editDialog->exec(view()->currentId()) == QDialog::Accepted) {
         m_model->populate();
@@ -100,7 +129,7 @@ void %TableClassName%::editCurrent()
     }
 }
 
-void %TableClassName%::deleteSelected()
+void UserTableDialog::deleteSelected()
 {
     QModelIndexList rows = view()->selectionModel()->selectedRows();
 
@@ -131,13 +160,13 @@ void %TableClassName%::deleteSelected()
     }
 }
 
-void %TableClassName%::slotPrint(Report &r)
+void UserTableDialog::slotPrint(Report &r)
 {
     r.appendModel(m_model);
     ReportManager::showReport(r);
 }
 
-void %TableClassName%::viewDoubleClicked(QModelIndex index)
+void UserTableDialog::viewDoubleClicked(QModelIndex index)
 {
     if (index.flags() & Qt::ItemIsEditable) {
         return;
@@ -146,7 +175,7 @@ void %TableClassName%::viewDoubleClicked(QModelIndex index)
     editCurrent();
 }
 
-void %TableClassName%::showEvent(QShowEvent *e)
+void UserTableDialog::showEvent(QShowEvent *e)
 {
     if (!m_model->populate()) {
         QMessageBox::critical(this, tr("Error"), m_model->errorString());
@@ -154,13 +183,13 @@ void %TableClassName%::showEvent(QShowEvent *e)
     QDialog::showEvent(e);
 }
 
-void %TableClassName%::hideEvent(QHideEvent *e)
+void UserTableDialog::hideEvent(QHideEvent *e)
 {
     m_pos = pos();
     QDialog::hideEvent(e);
 }
 
-QList<int> %TableClassName%::sourceRowsFromProxy(QModelIndexList indexes) const
+QList<int> UserTableDialog::sourceRowsFromProxy(QModelIndexList indexes) const
 {
     QListIterator<QModelIndex> iter(indexes);
     QList<int> rows;
@@ -172,3 +201,4 @@ QList<int> %TableClassName%::sourceRowsFromProxy(QModelIndexList indexes) const
     qSort(rows);
     return rows;
 }
+

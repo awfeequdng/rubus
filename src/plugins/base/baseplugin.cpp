@@ -34,6 +34,7 @@
 #include "widgets/itemeditwidget.h"
 #include "widgets/advtableview.h"
 #include "widgets/contractortabledialog.h"
+#include "widgets/usertabledialog.h"
 
 #include <QtPlugin>
 #include <QAction>
@@ -95,13 +96,14 @@ bool BasePlugin::initialize()
     m_itemDialog->setModel(m_itemModel, ItemModel::IdCol);
 
     m_contractorDialog = new ContractorTableDialog();
+    m_userTableDialog = new UserTableDialog(ICore::mainWindow());
 
     return true;
 }
 
 void BasePlugin::showUserManager()
 {
-    //TODO
+    m_instance->m_userTableDialog->show();
 }
 
 void BasePlugin::showLocationTable()

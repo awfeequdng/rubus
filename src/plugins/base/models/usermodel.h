@@ -27,75 +27,46 @@
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
  *   GNU General Public License for more details.                          *
  ***************************************************************************/
+#ifndef USERMODEL_H
+#define USERMODEL_H
 
-#ifndef USER_H
-#define USER_H
+#include "advitemmodel.h"
 
-#include <QObject>
-#include <QSet>
-#include <QtSql>
-#include <QHashIterator>
-
-#include "core_global.h"
-#include "qjson/qjsondocument.h"
-
-namespace Core {
-
-struct TableRecordPrefStruct {
-    QString table;
-    int recordId;
-    QString value;
+namespace UserInternal {
+struct Item {
+    QString role;
+    QString name;
 };
+}
 
-class CORE_EXPORT User : public QObject
+class UserModel : public AdvItemModel
 {
     Q_OBJECT
 public:
-    explicit User(QString rolename, QObject *parent = 0);
+    enum Cols {
+        RoleCol = 0,
+        NameCol = 1
+    };
 
-    bool load();
+    explicit UserModel(QObject *parent = 0);
 
-    QString rolename() const { return m_rolename; }
-    void setRoleName(const QString &role);
+    bool populate();
 
-    QString name() const { return m_name; }
-    void setName(const QString &value);
-
-    int contractorId() const { return m_contractorId; }
-    void setContractor(int id);
-
-    int location() const;
-
-
-    QJsonObject parameters() const;
-    QJsonObject parameter(const QString &name) const;
-    QJsonValue parameterValue(const QString &name) const;
-    void setParameter(const QString &name, QVariant &value);
-    void setParameter(const QString &name, QVariantMap &value);
-
-    QString gui() const;
-    void setGui(const QString &gui);
-
-    QString errorString() const { return m_errorString; }
-
+    int rowCount(const QModelIndex &parent) const;
+    int columnCount(const QModelIndex &parent) const;
+    QVariant data(const QModelIndex &index, int role) const;
+    QVariant headerData(int section, Qt::Orientation orientation, int role) const;
+    bool removeRows(int row, int count, const QModelIndex &parent);
 
 signals:
-    
-public slots:
-    bool save();
 
-protected:
-    QString m_rolename;
-    QString m_name;
-    int m_contractorId;
-    QVariantMap m_paramsMap;
-    QJsonDocument m_jsonDoc;
-    int m_location;
-    QString m_gui;
-    QString m_errorString;
-    
+public slots:
+    bool submit();
+
+private:
+    QList<UserInternal::Item *> m_items;
+    QString m_removedIds;
 };
 
-}
+#endif //  USERMODEL_H
 
-#endif // USER_H

@@ -16,10 +16,16 @@ unix {
     QMAKE_LFLAGS += -Wl,--rpath=$$NCREPORT_PATH/lib
 
     CUTEREPORT_PATH = /home/wulff/projects/cutereport
+    CUTEREPORT_BUILD = /home/wulff/projects/build-CuteReport-Qt4_8_6_32/debug/build
+    CUTEREPORT_BUILD_PLUGINS = $$CUTEREPORT_BUILD/cutereport/plugins
+    LIBS += -L$$CUTEREPORT_BUILD
     LIBS += -lCuteReport -lCuteReportWidgets
+    QMAKE_LFLAGS += -Wl,--rpath=$$CUTEREPORT_BUILD
+
 }
 
-
+DEFINES += CUTEREPORT_BUILD=\\\"$$CUTEREPORT_BUILD\\\"
+DEFINES += CUTEREPORT_BUILD_PLUGINS=\\\"$$CUTEREPORT_BUILD_PLUGINS\\\"
 
 
 INCLUDEPATH += $$NCREPORT_PATH/include \

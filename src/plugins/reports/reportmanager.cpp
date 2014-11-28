@@ -38,6 +38,7 @@
 #include "reportcore.h"
 #include "reportinterface.h"
 #include "reportpreview.h"
+#include "../plugins/standard/core_plugins/storage/sql/sql.h"
 
 //NcReport
 #include "ncreport.h"
@@ -172,21 +173,25 @@ void ReportManager::showReport(Report &rep)
 
     if (rep.engine() == Report::CuteReportEngine) {
         if (!m_cuteReport) {
-            QSettings sett("cutereport.ini", QSettings::IniFormat);
-            sett.setValue("CuteReport/PluginsPath","plugins/cutereport");
-            sett.setValue("Log/enabled", true);
-            sett.setValue("Log/synchronously", true);
-            sett.setValue("CuteReport/Storage_Standard_Sql_options",
-                          QString("tableName=reports,"
-                          "columnId=re_id,"
-                          "columnName=re_name,"
-                          "columnData=re_data,"
-                          "useAsDefaultConnection=true,"
-                          "connectionId=%1").arg(QSqlDatabase::database().connectionName()));
-
+            QSettings sett;
+            if (sett.value("CuteReport/PluginsPath").toString().isEmpty()) {
+                sett.setValue("CuteReport/PluginsPath", CUTEREPORT_BUILD_PLUGINS);
+            }
 
             m_cuteReport =  new CuteReport::ReportCore(&sett);
+            StorageSql *storage = static_cast<StorageSql*>(m_cuteReport->storageModule("Standard::SQL"));
+            if (storage) {
+                storage->setConnectionId(QSqlDatabase::database().connectionName());
+                storage->setTableName("reports");
+                storage->setColumnData("re_data");
+                storage->setColumnId("re_id");
+                m_cuteReport->setDefaultStorage("Standard::SQL");
+            } else {
+                qCritical() << "can't cast to StorageSql";
+                return;
+            }
         }
+
         QString err;
         CuteReport::ReportInterface * report = m_cuteReport->loadReport(QString("sql:<%1>").arg(rep.id()), &err);
 
@@ -211,13 +216,10 @@ void ReportManager::showReport(Report &rep)
         if (report) {
             preview->setReportCore(m_cuteReport);
             preview->connectReport(report);
+            preview->showMaximized();
+
             preview->run();
-
-            preview->show();
         }
-
-
-        return;
     }
 }
 

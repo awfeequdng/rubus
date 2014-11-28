@@ -59,7 +59,6 @@ public:
 
 public slots:
     static void showUserManager();
-    static void showReportManager();
     static void showLocationTable();
     static void showContractorTable();
     static void showItemTable();

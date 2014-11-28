@@ -101,17 +101,12 @@ bool BasePlugin::initialize()
 
 void BasePlugin::showUserManager()
 {
-    qDebug() << "users";
-}
-
-void BasePlugin::showReportManager()
-{
-    qDebug() << "reprots";
+    //TODO
 }
 
 void BasePlugin::showLocationTable()
 {
-
+    //TODO
 }
 
 void BasePlugin::showContractorTable()

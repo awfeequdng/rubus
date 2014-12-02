@@ -32,6 +32,7 @@
 #include "user.h"
 #include "widgets/mainwindow.h"
 #include "pluginmanager.h"
+#include "reportmanager.h"
 #include "version.h"
 
 #include <QDebug>
@@ -49,12 +50,14 @@ using namespace Core;
 static ICore *m_instance = 0;
 static MainWindow *m_mainWindow;
 static PluginManager *m_pluginManager;
+static ReportManager *m_reportManager;
 
 ICore::ICore(MainWindow *mainWindow, QString configFile)
 {
     m_instance = this;
     m_mainWindow = mainWindow;
     m_pluginManager = new PluginManager(this);
+    m_reportManager = new ReportManager(this);
 
     loadConfig(configFile.isEmpty() ? CONFIG_FILENAME : configFile);
 }
@@ -77,6 +80,11 @@ ICore *ICore::instance()
 PluginManager *ICore::pluginManager()
 {
     return m_pluginManager;
+}
+
+ReportManager *ICore::reportManager()
+{
+    return m_reportManager;
 }
 
 void ICore::loadPlugins()

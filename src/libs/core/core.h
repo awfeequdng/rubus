@@ -46,6 +46,7 @@ class User;
 class MainWindow;
 class IPlugin;
 class PluginManager;
+class ReportManager;
 
 class CORE_EXPORT ICore : public QObject
 {
@@ -59,6 +60,7 @@ public:
 
     static ICore *instance();
     static PluginManager *pluginManager();
+    static ReportManager *reportManager();
 
     static void loadPlugins();
 

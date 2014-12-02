@@ -16,8 +16,37 @@ TEMPLATE = lib
 
 DEFINES += CORE_LIBRARY
 
-INCLUDEPATH += \
-               $$NCREPORT_PATH/include \
+win32 {
+    NCREPORT_PATH = C:/Qt/NCReport
+    CONFIG(debug, debug|release) {
+        LIBS += -L$$NCREPORT_PATH/bin -lNCReportDebug2
+    }else  {
+        LIBS += -L$$NCREPORT_PATH/bin  -lNCReport2
+    }
+    CUTEREPORT_PATH = C:/Projects/cutereport/cutereport
+    CUTEREPORT_BUILD = C:/Projects/cutereport/build-CuteReport-Qt4_8_5_mingw/Debug/build
+}
+
+unix {
+    NCREPORT_PATH = /home/wulff/NCReport2
+    LIBS += -L$$NCREPORT_PATH/lib -lNCReport
+    QMAKE_LFLAGS += -Wl,--rpath=$$NCREPORT_PATH/lib
+
+    CUTEREPORT_PATH = /home/wulff/projects/cutereport
+    CUTEREPORT_BUILD = /home/wulff/projects/build-CuteReport-Qt4_8_6_32/debug/build
+    QMAKE_LFLAGS += -Wl,--rpath=$$CUTEREPORT_BUILD
+}
+
+CUTEREPORT_BUILD_PLUGINS = $$CUTEREPORT_BUILD/cutereport/plugins
+LIBS += -L$$CUTEREPORT_BUILD
+LIBS += -lCuteReport -lCuteReportWidgets
+
+DEFINES += CUTEREPORT_BUILD=\\\"$$CUTEREPORT_BUILD\\\"
+DEFINES += CUTEREPORT_BUILD_PLUGINS=\\\"$$CUTEREPORT_BUILD_PLUGINS\\\"
+
+INCLUDEPATH += $$NCREPORT_PATH/include \
+               $$CUTEREPORT_PATH/src/core \
+               $$CUTEREPORT_PATH/src/widgets/widgets \
 
 DESTDIR = $$LIB_DIR
 
@@ -29,7 +58,9 @@ SOURCES += \
     widgets/dlgauthorise.cpp \
     widgets/dlgauthsettings.cpp \
     widgets/mainwindow.cpp \
-    iplugin.cpp
+    iplugin.cpp \
+    oooreportbuilder.cpp \
+    reportmanager.cpp
 
 HEADERS +=\
     core.h \
@@ -43,7 +74,9 @@ HEADERS +=\
     widgets/dlgauthsettings.h \
     widgets/mainwindow.h \
     version.h \
-    iplugin.h
+    iplugin.h \
+    oooreportbuilder.h \
+    reportmanager.h
 
 FORMS += \
     widgets/dlgauthorise.ui \

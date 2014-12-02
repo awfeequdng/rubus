@@ -49,6 +49,8 @@ namespace CuteReport {
 class ReportCore;
 }
 
+namespace Core {
+
 class CORE_EXPORT ReportManager : public QObject
 {
     Q_OBJECT
@@ -62,7 +64,7 @@ public:
     static void showReport(Report &rep);
     void printReport(Report &rep, QString printerName, int copies, bool showDialog = false);
 
-    QList<Report> reportsByMenuId(QString menuId);
+    static QList<Report> reportsByMenuId(QString menuId);
     static NCReportSource reportDatabaseSource(int reportId);
 
 signals:
@@ -73,5 +75,6 @@ private:
     QHash<QString, QString> m_menus;
 
 };
+}
 
 #endif // REPORTMANAGER_H

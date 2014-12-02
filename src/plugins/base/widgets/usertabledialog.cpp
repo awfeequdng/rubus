@@ -31,7 +31,7 @@
 #include "ui_usertabledialog.h"
 #include "models/usermodel.h"
 #include "widgets/usereditwidget.h"
-#include "../../plugins/reports/reportmanager.h"
+#include "reportmanager.h"
 #include "widgets/editdialog.h"
 
 #include <QMessageBox>

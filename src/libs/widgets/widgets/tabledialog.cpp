@@ -29,7 +29,7 @@
  ***************************************************************************/
 #include "tabledialog.h"
 #include "editdialog.h"
-#include "../../plugins/reports/reportmanager.h"
+#include "reportmanager.h"
 #include "printbutton.h"
 #include "advitemmodel.h"
 #include "advtableview.h"

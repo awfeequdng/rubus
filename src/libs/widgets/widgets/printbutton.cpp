@@ -28,7 +28,7 @@
  *   GNU General Public License for more details.                          *
  ***************************************************************************/
 #include "printbutton.h"
-#include "../../plugins/reports/reportmanager.h"
+#include "reportmanager.h"
 #include "report.h"
 
 #include <QMenu>
@@ -51,8 +51,7 @@ void PrintButton::populateMenu(QString menuId)
 {
     m_menu->clear();
     m_reports.clear();
-    REPORTMANAGER_H
-    m_reports = ReportManager::instance()->reportsByMenuId(menuId);
+    m_reports = ReportManager::reportsByMenuId(menuId);
 
     QListIterator<Report> iter(m_reports);
     while(iter.hasNext()) {

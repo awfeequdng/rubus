@@ -29,7 +29,7 @@
  ***************************************************************************/
 #include "standardtabledialog.h"
 #include "ui_standardtabledialog.h"
-#include "../../plugins/reports/reportmanager.h"
+#include "reportmanager.h"
 
 #include <QSettings>
 

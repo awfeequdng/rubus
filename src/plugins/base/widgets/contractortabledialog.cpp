@@ -31,7 +31,7 @@
 #include "ui_contractortabledialog.h"
 #include "models/contractormodel.h"
 #include "constants.h"
-#include "../../plugins/reports/reportmanager.h"
+#include "reportmanager.h"
 #include "contractoreditwidget.h"
 #include "widgets/editdialog.h"
 

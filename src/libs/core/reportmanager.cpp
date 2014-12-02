@@ -52,6 +52,8 @@
 #include <QtSql>
 #include <QSettings>
 
+using namespace Core;
+
 static ReportManager *m_instance = 0;
 static CuteReport::ReportCore *m_cuteReport = 0;
 
@@ -181,10 +183,10 @@ void ReportManager::showReport(Report &rep)
             m_cuteReport =  new CuteReport::ReportCore(&sett);
             StorageSql *storage = static_cast<StorageSql*>(m_cuteReport->storageModule("Standard::SQL"));
             if (storage) {
-                storage->setConnectionId(QSqlDatabase::database().connectionName());
-                storage->setTableName("reports");
-                storage->setColumnData("re_data");
-                storage->setColumnId("re_id");
+                //storage->setConnectionId(QSqlDatabase::database().connectionName());
+                //storage->setTableName("reports");
+                //storage->setColumnData("re_data");
+                //storage->setColumnId("re_id");
                 m_cuteReport->setDefaultStorage("Standard::SQL");
             } else {
                 qCritical() << "can't cast to StorageSql";

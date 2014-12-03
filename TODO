@@ -1,13 +1,20 @@
 Version 0.3
-        * Base.Users
-            * UI for mainwindow settings
-            * UI for parameters of widgets
-            * Dialog change password
+    * translate readme.md to english
+
+    * Base.Users
+        * UI for mainwindow settings
+        * UI for parameters of widgets
+        * Dialog change password
+
+    * ReportManager
+         * define flags on NCREPORT and CUTEREPORT
+         * CuteReport: set database settings to StorageSqll
 
         * Reports
             * Items list
-            * Contractor list         
+            * Contractor list
 
+----------------------------------------------
 Version 0.2
     + Integration in QtCreator
         + QtCreator wizards
@@ -35,7 +42,4 @@ Version 0.2
             - Locations
             + Users
 
-        + Reports
-
-
-    
+        + Reports 

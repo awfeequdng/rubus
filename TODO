@@ -1,3 +1,13 @@
+Version 0.3
+        * Base.Users
+            * UI for mainwindow settings
+            * UI for parameters of widgets
+            * Dialog change password
+
+        * Reports
+            * Items list
+            * Contractor list         
+
 Version 0.2
     + Integration in QtCreator
         + QtCreator wizards
@@ -18,12 +28,12 @@ Version 0.2
          + sql init script 
          + sql demo script
 
-    * Plugins
-        * Base
+    + Plugins
+        + Base
             + Items
             + Contractors
             - Locations
-            * Users
+            + Users
 
         + Reports
 

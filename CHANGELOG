@@ -1,0 +1,6 @@
+v0.2
+- Integration in QtCreator, wizards:TableDialog,EditWidget,TableDialog and Complex         
+- add widgets: AdvTableView
+- Database: init script, demo script
+- Add plugins: Base with CRUD: Items, Contractors, Users
+- Integrated CuteReport

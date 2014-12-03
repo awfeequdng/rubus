@@ -39,6 +39,7 @@
 
 class EditWidgetInterface;
 class QAction;
+class ReportManager;
 
 namespace Core {
 
@@ -46,7 +47,6 @@ class User;
 class MainWindow;
 class IPlugin;
 class PluginManager;
-class ReportManager;
 
 class CORE_EXPORT ICore : public QObject
 {

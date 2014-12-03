@@ -52,7 +52,7 @@
 #include <QtSql>
 #include <QSettings>
 
-using namespace Core;
+//using namespace Core;
 
 static ReportManager *m_instance = 0;
 static CuteReport::ReportCore *m_cuteReport = 0;

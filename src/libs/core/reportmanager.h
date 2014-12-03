@@ -49,8 +49,6 @@ namespace CuteReport {
 class ReportCore;
 }
 
-namespace Core {
-
 class CORE_EXPORT ReportManager : public QObject
 {
     Q_OBJECT
@@ -75,6 +73,6 @@ private:
     QHash<QString, QString> m_menus;
 
 };
-}
+
 
 #endif // REPORTMANAGER_H

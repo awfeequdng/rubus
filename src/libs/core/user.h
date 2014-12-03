@@ -67,6 +67,7 @@ public:
     int location() const;
 
     bool changePassword(const QString &pwd);
+    bool changePassword(const QString role, const QString &pwd);
 
 
     QJsonObject parameters() const;

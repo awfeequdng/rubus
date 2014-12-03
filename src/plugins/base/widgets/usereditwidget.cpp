@@ -68,6 +68,8 @@ bool UserEditWidget::load(QVariant id)
     ui->edRole->setText(m_role);
     ui->edRole->setEnabled(m_role.isEmpty());
     m_user->setRoleName(m_role);
+    ui->edPwd->clear();
+    ui->edPwdAgain->clear();
 
     if (!m_user->load()) {
         qCritical() << m_user->errorString();
@@ -105,6 +107,15 @@ bool UserEditWidget::save()
         return false;
     }
 
+    if (!ui->edPwd->text().isEmpty()) {
+        if (!m_user->changePassword(ui->edPwd->text())) {
+            QSqlDatabase::database().rollback();
+            qCritical() << m_user->errorString();
+            QMessageBox::critical(this, tr("Save"), m_user->errorString());
+            return false;
+        }
+    }
+
     QSqlDatabase::database().commit();
     emit saved();
     return true;
@@ -127,6 +138,12 @@ bool UserEditWidget::isValid()
     if (ui->edName->text().isEmpty()) {
         ui->edName->setFocus();
         QMessageBox::critical(this, "Validation", tr("Name is empty!"));
+        return false;
+    }
+
+    if (!ui->edPwd->text().isEmpty() && ui->edPwd->text() != ui->edPwdAgain->text()) {
+        ui->edPwd->setFocus();
+        QMessageBox::critical(this, tr("Validation"), tr("Password and password again incorrect"));
         return false;
     }
 

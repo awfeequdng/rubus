@@ -55,6 +55,7 @@ public:
 public slots:
     bool load(QVariant id);
     bool save();
+
 private:
     Ui::UserEditWidget *ui;
     QString m_role;

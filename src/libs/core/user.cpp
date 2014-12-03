@@ -31,6 +31,8 @@
 #include "qjsonarray.h"
 #include "qjsonobject.h"
 
+#include <QCryptographicHash>
+
 
 using namespace Core;
 
@@ -95,8 +97,31 @@ int Core::User::location() const
 
 bool User::changePassword(const QString &pwd)
 {
-    Q_UNUSED(pwd)
-    //TODO
+    return changePassword(m_rolename, pwd);
+}
+
+bool User::changePassword(const QString role, const QString &pwd)
+{
+    if (role.isEmpty() || pwd.isEmpty()) {
+        m_errorString = tr("role name or password is empty!");
+        return false;
+    }
+
+    QByteArray p;
+    p.append(pwd);
+    p.append(role);
+    p = QCryptographicHash::hash(p, QCryptographicHash::Md5).toHex();
+
+    QSqlQuery sql;
+    sql.exec(QString("ALTER ROLE %1 WITH ENCRYPTED PASSWORD 'md5%2'")
+             .arg(role)
+             .arg(QString(p)));
+
+    if (sql.lastError().isValid()) {
+        m_errorString = sql.lastError().text();
+        return false;
+    }
+
     return true;
 }
 

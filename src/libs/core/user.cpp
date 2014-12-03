@@ -37,7 +37,8 @@ using namespace Core;
 User::User(QString rolename, QObject *parent) :
     QObject(parent),
     m_rolename(rolename),
-    m_contractorId(-1)
+    m_contractorId(-1),
+    m_isExists(false)
 {
 }
 
@@ -47,6 +48,8 @@ bool User::load()
     sql.exec(QString("SELECT up_name,up_contractor,up_params, up_gui "
                      "FROM user_params WHERE up_role = '%1'")
              .arg(rolename()));
+
+    m_isExists = false;
 
     if (sql.lastError().isValid()) {
         qDebug() << sql.lastError();
@@ -58,19 +61,13 @@ bool User::load()
         setName(sql.value(0).toString());
         m_contractorId = sql.value(1).isNull() ? -1 : sql.value(1).toInt();
 
-        QJsonParseError err;
-        m_jsonDoc = QJsonDocument::fromJson(sql.value(2).toString().toUtf8(), &err);
-
-        if (err.error != QJsonParseError::NoError) {
-            qDebug() << "can't parse parameter's user: JsonError:" << err.error;
-        }
+        setParameters(sql.value(2).toString());
 
         m_gui = sql.value(3).toString();
         m_location = parameterValue("location").toVariant().toInt();
+        m_isExists = true;
     } else {
-        m_errorString = tr("No record of user contacts");
-        qWarning() << m_errorString;
-        return false;
+        //TODO init data user
     }
 
     return true;
@@ -86,9 +83,21 @@ void User::setName(const QString &name)
     m_name = name;
 }
 
+void User::setContractor(int id)
+{
+    m_contractorId = id;
+}
+
 int Core::User::location() const
 {
     return m_location;
+}
+
+bool User::changePassword(const QString &pwd)
+{
+    Q_UNUSED(pwd)
+    //TODO
+    return true;
 }
 
 QJsonObject User::parameters() const
@@ -119,6 +128,16 @@ void Core::User::setParameter(const QString &name, QVariantMap &value)
 
 }
 
+void User::setParameters(const QString &params)
+{
+    QJsonParseError err;
+    m_jsonDoc = QJsonDocument::fromJson(params.toUtf8(), &err);
+
+    if (err.error != QJsonParseError::NoError) {
+        qDebug() << "can't parse parameter's user: JsonError:" << err.error;
+    }
+}
+
 QString User::gui() const
 {
     return m_gui;
@@ -132,15 +151,26 @@ void User::setGui(const QString &gui)
 
 bool User::save()
 {
-    if (m_jsonDoc.isEmpty()) {
-        return true;
-    }
-
     QSqlQuery sql;
 
-    if (!sql.exec(QString("UPDATE user_params SET up_params = '%1' WHERE up_role = '%2'")
-                  .arg(QString(m_jsonDoc.toJson()))
-                  .arg(rolename()))) {
+    if (!m_isExists) {
+        sql.prepare("INSERT INTO user_params (up_role, up_name, up_contractor, up_params, up_gui) "
+                    "VALUES (:role, :name, :contractor, :params, :gui)");
+    } else {
+        sql.prepare("UPDATE user_params SET up_name = :name, "
+                    "up_contractor = :contractor, "
+                    "up_params = :params, "
+                    "up_gui = :gui "
+                    "WHERE up_role = :role");
+    }
+
+    sql.bindValue(":role", m_rolename);
+    sql.bindValue(":name", m_name);
+    sql.bindValue(":contractor", m_contractorId);
+    sql.bindValue(":params", m_jsonDoc.isEmpty() ? QString() : QString(m_jsonDoc.toJson()));
+    sql.bindValue(":gui", m_gui);
+
+    if (!sql.exec()) {
         qCritical() << sql.lastError();
         m_errorString = sql.lastError().text();
         return false;

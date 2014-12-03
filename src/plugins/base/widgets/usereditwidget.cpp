@@ -30,6 +30,8 @@
 #include "usereditwidget.h"
 #include "ui_usereditwidget.h"
 #include "user.h"
+#include "qjson/qjsonarray.h"
+#include "qjson/qjsonobject.h"
 
 #include <QtSql>
 #include <QDebug>
@@ -65,30 +67,18 @@ bool UserEditWidget::load(QVariant id)
 
     ui->edRole->setText(m_role);
     ui->edRole->setEnabled(m_role.isEmpty());
+    m_user->setRoleName(m_role);
 
-    if (!m_role.isEmpty()) {
-        QSqlQuery sql;
-        sql.exec(QString("SELECT up_name, up_contractor, up_params, up_gui "
-                         "FROM user_params WHERE up_role = '%1'")
-                 .arg(m_role));
-
-        if (sql.lastError().isValid()) {
-            setErrorString(sql.lastError().text());
-            qCritical() << sql.lastError();
-            return false;
-        }
-
-        if (!sql.next()) {
-            setErrorString(tr("User #%1 not found!").arg(m_role));
-            return false;
-        }
-
-        ui->edName->setText(sql.value(0).toString());
-        ui->cmbContractor->setCurrentKey(sql.value(1).toInt());
-
-        //m_params = sql.value(2).toString();
-        //m_gui = sql.value(3).toString();
+    if (!m_user->load()) {
+        qCritical() << m_user->errorString();
+        return false;
     }
+
+    ui->edName->setText(m_user->name());
+    ui->cmbContractor->setCurrentKey(m_user->contractorId());
+    ui->edGui->setText(m_user->gui());
+    QJsonDocument doc(m_user->parameters());
+    ui->edParams->setText(QString(doc.toJson()));
 
     setWindowTitle(m_role.isEmpty() ? tr("New user") : tr("Edit  user #%1").arg(m_role));
     return true;
@@ -100,49 +90,22 @@ bool UserEditWidget::save()
         return false;
     }
 
-    QSqlQuery sql;
     QSqlDatabase::database().transaction();
 
-    if (m_role.isEmpty()) {
-        sql.prepare("INSERT INTO user_params (up_role, up_name, up_contractor, up_params, up_gui) "
-                    "VALUES (:role, :name, :contractor, :params, :gui)");
-        sql.bindValue(":role", ui->edRole->text());
-    } else {
-        sql.prepare("UPDATE user_params SET up_name = :name, "
-                    "up_contractor = :contractor, "
-                    "up_params = :params, "
-                    "up_gui = :gui "
-                    "WHERE up_role = :role");
-        sql.bindValue(":role", m_role);
-    }
+    m_user->setRoleName(ui->edRole->text());
+    m_user->setName(ui->edName->text());
+    m_user->setContractor(ui->cmbContractor->currentKey().toInt());
+    m_user->setGui(ui->edGui->toPlainText());
+    m_user->setParameters(ui->edParams->toPlainText());
 
-    sql.bindValue(":name", ui->edName->text().simplified());
-    sql.bindValue(":contractor", ui->cmbContractor->currentKey());
-    //sql.bindValue(":params", m_params); //TODO get params
-    //sql.bindValue(":gui", m_gui);
-
-    if (!sql.exec()) {
-        setErrorString(sql.lastError().text());
-        qCritical() << sql.lastError();
+    if (!m_user->save()) {
+        QSqlDatabase::database().rollback();
+        qCritical() << m_user->errorString();
+        QMessageBox::critical(this, tr("Save"), m_user->errorString());
         return false;
     }
 
-    if (m_role.isEmpty()) {
-        sql.exec(QString("SELECT rolname FROM pg_catalog.pg_roles "
-                         "WHERE rolname = '%1'").arg(ui->edRole->text()));
-
-        if (sql.lastError().isValid()) {
-            setErrorString(sql.lastError().text());
-            QSqlDatabase::database().rollback();
-            return false;
-        }
-
-        if (!sql.next()) {
-
-        }
-    }
-
-
+    QSqlDatabase::database().commit();
     emit saved();
     return true;
 }

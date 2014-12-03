@@ -66,12 +66,15 @@ public:
 
     int location() const;
 
+    bool changePassword(const QString &pwd);
+
 
     QJsonObject parameters() const;
     QJsonObject parameter(const QString &name) const;
     QJsonValue parameterValue(const QString &name) const;
     void setParameter(const QString &name, QVariant &value);
     void setParameter(const QString &name, QVariantMap &value);
+    void setParameters(const QString &params);
 
     QString gui() const;
     void setGui(const QString &gui);
@@ -93,6 +96,7 @@ protected:
     int m_location;
     QString m_gui;
     QString m_errorString;
+    bool m_isExists;
     
 };
 

@@ -8,11 +8,28 @@ Version 0.3
 
     * ReportManager
          * define flags on NCREPORT and CUTEREPORT
-         * CuteReport: set database settings to StorageSqll
+         * CuteReport: set database settings to StorageSql
 
-        * Reports
-            * Items list
-            * Contractor list
+    * Reports
+        * Items list
+        * Contractor list
+
+    * Plugins
+        * Base.Contractors
+             * Contacts
+        * Spareparts
+            * Tables: item_sparepart
+            * Sparepart balance widget
+        * Equipments
+             * Tables: equipments, equipment_types
+             * Widgets equiment type, equipments           
+            
+    
+    * Database
+        * Warehouse
+             * Stock balance
+             * Stock history
+        
 
 ----------------------------------------------
 Version 0.2

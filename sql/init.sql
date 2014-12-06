@@ -56,3 +56,9 @@ re_note text,
 re_data xml,
 PRIMARY KEY (re_id)
 );
+
+CREATE TABLE objects (
+ob_id varchar(200),
+ob_data text,
+PRIMARY KEY (ob_id)
+)

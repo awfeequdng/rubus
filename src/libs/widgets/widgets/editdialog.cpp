@@ -34,6 +34,7 @@
 #include <QCloseEvent>
 #include <QPushButton>
 #include <QLayout>
+#include <QVBoxLayout>
 #include <QDebug>
 
 EditDialog::EditDialog(EditWidgetInterface *editWidget, QWidget *parent) :

@@ -36,6 +36,9 @@
 #include "widgets/editdialog.h"
 
 #include <QMessageBox>
+#include <QSortFilterProxyModel>
+#include <QDebug>
+#include <QSettings>
 
 ContractorTableDialog::ContractorTableDialog(QWidget *parent) :
     QDialog(parent),

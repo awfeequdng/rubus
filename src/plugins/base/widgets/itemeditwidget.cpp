@@ -32,6 +32,7 @@
 #include "models/itemtypemodel.h"
 
 #include <QtSql>
+#include <QMessageBox>
 
 ItemEditWidget::ItemEditWidget(QWidget *parent) :
     EditWidgetInterface(parent),

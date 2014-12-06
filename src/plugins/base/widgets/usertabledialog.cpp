@@ -35,6 +35,9 @@
 #include "widgets/editdialog.h"
 
 #include <QMessageBox>
+#include <QSortFilterProxyModel>
+#include <QDebug>
+#include <QSettings>
 
 UserTableDialog::UserTableDialog(QWidget *parent) :
     QDialog(parent),

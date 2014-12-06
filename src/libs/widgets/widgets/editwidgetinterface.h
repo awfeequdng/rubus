@@ -30,7 +30,8 @@
 #ifndef EDITWIDGETINTERFACE_H
 #define EDITWIDGETINTERFACE_H
 
-#include <QtGui>
+#include <QWidget>
+#include <QVariant>
 
 #include "widgets_global.h"
 

@@ -30,11 +30,12 @@
 #include "usereditwidget.h"
 #include "ui_usereditwidget.h"
 #include "user.h"
-#include "qjson/qjsonarray.h"
-#include "qjson/qjsonobject.h"
+//#include "qjson/qjsonarray.h"
+//#include "qjson/qjsonobject.h"
 
 #include <QtSql>
 #include <QDebug>
+#include <QMessageBox>
 
 UserEditWidget::UserEditWidget(QWidget *parent) :
     EditWidgetInterface(parent),
@@ -79,8 +80,8 @@ bool UserEditWidget::load(QVariant id)
     ui->edName->setText(m_user->name());
     ui->cmbContractor->setCurrentKey(m_user->contractorId());
     ui->edGui->setText(m_user->gui());
-    QJsonDocument doc(m_user->parameters());
-    ui->edParams->setText(QString(doc.toJson()));
+    //QJsonDocument doc(m_user->parameters());
+    //ui->edParams->setText(QString(doc.toJson()));
 
     setWindowTitle(m_role.isEmpty() ? tr("New user") : tr("Edit  user #%1").arg(m_role));
     return true;

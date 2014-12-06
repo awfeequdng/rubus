@@ -197,23 +197,30 @@ void ReportEditWidget::saveToFile()
     dlg.setNameFilters(filters);
 
     QString ext;
+    QString nameFilter;
     int type = ui->cmbType->currentKey().toInt();
     switch (type) {
     case Report::NcReportEngine :
         ext = ".ncr";
-        dlg.selectFilter(filters.at(1));
+        nameFilter = filters.at(1);
         break;
     case Report::CuteReportEngine :
         ext = ".xml";
-        dlg.selectFilter(filters.at(2));
+        nameFilter = filters.at(2);
         break;
     case Report::OpenOfficeEngine :
         ext = ".ods";
-        dlg.selectFilter(filters.at(3));
+        nameFilter = filters.at(3);
         break;
     default:
         break;
     }
+
+#if QT_VERSION < 0x050000
+    dlg.selectFilter(nameFilter);
+#else
+    dlg.setNameFilter(nameFilter);
+#endif
 
     dlg.selectFile(ui->edName->text() + ext);
     if (dlg.exec() == QDialog::Accepted) {

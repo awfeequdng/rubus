@@ -35,6 +35,9 @@
 #include "advtableview.h"
 
 #include <QSortFilterProxyModel>
+#include <QSettings>
+#include <QDebug>
+#include <QMessageBox>
 
 TableDialog::TableDialog(QWidget *parent) :
     QDialog(parent),
@@ -131,8 +134,16 @@ void TableDialog::setView(AdvTableView *view)
     }
 
     m_view->setSortingEnabled(true);
+
+
+#if QT_VERSION < 0x050000
     m_view->horizontalHeader()->setClickable(true);
     m_view->horizontalHeader()->setMovable(true);
+#else
+    m_view->horizontalHeader()->setSectionsClickable(true);
+    m_view->horizontalHeader()->setSectionsMovable(true);
+#endif
+
     m_view->horizontalHeader()->setSortIndicatorShown(true);
 
     connect(m_view, SIGNAL(doubleClicked(QModelIndex)), SLOT(slotTableViewDoubleClicked(QModelIndex)));

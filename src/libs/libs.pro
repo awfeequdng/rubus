@@ -2,7 +2,7 @@ TEMPLATE = subdirs
 
 SUBDIRS += \
         core \
-        widgets \
+        #widgets \
 
 
 CONFIG += ordered

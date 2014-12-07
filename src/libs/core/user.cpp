@@ -36,6 +36,14 @@
 
 using namespace Core;
 
+User::User(QObject *parent) :
+    QObject(parent),
+    m_rolename(QString()),
+    m_contractorId(-1),
+    m_isExists(false)
+{
+}
+
 User::User(QString rolename, QObject *parent) :
     QObject(parent),
     m_rolename(rolename),
@@ -75,7 +83,7 @@ bool User::load()
     return true;
 }
 
-void User::setRoleName(const QString &role)
+void User::setRolename(const QString &role)
 {
     m_rolename = role;
 }

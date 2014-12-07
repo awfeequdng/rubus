@@ -34,7 +34,6 @@
 #include <QMap>
 
 #include "core_global.h"
-#include "widgets/mainwindow.h"
 
 
 class EditWidgetInterface;
@@ -44,17 +43,20 @@ class ReportManager;
 namespace Core {
 
 class User;
-class MainWindow;
 class IPlugin;
 class PluginManager;
 
 class CORE_EXPORT ICore : public QObject
 {
     Q_OBJECT
-    friend class MainWindow;
-    explicit ICore(MainWindow *mainWindow, QString configFile = QString());
+
+    Q_PROPERTY(QString host READ host WRITE setHost NOTIFY hostChanged)
+    Q_PROPERTY(QString database READ database WRITE setDatabase NOTIFY databaseChanged)
+    Q_PROPERTY(int port READ port WRITE setPort NOTIFY portChanged)
+    Q_PROPERTY(QString version READ version CONSTANT)
 
 public:
+    explicit ICore(QString configFile = QString());
 
     ~ICore();
 
@@ -64,10 +66,8 @@ public:
 
     static void loadPlugins();
 
-    static MainWindow *mainWindow();
-
-    bool login(QString username, QString password);
-    bool logout();
+    Q_INVOKABLE bool login(QString username, QString password);
+    Q_INVOKABLE bool logout();
 
     static void registerWidget(QString name, QWidget *widget);
 
@@ -75,30 +75,33 @@ public:
     static void registerActions(QMap<QString, QAction *> map);
     static QAction * actionById(QString id);
 
-    QString databaseHost() const { return m_databaseHost; }
-    void setDatabaseHost(QString host) { m_databaseHost = host; }
+    QString host() const { return m_databaseHost; }
+    void setHost(QString host) { m_databaseHost = host; }
 
-    QString databaseName() const { return m_databaseName; }
-    void setDatabaseName(QString name) { m_databaseName = name; }
+    QString database() const { return m_databaseName; }
+    void setDatabase(QString name) { m_databaseName = name; }
 
-    int databasePort() const { return m_databasePort; }
-    void setDatabasePort(int port) { m_databasePort = port; }
+    int port() const { return m_databasePort; }
+    void setPort(int port) { m_databasePort = port; }
 
-    QString errorString() const { return m_errorString; }
+    Q_INVOKABLE QString errorString() const { return m_errorString; }
     bool canChangeDatabaseSettings() { return m_canChangeDatabaseSettings; }
 
-    static User *currentUser();
+    Q_INVOKABLE static User *currentUser();
 
     void loadParameters();
     void saveParameters();
 
-    static QString version();
+    Q_INVOKABLE static QString version();
 
 
 
 signals:
     void logged();
     void loggedOut();
+    void hostChanged();
+    void databaseChanged();
+    void portChanged();
 
 public slots:
 

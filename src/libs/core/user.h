@@ -37,26 +37,21 @@
 #include <QHashIterator>
 
 #include "core_global.h"
-#include "qjson/qjsondocument.h"
 
 namespace Core {
-
-struct TableRecordPrefStruct {
-    QString table;
-    int recordId;
-    QString value;
-};
 
 class CORE_EXPORT User : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(QString rolename READ rolename WRITE setRolename NOTIFY rolenameChanged)
+    Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
+    Q_PROPERTY(int contractor READ contractorId WRITE setContractor NOTIFY contractorChanged)
 public:
+    explicit User(QObject *parent = 0);
     explicit User(QString rolename, QObject *parent = 0);
 
-    bool load();
-
     QString rolename() const { return m_rolename; }
-    void setRoleName(const QString &role);
+    void setRolename(const QString &role);
 
     QString name() const { return m_name; }
     void setName(const QString &value);
@@ -84,8 +79,12 @@ public:
 
 
 signals:
+    void rolenameChanged();
+    void nameChanged();
+    void contractorChanged();
     
 public slots:
+    bool load();
     bool save();
 
 protected:

@@ -1,0 +1,103 @@
+import QtQuick 2.2
+import QtQuick.Window 2.0
+import QtQuick.Controls 1.1
+import QtQuick.Layouts 1.1
+import QtQuick.Controls.Styles 1.1
+import QtQuick.Dialogs 1.1
+import Rubus 1.0
+
+Window {
+    id: loginWindow
+    property string username: edLogin.text;
+    property string password: edPwd.text;
+    property bool issave: ckSavePassword.checked;
+    property bool save: true;
+
+    flags: Qt.Dialog
+    modality: Qt.WindowModal
+    width: 300
+    height: 130
+    title: "Rubus " + core.version;
+
+    Core { id: core }
+
+    MessageDialog {
+        id : coreError
+        title: "Core error"
+        icon: StandardIcon.Critical
+        standardButtons: StandardButton.Ok
+
+    }
+
+    GridLayout {
+        columns: 2
+        anchors.fill: parent
+        anchors.margins: 10
+        rowSpacing: 6
+        columnSpacing: 6
+
+        Label { text: qsTr("Login:") }
+        TextField {
+            id: edLogin
+            text : username
+            placeholderText: qsTr("Login")
+            Layout.fillWidth: true
+        }
+
+        Label { text: qsTr("Password:") }
+        TextField {
+            id: edPwd
+            text: password
+            placeholderText: qsTr("Password")
+            echoMode: TextInput.Password
+            Layout.fillWidth: true
+        }
+
+        Label { text: "" }
+        CheckBox {
+            id: ckSavePassword
+            text: qsTr("Save password?")
+        }
+
+
+        RowLayout {
+            Layout.columnSpan: 2
+            Item {
+                Layout.fillWidth: true
+            }
+
+            Button {
+                id: btnAccept
+                text: qsTr("Sign in")
+                Layout.preferredHeight: 30
+                onClicked: {
+                    if (edLogin.text == "") {
+                        edLogin.focus = true
+                    } else {
+                        if (!core.login(username, password)) {
+                            coreError.text = core.errorString()
+                            coreError.visible = true
+                        }
+                    }
+                }
+            }
+
+            Button {
+                id: btnCancel
+                text: qsTr("Cancel")
+                Layout.preferredHeight: 30
+                onClicked: {
+                    loginWindow.close();
+                }
+            }
+        }
+
+        Item {
+            Layout.columnSpan: 2
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+        }
+    }
+
+    Component.onCompleted: visible = true
+}

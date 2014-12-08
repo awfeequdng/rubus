@@ -121,7 +121,16 @@ bool ICore::login(QString username, QString password)
             return false;
         }
 
+        m_mainwindowQml = "import QtQuick 2.0;import QtQuick.Window 2.0; Window {"
+                "visible : true;"
+                "width: 100;"
+                "height: 62;"
+                "}";
+
+
+
         loadParameters();
+        qDebug() << "logged";
         emit logged();
     } else {
         qDebug() << db.lastError();

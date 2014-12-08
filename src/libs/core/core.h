@@ -88,6 +88,7 @@ public:
     bool canChangeDatabaseSettings() { return m_canChangeDatabaseSettings; }
 
     Q_INVOKABLE static User *currentUser();
+    QByteArray mainWndowQml() const { return m_mainwindowQml; }
 
     void loadParameters();
     void saveParameters();
@@ -102,6 +103,7 @@ signals:
     void hostChanged();
     void databaseChanged();
     void portChanged();
+    void mainWindowDataLoaded(const QByteArray & data, const QUrl & url);
 
 public slots:
 
@@ -117,6 +119,7 @@ private:
     User *m_currentUser;
     QString m_reportStoragePath;
     QString m_configFile;
+    QByteArray m_mainwindowQml;
 
     QMap<QString, QAction *> m_actionById;
 };

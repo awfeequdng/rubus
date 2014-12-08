@@ -13,13 +13,16 @@ Window {
     property bool issave: ckSavePassword.checked;
     property bool save: true;
 
+    signal onSignin;
+
+    visible : true
     flags: Qt.Dialog
     modality: Qt.WindowModal
     width: 300
     height: 130
     title: "Rubus " + core.version;
 
-    Core { id: core }
+    Core { id : core }
 
     MessageDialog {
         id : coreError
@@ -42,6 +45,17 @@ Window {
             text : username
             placeholderText: qsTr("Login")
             Layout.fillWidth: true
+            Keys.onEnterPressed : {
+                if (text != "")
+                    edPwd.focus = true
+            }
+            Keys.onReturnPressed : {
+                if (text != "")
+                    edPwd.focus = true
+            }
+
+
+            Keys.onEscapePressed : loginWindow.close();
         }
 
         Label { text: qsTr("Password:") }
@@ -51,6 +65,10 @@ Window {
             placeholderText: qsTr("Password")
             echoMode: TextInput.Password
             Layout.fillWidth: true
+            Keys.onEscapePressed : loginWindow.close();
+
+            Keys.onEnterPressed : login()
+            Keys.onReturnPressed : login()
         }
 
         Label { text: "" }
@@ -74,10 +92,7 @@ Window {
                     if (edLogin.text == "") {
                         edLogin.focus = true
                     } else {
-                        if (!core.login(username, password)) {
-                            coreError.text = core.errorString()
-                            coreError.visible = true
-                        }
+                        login();
                     }
                 }
             }
@@ -97,7 +112,24 @@ Window {
             Layout.fillWidth: true
             Layout.fillHeight: true
         }
+    }    
+
+    Component.onCompleted : {
+        visible = true
+        if (edLogin.text == "") {
+            edLogin.focus = true
+        } else {
+            edPwd.focus = true
+        }
     }
 
-    Component.onCompleted: visible = true
+    function login() {
+        if (!core.login(username, password)) {
+            coreError.text = core.errorString()
+            coreError.visible = true
+        } else {
+            onSignin();
+            visible = false
+        }
+    }
 }

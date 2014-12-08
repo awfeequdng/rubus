@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>qml/SigninDialog.qml</file>
+        <file>qml/mainwindow.qml</file>
     </qresource>
 </RCC>

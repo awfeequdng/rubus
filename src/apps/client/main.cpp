@@ -2,6 +2,8 @@
 #include <QQmlApplicationEngine>
 #include <QtQml>
 #include <QtDeclarative/QDeclarativeProperty>
+#include <QObject>
+#include <QQuickWindow>
 
 #include "core.h"
 #include "user.h"
@@ -59,6 +61,17 @@ void parseAppArgs()
     }
 }
 
+class Win : public QObject {
+    Q_OBJECT
+public slots:
+    void onSignin() {
+        QQmlApplicationEngine engine;
+        engine.loadData(Core::ICore::instance()->mainWndowQml());
+        QQuickWindow *mainWindow = qobject_cast<QQuickWindow*>(engine.rootObjects().first());
+        mainWindow->show();
+    }
+};
+
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
@@ -74,13 +87,18 @@ int main(int argc, char *argv[])
 
     Core::ICore core(m_configFile);
 
+    QQmlApplicationEngine signDialog;
 
-    QQmlApplicationEngine engine;
-    engine.load(QUrl("qrc:/qml/SigninDialog.qml"));
+    signDialog.load(QUrl("qrc:/qml/SigninDialog.qml"));
 
-    QObject *signin = engine.rootObjects().first();
+    QObject *signin = signDialog.rootObjects().first();
     signin->setProperty("username", m_user);
     signin->setProperty("password", m_pwd);
 
+    Win w;
+    QObject::connect(signin, SIGNAL(onSignin()), &w, SLOT(onSignin()));
+
     return app.exec();
 }
+
+#include "main.moc"

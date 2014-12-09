@@ -126,18 +126,9 @@ bool ICore::login(QString username, QString password)
             m_errorString = m_currentUser->errorString();
             return false;
         }
-
-        m_mainwindowQml = "import QtQuick 2.0;import QtQuick.Window 2.0; Window {"
-                "visible : true;"
-                "width: 100;"
-                "height: 62;"
-                "}";
-
-
-
-        loadParameters();
-        emit mainWindowDataLoaded(m_mainwindowQml, QUrl());
         emit logged();
+        loadParameters();
+        initMainWindow();
     } else {
         qDebug() << db.lastError();
         m_errorString = db.lastError().text();
@@ -263,5 +254,37 @@ void ICore::saveConfig()
     m_systemSettings->setValue("host",m_databaseHost);
     m_systemSettings->setValue("database",m_databaseName);
     m_systemSettings->setValue("port",m_databasePort);
+}
+
+void ICore::initMainWindow()
+{
+    QJsonObject obj = m_currentUser->parameter("mainwindow");
+    if (obj.empty()) {
+        qCritical() << "not settings for MainWindow";
+        QApplication::quit();
+        return;
+    }
+
+    QVariantMap map = obj.toVariantMap();
+    if(map.value("storage").toString() == "file") {
+        QString path;
+        path += QML_BASE_DIR;
+        path += "/";
+        QUrl url(path + map.value("url").toString());
+
+        QFile f(url.toString(QUrl::RemoveScheme));
+
+        if (!f.open(QIODevice::ReadOnly)) {
+            qCritical() << "can't open MainWindow file:" << url.toLocalFile();
+            QApplication::quit();
+            return;
+        }
+
+        m_mainwindowQml = f.readAll();
+        qDebug() << m_mainwindowQml;
+        f.close();
+    }
+
+    emit mainWindowDataLoaded(m_mainwindowQml, QUrl());
 }
 

@@ -17,10 +17,11 @@ INCLUDEPATH += ../../libs/core \
 LIBS += -L$$LIB_DIR -lRubusCore
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
-QML_IMPORT_PATH =
+QML_IMPORT_PATH = $$QML_BASE_DIR
 
 # Default rules for deployment.
 include(deployment.pri)
 
 OTHER_FILES += \
     qml/SigninDialog.qml
+    ../shared/qml/mainwindow.qml

@@ -112,6 +112,8 @@ private:
     void loadConfig();
     void saveConfig();
 
+    void initMainWindow();
+
     QString m_databaseHost;
     QString m_databaseName;
     int m_databasePort;

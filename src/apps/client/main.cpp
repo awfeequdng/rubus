@@ -63,10 +63,6 @@ void parseAppArgs()
     }
 }
 
-void showSigninDialog(QQmlApplicationEngine *engine) {
-
-}
-
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
@@ -76,7 +72,6 @@ int main(int argc, char *argv[])
     app.setApplicationName("Rubus");
 
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("utf8"));
-    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("utf8"));
 
     qmlRegisterType<Core::ICore>("Rubus", 1, 0, "Core");
     qmlRegisterType<Core::User>("Rubus", 1, 0, "User");

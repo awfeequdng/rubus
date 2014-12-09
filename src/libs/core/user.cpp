@@ -167,7 +167,7 @@ void User::setParameters(const QString &params)
     m_jsonDoc = QJsonDocument::fromJson(params.toUtf8(), &err);
 
     if (err.error != QJsonParseError::NoError) {
-        qDebug() << "can't parse parameter's user: JsonError:" << err.error;
+        qDebug() << "can't parse parameter's user: JsonError:" << err.error << err.errorString();
     }
 }
 

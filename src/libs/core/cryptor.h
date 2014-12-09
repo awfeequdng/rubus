@@ -31,16 +31,17 @@
 #define CRYPTOR_H
 
 #include <QString>
+#include <QObject>
 
 #include "core_global.h"
 
-class CORE_EXPORT Cryptor
+class CORE_EXPORT Cryptor : public QObject
 {
+    Q_OBJECT
+    static const quint64 key = 8374568;
 public:
 
-    static const quint64 key = 8374568;
-
-    static QString encode(QString value)
+    Q_INVOKABLE static QString encode(QString value)
     {
         QByteArray arr(value.toUtf8());
         for(int i =0; i<arr.size(); i++)
@@ -49,7 +50,7 @@ public:
         return QString::fromUtf8(arr.toBase64());
     }
 
-    static QString decode(QString value)
+    Q_INVOKABLE static QString decode(QString value)
     {
         QByteArray arr = QByteArray::fromBase64(value.toUtf8());
         for(int i =0; i<arr.size(); i++)

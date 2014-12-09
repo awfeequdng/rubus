@@ -48,7 +48,8 @@ SOURCES += \
     user.cpp \
     iplugin.cpp \
     oooreportbuilder.cpp \
-    reportmanager.cpp
+    reportmanager.cpp \
+    settings.cpp
 
 HEADERS +=\
     core.h \
@@ -61,7 +62,8 @@ HEADERS +=\
     version.h \
     iplugin.h \
     oooreportbuilder.h \
-    reportmanager.h
+    reportmanager.h \
+    settings.h
 
 RESOURCES +=
 

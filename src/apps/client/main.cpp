@@ -4,9 +4,11 @@
 #include <QtDeclarative/QDeclarativeProperty>
 #include <QObject>
 #include <QQuickWindow>
+#include <QMessageBox>
 
 #include "core.h"
 #include "user.h"
+#include "cryptor.h"
 
 QString m_configFile;
 QString m_user;
@@ -61,23 +63,21 @@ void parseAppArgs()
     }
 }
 
-class Win : public QObject {
-    Q_OBJECT
-public slots:
-    void onSignin() {
-        QQmlApplicationEngine engine;
-        engine.loadData(Core::ICore::instance()->mainWndowQml());
-        QQuickWindow *mainWindow = qobject_cast<QQuickWindow*>(engine.rootObjects().first());
-        mainWindow->show();
-    }
-};
+void showSigninDialog(QQmlApplicationEngine *engine) {
+
+}
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
+    QLocale::setDefault(QLocale::system());
+
+    app.setOrganizationName("WSoft");
+    app.setApplicationName("Rubus");
 
     qmlRegisterType<Core::ICore>("Rubus", 1, 0, "Core");
     qmlRegisterType<Core::User>("Rubus", 1, 0, "User");
+    qmlRegisterType<Cryptor>("Rubus", 1, 0, "Cryptor");
 
     QTranslator translator;
     translator.load("rubus_ru");
@@ -86,19 +86,45 @@ int main(int argc, char *argv[])
     parseAppArgs();
 
     Core::ICore core(m_configFile);
+    Settings *sett = core.settings(QSettings::UserScope);
 
-    QQmlApplicationEngine signDialog;
+    QQmlApplicationEngine engine;
+    engine.rootContext()->setContextProperty("core", &core);
+    engine.rootContext()->setContextProperty("settings", sett);
 
-    signDialog.load(QUrl("qrc:/qml/SigninDialog.qml"));
+    bool logged = false;
 
-    QObject *signin = signDialog.rootObjects().first();
-    signin->setProperty("username", m_user);
-    signin->setProperty("password", m_pwd);
+    QObject::connect(&core, SIGNAL(mainWindowDataLoaded(QByteArray, QUrl)), &engine, SLOT(loadData(QByteArray,QUrl)));
 
-    Win w;
-    QObject::connect(signin, SIGNAL(onSignin()), &w, SLOT(onSignin()));
+    if (!m_user.isEmpty() && !m_pwd.isEmpty()) {
+        logged = core.login(m_user, m_pwd);
+
+        if (!logged) {
+            QMessageBox::critical(0, "Core error", core.errorString());
+        }
+    } else {
+        m_user = sett->value("lastUser").toString();
+
+        if (sett->value("isSave").toBool() == true) {
+            m_pwd = Cryptor::decode(sett->value("pwd").toString());
+            logged = core.login(m_user, m_pwd);
+
+            if (!logged) {
+                QMessageBox::critical(0, "Core error", core.errorString());
+            }
+        }
+    }
+
+    if (!logged) {
+        engine.load(QUrl("qrc:/qml/SigninDialog.qml"));
+        QObject *signin = engine.rootObjects().first();
+        if (!signin) {
+            return -1;
+        }
+
+        signin->setProperty("username", m_user);
+        signin->setProperty("issave", sett->value("isSave").toBool());
+    }
 
     return app.exec();
 }
-
-#include "main.moc"

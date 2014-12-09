@@ -11,25 +11,25 @@ Window {
     property string username: edLogin.text;
     property string password: edPwd.text;
     property bool issave: ckSavePassword.checked;
-    property bool save: true;
 
-    signal onSignin;
+    //signal onSignin;
 
     visible : true
     flags: Qt.Dialog
     modality: Qt.WindowModal
     width: 300
     height: 130
-    title: "Rubus " + core.version;
-
-    Core { id : core }
+    title: "Rubus " + core.version
 
     MessageDialog {
         id : coreError
         title: "Core error"
         icon: StandardIcon.Critical
         standardButtons: StandardButton.Ok
+    }
 
+    Cryptor {
+        id: cryptor
     }
 
     GridLayout {
@@ -43,7 +43,7 @@ Window {
         TextField {
             id: edLogin
             text : username
-            placeholderText: qsTr("Login")
+            placeholderText: qsTr("Enter login")
             Layout.fillWidth: true
             Keys.onEnterPressed : {
                 if (text != "")
@@ -62,11 +62,11 @@ Window {
         TextField {
             id: edPwd
             text: password
-            placeholderText: qsTr("Password")
+            placeholderText: qsTr("Enter password")
             echoMode: TextInput.Password
             Layout.fillWidth: true
-            Keys.onEscapePressed : loginWindow.close();
 
+            Keys.onEscapePressed : loginWindow.close();
             Keys.onEnterPressed : login()
             Keys.onReturnPressed : login()
         }
@@ -75,6 +75,7 @@ Window {
         CheckBox {
             id: ckSavePassword
             text: qsTr("Save password?")
+            checked: issave
         }
 
 
@@ -116,11 +117,13 @@ Window {
 
     Component.onCompleted : {
         visible = true
-        if (edLogin.text == "") {
+
+        if (username == "") {
             edLogin.focus = true
         } else {
             edPwd.focus = true
         }
+
     }
 
     function login() {
@@ -128,8 +131,12 @@ Window {
             coreError.text = core.errorString()
             coreError.visible = true
         } else {
-            onSignin();
             visible = false
+            settings.setValue("lastUser", username)
+            settings.setValue("isSave", issave)
+            if (issave) {
+                settings.setValue("pwd", cryptor.encode(password))
+            }
         }
     }
 }

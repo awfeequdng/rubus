@@ -39,6 +39,7 @@
 #include <QSettings>
 #include <QtSql>
 #include <QAction>
+#include <QApplication>
 #include "qjsondocument.h"
 #include "qjsonobject.h"
 
@@ -56,13 +57,18 @@ ICore::ICore(QString configFile)
     m_pluginManager = new PluginManager(this);
     m_reportManager = new ReportManager(this);
 
-    loadConfig(configFile.isEmpty() ? CONFIG_FILENAME : configFile);
+    m_systemSettings = new Settings(configFile.isEmpty() ? CONFIG_FILENAME : configFile, QSettings::IniFormat);
+    m_userSettings = new Settings(QSettings::UserScope, QApplication::applicationName());
+
+    loadConfig();
 }
 
 ICore::~ICore()
 {
     saveConfig();
     m_instance = 0;
+    m_systemSettings->deleteLater();
+    m_userSettings->deleteLater();
 
     delete m_pluginManager;
     m_pluginManager = 0;
@@ -130,7 +136,7 @@ bool ICore::login(QString username, QString password)
 
 
         loadParameters();
-        qDebug() << "logged";
+        emit mainWindowDataLoaded(m_mainwindowQml, QUrl());
         emit logged();
     } else {
         qDebug() << db.lastError();
@@ -235,21 +241,27 @@ QString ICore::version()
             .arg(QString(Version::STAGE).isEmpty() ? "" : QString(" - %1").arg(Version::STAGE));
 }
 
-void ICore::loadConfig(QString filename)
+Settings *ICore::settings(QSettings::Scope scope)
 {
-    m_configFile = filename;
-    QSettings sett(filename,QSettings::IniFormat);
-    m_databaseHost = sett.value("host","localhost").toString();
-    m_databaseName = sett.value("database","rubus").toString();
-    m_databasePort = sett.value("port",5432).toInt();
-    m_canChangeDatabaseSettings = sett.value("canSettings",true).toBool();
+    if (scope == QSettings::SystemScope) {
+        return m_systemSettings;
+    } else {
+        return m_userSettings;
+    }
+}
+
+void ICore::loadConfig()
+{
+    m_databaseHost = m_systemSettings->value("host","localhost").toString();
+    m_databaseName = m_systemSettings->value("database","rubus").toString();
+    m_databasePort = m_systemSettings->value("port",5432).toInt();
+    m_canChangeDatabaseSettings = m_systemSettings->value("canSettings",true).toBool();
 }
 
 void ICore::saveConfig()
 {
-    QSettings sett(m_configFile,QSettings::IniFormat);
-    sett.setValue("host",m_databaseHost);
-    sett.setValue("database",m_databaseName);
-    sett.setValue("port",m_databasePort);
+    m_systemSettings->setValue("host",m_databaseHost);
+    m_systemSettings->setValue("database",m_databaseName);
+    m_systemSettings->setValue("port",m_databasePort);
 }
 

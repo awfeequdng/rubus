@@ -34,11 +34,13 @@
 #include <QMap>
 
 #include "core_global.h"
+#include "settings.h"
 
 
 class EditWidgetInterface;
 class QAction;
 class ReportManager;
+
 
 namespace Core {
 
@@ -93,9 +95,8 @@ public:
     void loadParameters();
     void saveParameters();
 
-    Q_INVOKABLE static QString version();
-
-
+    static QString version();
+    Settings *settings(QSettings::Scope scope);
 
 signals:
     void logged();
@@ -108,7 +109,7 @@ signals:
 public slots:
 
 private:
-    void loadConfig(QString filename);
+    void loadConfig();
     void saveConfig();
 
     QString m_databaseHost;
@@ -121,9 +122,12 @@ private:
     QString m_configFile;
     QByteArray m_mainwindowQml;
 
+    Settings *m_systemSettings;
+    Settings *m_userSettings;
+
     QMap<QString, QAction *> m_actionById;
 };
-
 }
+
 
 #endif // CORE_H

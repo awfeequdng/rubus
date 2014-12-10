@@ -23,5 +23,7 @@ QML_IMPORT_PATH = $$QML_BASE_DIR
 include(deployment.pri)
 
 OTHER_FILES += \
-    qml/SigninDialog.qml
-    ../shared/qml/mainwindow.qml
+    qml/SigninDialog.qml \
+    ../../shared/qml/mainwindow.qml \
+    ../../shared/qml/Reports.qml
+

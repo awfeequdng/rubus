@@ -1,3 +1,32 @@
+/***************************************************************************
+ *   This file is part of the Rubus project                                *
+ *   Copyright (C) 2012-2014 by Ivan Volkov                                *
+ *   wulff007@gmail.com                                                    *
+ *                                                                         *
+ **                   GNU General Public License Usage                    **
+ *                                                                         *
+ *   This library is free software: you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation, either version 3 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
+ *                                                                         *
+ **                  GNU Lesser General Public License                    **
+ *                                                                         *
+ *   This library is free software: you can redistribute it and/or modify  *
+ *   it under the terms of the GNU Lesser General Public License as        *
+ *   published by the Free Software Foundation, either version 3 of the    *
+ *   License, or (at your option) any later version.                       *
+ *   You should have received a copy of the GNU Lesser General Public      *
+ *   License along with this library.                                      *
+ *   If not, see <http://www.gnu.org/licenses/>.                           *
+ *                                                                         *
+ *   This library is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ ***************************************************************************/
 #include <QApplication>
 #include <QQmlApplicationEngine>
 #include <QtQml>
@@ -74,7 +103,7 @@ int main(int argc, char *argv[])
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("utf8"));
 
     qmlRegisterType<Core::ICore>("Rubus", 1, 0, "Core");
-    qmlRegisterType<Core::User>("Rubus", 1, 0, "User");
+    qmlRegisterType<User>("Rubus", 1, 0, "User");
     qmlRegisterType<Cryptor>("Rubus", 1, 0, "Cryptor");
 
     QTranslator translator;
@@ -87,9 +116,10 @@ int main(int argc, char *argv[])
     Settings *sett = core.settings(QSettings::UserScope);
 
     QQmlApplicationEngine engine;
+    engine.setBaseUrl(QUrl(QML_BASE_DIR));
+    engine.addImportPath(QML_BASE_DIR);
     engine.rootContext()->setContextProperty("core", &core);
     engine.rootContext()->setContextProperty("settings", sett);
-
     bool logged = false;
 
     QObject::connect(&core, SIGNAL(mainWindowDataLoaded(QByteArray, QUrl)), &engine, SLOT(loadData(QByteArray,QUrl)));

@@ -40,11 +40,11 @@
 class EditWidgetInterface;
 class QAction;
 class ReportManager;
+class User;
 
 
 namespace Core {
 
-class User;
 class IPlugin;
 class PluginManager;
 
@@ -62,7 +62,7 @@ public:
 
     ~ICore();
 
-    static ICore *instance();
+    Q_INVOKABLE static ICore *instance();
     static PluginManager *pluginManager();
     static ReportManager *reportManager();
 
@@ -90,6 +90,7 @@ public:
     bool canChangeDatabaseSettings() { return m_canChangeDatabaseSettings; }
 
     Q_INVOKABLE static User *currentUser();
+    Q_INVOKABLE QByteArray loadQmlObject(const QString &name) const;
     QByteArray mainWndowQml() const { return m_mainwindowQml; }
 
     void loadParameters();
@@ -123,6 +124,7 @@ private:
     QString m_reportStoragePath;
     QString m_configFile;
     QByteArray m_mainwindowQml;
+    QString m_storageQml;
 
     Settings *m_systemSettings;
     Settings *m_userSettings;

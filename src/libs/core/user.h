@@ -38,7 +38,7 @@
 
 #include "core_global.h"
 
-namespace Core {
+//namespace Core {
 
 class CORE_EXPORT User : public QObject
 {
@@ -72,10 +72,9 @@ public:
     void setParameter(const QString &name, QVariantMap &value);
     void setParameters(const QString &params);
 
-    QString gui() const;
-    void setGui(const QString &gui);
-
     QString errorString() const { return m_errorString; }
+
+    Q_INVOKABLE bool permission(const QString &name) const;
 
 
 signals:
@@ -94,12 +93,12 @@ protected:
     QVariantMap m_paramsMap;
     QJsonDocument m_jsonDoc;
     int m_location;
-    QString m_gui;
     QString m_errorString;
     bool m_isExists;
+    QList<QString> m_permissions;
     
 };
 
-}
+//}
 
 #endif // USER_H

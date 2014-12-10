@@ -34,7 +34,7 @@
 #include <QCryptographicHash>
 
 
-using namespace Core;
+//using namespace Core;
 
 User::User(QObject *parent) :
     QObject(parent),
@@ -55,7 +55,7 @@ User::User(QString rolename, QObject *parent) :
 bool User::load()
 {
     QSqlQuery sql;
-    sql.exec(QString("SELECT up_name,up_contractor,up_params, up_gui "
+    sql.exec(QString("SELECT up_name,up_contractor,up_params "
                      "FROM user_params WHERE up_role = '%1'")
              .arg(rolename()));
 
@@ -73,7 +73,6 @@ bool User::load()
 
         setParameters(sql.value(2).toString());
 
-        m_gui = sql.value(3).toString();
         m_location = parameterValue("location").toVariant().toInt();
         m_isExists = true;
     } else {
@@ -98,7 +97,7 @@ void User::setContractor(int id)
     m_contractorId = id;
 }
 
-int Core::User::location() const
+int User::location() const
 {
     return m_location;
 }
@@ -144,7 +143,7 @@ QJsonObject User::parameter(const QString &name) const
     return obj[name].toObject();
 }
 
-QJsonValue Core::User::parameterValue(const QString &name) const
+QJsonValue User::parameterValue(const QString &name) const
 {
     QJsonObject obj = m_jsonDoc.object();
     return obj[name];
@@ -155,7 +154,7 @@ void User::setParameter(const QString &name, QVariant &value)
     m_jsonDoc.object()[name] = QJsonValue::fromVariant(value);
 }
 
-void Core::User::setParameter(const QString &name, QVariantMap &value)
+void User::setParameter(const QString &name, QVariantMap &value)
 {
     m_jsonDoc.object()[name] = QJsonObject::fromVariantMap(value);
 
@@ -171,29 +170,22 @@ void User::setParameters(const QString &params)
     }
 }
 
-QString User::gui() const
+bool User::permission(const QString &name) const
 {
-    return m_gui;
+    return m_permissions.contains(name);
 }
-
-void User::setGui(const QString &gui)
-{
-    m_gui = gui;
-}
-
 
 bool User::save()
 {
     QSqlQuery sql;
 
     if (!m_isExists) {
-        sql.prepare("INSERT INTO user_params (up_role, up_name, up_contractor, up_params, up_gui) "
-                    "VALUES (:role, :name, :contractor, :params, :gui)");
+        sql.prepare("INSERT INTO user_params (up_role, up_name, up_contractor, up_params) "
+                    "VALUES (:role, :name, :contractor, :params)");
     } else {
         sql.prepare("UPDATE user_params SET up_name = :name, "
                     "up_contractor = :contractor, "
-                    "up_params = :params, "
-                    "up_gui = :gui "
+                    "up_params = :params "
                     "WHERE up_role = :role");
     }
 
@@ -201,7 +193,6 @@ bool User::save()
     sql.bindValue(":name", m_name);
     sql.bindValue(":contractor", m_contractorId);
     sql.bindValue(":params", m_jsonDoc.isEmpty() ? QString() : QString(m_jsonDoc.toJson()));
-    sql.bindValue(":gui", m_gui);
 
     if (!sql.exec()) {
         qCritical() << sql.lastError();

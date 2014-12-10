@@ -55,7 +55,12 @@ const char S_CORE_USERS[]              = "Core.Users";
 const char S_CORE_REPORTS[]            = "Core.Reports";
 const char S_CORE_USER_CAN_CHANGE_PWD[]= "Core.UserCanChangePwd";
 
+namespace Internal {
 
+const char QMLSTORAGE_FILE[] = "file";
+const char QMLSTORAGE_DB[] = "database";
+
+}// namespace Internal
 } // namespace Constants
 } // namespace Core
 

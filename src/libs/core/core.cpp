@@ -33,6 +33,7 @@
 #include "pluginmanager.h"
 #include "reportmanager.h"
 #include "version.h"
+#include "coreconstants.h"
 
 #include <QDebug>
 #include <QDir>
@@ -177,6 +178,29 @@ User *ICore::currentUser()
     return m_instance->m_currentUser;
 }
 
+QByteArray ICore::loadQmlObject(const QString &name) const
+{
+    QByteArray arr;
+    if(m_storageQml == Constants::Internal::QMLSTORAGE_FILE) {
+        QString path = QML_BASE_DIR "/";
+        QUrl url(path + name + ".qml"); //TODO check ext
+
+        QFile f(url.toString(QUrl::RemoveScheme));
+
+        if (!f.open(QIODevice::ReadOnly)) {
+            qCritical() << "can't open MainWindow file:" << url.toLocalFile();
+            return QByteArray();
+        }
+
+        arr = f.readAll();
+        f.close();
+    } else if (m_storageQml == Constants::Internal::QMLSTORAGE_DB) {
+
+    }
+
+    return arr;
+}
+
 void Core::ICore::loadParameters()
 {
     QListIterator<IPlugin *> iter(m_pluginManager->plugins());
@@ -247,6 +271,7 @@ void ICore::loadConfig()
     m_databaseName = m_systemSettings->value("database","rubus").toString();
     m_databasePort = m_systemSettings->value("port",5432).toInt();
     m_canChangeDatabaseSettings = m_systemSettings->value("canSettings",true).toBool();
+    m_storageQml = m_systemSettings->value("storage",Constants::Internal::QMLSTORAGE_DB).toString();
 }
 
 void ICore::saveConfig()
@@ -266,23 +291,11 @@ void ICore::initMainWindow()
     }
 
     QVariantMap map = obj.toVariantMap();
-    if(map.value("storage").toString() == "file") {
-        QString path;
-        path += QML_BASE_DIR;
-        path += "/";
-        QUrl url(path + map.value("url").toString());
+    m_mainwindowQml = loadQmlObject(map.value("objectname").toString());
 
-        QFile f(url.toString(QUrl::RemoveScheme));
-
-        if (!f.open(QIODevice::ReadOnly)) {
-            qCritical() << "can't open MainWindow file:" << url.toLocalFile();
-            QApplication::quit();
-            return;
-        }
-
-        m_mainwindowQml = f.readAll();
-        qDebug() << m_mainwindowQml;
-        f.close();
+    if (m_mainwindowQml.isEmpty()) {
+        qCritical() << "MainWindow qml is empty!";
+        QApplication::quit();
     }
 
     emit mainWindowDataLoaded(m_mainwindowQml, QUrl());

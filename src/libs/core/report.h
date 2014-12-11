@@ -38,8 +38,10 @@ QT_BEGIN_NAMESPACE
 class QAbstractItemModel;
 QT_END_NAMESPACE
 
-class CORE_EXPORT Report
+class CORE_EXPORT Report : public QObject
 {
+    Q_OBJECT
+    //Q_ENUMS(Engine)
 public:
     enum Engine {
         OpenOfficeEngine = 0,
@@ -47,7 +49,7 @@ public:
         CuteReportEngine = 2
     };
 
-    explicit Report();
+    explicit Report(QObject *parent = 0);
     Report(int engine);
     void setId(int id);
     int id() const;

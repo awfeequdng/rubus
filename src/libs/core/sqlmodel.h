@@ -13,13 +13,34 @@ class CORE_EXPORT SqlModel : public QAbstractItemModel
     Q_OBJECT
     Q_PROPERTY(QString query READ query WRITE setQuery NOTIFY queryChanged)
     Q_PROPERTY(QString errorString READ errorString NOTIFY errorStringChanged)
+    Q_PROPERTY(QString select READ select WRITE setSelect NOTIFY selectChanged)
+    Q_PROPERTY(QString where READ where WRITE setWhere NOTIFY whereChanged)
+    Q_PROPERTY(QString orderBy READ orderBy WRITE setOrderBy NOTIFY orderByChanged)
+    Q_PROPERTY(QString primaryKeyRole READ primaryKeyRole WRITE setPrimaryKeyRole NOTIFY primaryKeyColumnChanged)
 public:
     explicit SqlModel(QObject *parent = 0);
 
     QString query() const;
     void setQuery(const QString &query);
 
+    QString select() const;
+    void setSelect(const QString &select);
+
+    QString where() const;
+    void setWhere(const QString &where);
+
+    QString orderBy() const;
+    void setOrderBy(const QString &order);
+
+    QString primaryKeyRole() const;
+    void setPrimaryKeyRole(const QString &column);
+
     QString errorString() const;
+    Q_INVOKABLE QVariant value(int row, int role) const;
+    Q_INVOKABLE QVariant value(int row, QString rolename) const;
+    Q_INVOKABLE QVariant primaryKeyValue(int row) const;
+
+    Q_INVOKABLE void refresh();
 
     QModelIndex index(int row, int column, const QModelIndex &parent) const;
     QModelIndex parent(const QModelIndex &child) const;
@@ -31,12 +52,20 @@ public:
 signals:
     void queryChanged();
     void errorStringChanged();
+    void selectChanged();
+    void whereChanged();
+    void orderByChanged();
+    void primaryKeyColumnChanged();
 
 public slots:
 
 private:
     QSqlQuery *m_query;
     QHash<int, QByteArray> m_roles;
+    QString m_select;
+    QString m_where;
+    QString m_order;
+    QString m_pkeyRole;
 
 };
 

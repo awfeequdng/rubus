@@ -29,7 +29,8 @@
  ***************************************************************************/
 #include "report.h"
 
-Report::Report() :
+Report::Report(QObject *parent) :
+    QObject(parent),
     m_id(-1),
     m_engine(OpenOfficeEngine)
 {

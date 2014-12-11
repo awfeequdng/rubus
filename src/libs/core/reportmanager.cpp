@@ -28,7 +28,6 @@
  *   GNU General Public License for more details.                          *
  ***************************************************************************/
 #include "reportmanager.h"
-#include "report.h"
 
 //OpenOffice
 #include "oooreportbuilder.h"
@@ -70,27 +69,27 @@ ReportManager *ReportManager::instance()
     return m_instance;
 }
 
-Report ReportManager::loadReport(int id)
+Report *ReportManager::loadReport(int id)
 {
-    QSqlQuery sql;
-    Report rep;
-    sql.exec(QString("SELECT re_name, re_type,re_menu FROM reports WHERE re_id = %1")
-             .arg(id));
+//    QSqlQuery sql;
+//    Report rep;
+//    sql.exec(QString("SELECT re_name, re_type,re_menu FROM reports WHERE re_id = %1")
+//             .arg(id));
 
-    if (sql.lastError().isValid()) {
-        qCritical() << sql.lastError();
-        return rep;
-    }
-    if (!sql.next()) {
-        qCritical() << "report not found";
-    }
+//    if (sql.lastError().isValid()) {
+//        qCritical() << sql.lastError();
+//        return rep;
+//    }
+//    if (!sql.next()) {
+//        qCritical() << "report not found";
+//    }
 
-    rep = Report(sql.value(1).toInt());
-    rep.setId(id);
-    rep.setMenuId(sql.value(2).toString());
-    rep.setTitle(sql.value(0).toString());
+//    rep = Report(sql.value(1).toInt());
+//    rep.setId(id);
+//    rep.setMenuId(sql.value(2).toString());
+//    rep.setTitle(sql.value(0).toString());
 
-    return rep;
+//    return rep;
 }
 
 void ReportManager::registerMenuId(QString id, QString title)
@@ -98,34 +97,34 @@ void ReportManager::registerMenuId(QString id, QString title)
     instance()->m_menus.insert(id,title);
 }
 
-QList<Report> ReportManager::reportsByMenuId(QString menuId)
+QList<Report *> ReportManager::reportsByMenuId(QString menuId)
 {
-    QSqlQuery sql;
-    sql.exec(QString("SELECT re_id,re_name,re_type,re_note "
-                     "FROM reports "
-                     "WHERE re_menu = '%1'")
-             .arg(menuId));
+//    QSqlQuery sql;
+//    sql.exec(QString("SELECT re_id,re_name,re_type,re_note "
+//                     "FROM reports "
+//                     "WHERE re_menu = '%1'")
+//             .arg(menuId));
 
-    QList<Report> reps;
+//    QList<Report> reps;
 
-    if (sql.lastError().isValid()) {
-        qWarning() << sql.lastError();
-        return reps;
-    }
+//    if (sql.lastError().isValid()) {
+//        qWarning() << sql.lastError();
+//        return reps;
+//    }
 
-    while (sql.next()) {
-        Report rep(sql.value(2).toInt());
-        rep.setId(sql.value(0).toInt());
-        rep.setTitle(sql.value(1).toString());
-        rep.setMenuId(menuId);
+//    while (sql.next()) {
+//        Report rep(sql.value(2).toInt());
+//        rep.setId(sql.value(0).toInt());
+//        rep.setTitle(sql.value(1).toString());
+//        rep.setMenuId(menuId);
 
-        reps.append(rep);
-    }
+//        reps.append(rep);
+//    }
 
-    return reps;
+//    return reps;
 }
 
-void ReportManager::showReport(Report &rep)
+void ReportManager::showReport(Report *rep)
 {
     if (rep.engine() == Report::OpenOfficeEngine) {
         OOoReportBuilder builder;
@@ -228,7 +227,7 @@ void ReportManager::showReport(Report &rep)
 //    }
 }
 
-void ReportManager::printReport(Report &rep, QString printerName, int copies,  bool showDialog)
+void ReportManager::printReport(Report *rep, QString printerName, int copies,  bool showDialog)
 {
 #ifdef NCREPORT
     if (rep.engine() == Report::NcReportEngine) {

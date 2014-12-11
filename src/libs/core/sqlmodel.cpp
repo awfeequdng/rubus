@@ -36,9 +36,89 @@ void SqlModel::setQuery(const QString &query)
     emit queryChanged();
 }
 
+QString SqlModel::select() const
+{
+    return m_select;
+}
+
+void SqlModel::setSelect(const QString &select)
+{
+    m_select = select;
+}
+
+QString SqlModel::where() const
+{
+    return m_where;
+}
+
+void SqlModel::setWhere(const QString &where)
+{
+    m_where = where;
+}
+
+QString SqlModel::orderBy() const
+{
+    return m_order;
+}
+
+void SqlModel::setOrderBy(const QString &order)
+{
+    m_order = order;
+}
+
+QString SqlModel::primaryKeyRole() const
+{
+    return m_pkeyRole;
+}
+
+void SqlModel::setPrimaryKeyRole(const QString &column)
+{
+    m_pkeyRole = column;
+}
+
 QString SqlModel::errorString() const
 {
     return m_query ? m_query->lastError().text() : QString();
+}
+
+QVariant SqlModel::value(int row, int role) const
+{
+    if (!m_query->seek(row)) {
+        qDebug() << "can't seek in data()";
+        return QVariant();
+    }
+
+    QSqlRecord rec = m_query->record();
+    QVariant value;
+
+    if (role < Qt::UserRole) {
+        value = QVariant();
+    } else {
+        value = rec.value(role - Qt::UserRole - 1);
+    }
+
+    return value;
+}
+
+QVariant SqlModel::value(int row, QString rolename) const
+{
+    return value(row, m_roles.key(rolename.toUtf8()));
+}
+
+QVariant SqlModel::primaryKeyValue(int row) const
+{
+    return m_pkeyRole.isEmpty() ?
+                value(row, Qt::UserRole + 1) :
+                value(row, m_pkeyRole);
+}
+
+void SqlModel::refresh()
+{
+    if (!m_query) {
+        return;
+    }
+
+    setQuery(m_query->lastQuery());
 }
 
 
@@ -72,21 +152,7 @@ QVariant SqlModel::data(const QModelIndex &index, int role) const
         QVariant();
     }
 
-    if (!m_query->seek(index.row())) {
-        qDebug() << "can't seek in data()";
-        return QVariant();
-    }
-
-    QSqlRecord rec = m_query->record();
-    QVariant value;
-
-    if (role < Qt::UserRole) {
-        value = rec.value(index.column());
-    } else {
-        value = rec.value(role - Qt::UserRole - 1);
-    }
-
-    return value;
+    return value(index.row(), role);
 }
 
 QHash<int, QByteArray> SqlModel::roleNames() const

@@ -40,6 +40,8 @@
 #include "user.h"
 #include "cryptor.h"
 #include "sqlmodel.h"
+#include "report.h"
+#include "reportmanager.h"
 
 QString m_configFile;
 QString m_user;
@@ -111,6 +113,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<User>("Rubus", 1, 0, "User");
     qmlRegisterType<Cryptor>("Rubus", 1, 0, "Cryptor");
     qmlRegisterType<SqlModel>("Rubus", 1, 0, "SqlModel");
+    qmlRegisterType<Report>("Rubus", 1, 0, "Report");
 
     QTranslator translator;
     translator.load("rubus_ru");

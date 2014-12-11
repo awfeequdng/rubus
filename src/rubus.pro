@@ -2,7 +2,7 @@ TEMPLATE = subdirs
 
 
 SUBDIRS += \
-    thirdparty \
+    #thirdparty \
     libs \
     #plugins \
     apps \

@@ -13,8 +13,9 @@ DESTDIR = $$ROOT_DIR
 
 INCLUDEPATH += ../../libs/core \
                ../../libs/core/widgets \
+               ../../thirdparty/qaivlib \
 
-LIBS += -L$$LIB_DIR -lRubusCore -lqaivlib
+LIBS += -L$$LIB_DIR -lRubusCore
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH = $$QML_BASE_DIR

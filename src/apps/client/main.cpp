@@ -34,10 +34,12 @@
 #include <QObject>
 #include <QQuickWindow>
 #include <QMessageBox>
+#include <QQuickPaintedItem>
 
 #include "core.h"
 #include "user.h"
 #include "cryptor.h"
+#include "sqlmodel.h"
 
 QString m_configFile;
 QString m_user;
@@ -99,12 +101,16 @@ int main(int argc, char *argv[])
 
     app.setOrganizationName("WSoft");
     app.setApplicationName("Rubus");
+#ifdef Q_OS_WIN
+    app.setFont(QFont("tahoma", 10));
+#endif
 
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("utf8"));
 
     qmlRegisterType<Core::ICore>("Rubus", 1, 0, "Core");
     qmlRegisterType<User>("Rubus", 1, 0, "User");
     qmlRegisterType<Cryptor>("Rubus", 1, 0, "Cryptor");
+    qmlRegisterType<SqlModel>("Rubus", 1, 0, "SqlModel");
 
     QTranslator translator;
     translator.load("rubus_ru");
@@ -115,7 +121,7 @@ int main(int argc, char *argv[])
     Core::ICore core(m_configFile);
     Settings *sett = core.settings(QSettings::UserScope);
 
-    QQmlApplicationEngine engine;
+    QQmlApplicationEngine engine;    
     engine.setBaseUrl(QUrl(QML_BASE_DIR));
     engine.addImportPath(QML_BASE_DIR);
     engine.rootContext()->setContextProperty("core", &core);

@@ -39,7 +39,6 @@
 
 class EditWidgetInterface;
 class QAction;
-class ReportManager;
 class User;
 
 
@@ -64,7 +63,6 @@ public:
 
     Q_INVOKABLE static ICore *instance();
     static PluginManager *pluginManager();
-    static ReportManager *reportManager();
 
     static void loadPlugins();
 

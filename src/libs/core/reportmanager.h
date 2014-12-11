@@ -56,13 +56,13 @@ public:
     explicit ReportManager(QObject *parent = 0);
 
     static ReportManager *instance();
-    static Report *loadReport(int id);
+    Q_INVOKABLE static Report & loadReport(int id);
 
     static void registerMenuId(QString id, QString title);
-    static void showReport(Report *rep);
-    void printReport(Report *rep, QString printerName, int copies, bool showDialog = false);
+    Q_INVOKABLE static void showReport(const Report &rep);
+    Q_INVOKABLE void printReport(const Report &rep, QString printerName, int copies, bool showDialog = false);
 
-    static QList<Report*> reportsByMenuId(QString menuId);
+    //Q_INVOKABLE static QList<Report> reportsByMenuId(QString menuId);
 #ifdef NCREPORT
     static NCReportSource reportDatabaseSource(int reportId);
 #endif

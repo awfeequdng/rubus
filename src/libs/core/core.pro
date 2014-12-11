@@ -47,8 +47,6 @@ SOURCES += \
     report.cpp \
     user.cpp \
     iplugin.cpp \
-    oooreportbuilder.cpp \
-    reportmanager.cpp \
     settings.cpp \
     sqlmodel.cpp
 
@@ -62,8 +60,6 @@ HEADERS +=\
     user.h \
     version.h \
     iplugin.h \
-    oooreportbuilder.h \
-    reportmanager.h \
     settings.h \
     sqlmodel.h
 

@@ -41,29 +41,16 @@ QT_END_NAMESPACE
 class CORE_EXPORT Report : public QObject
 {
     Q_OBJECT
-    //Q_ENUMS(Engine)
 public:
-    enum Engine {
-        OpenOfficeEngine = 0,
-        NcReportEngine = 1,
-        CuteReportEngine = 2
-    };
-
     explicit Report(QObject *parent = 0);
-    Report(int engine);
     void setId(int id);
     int id() const;
 
-    QString title() const;
-    void setTitle(QString title);
+    QString name() const;
+    void setName(QString name);
 
-    QString menuId() const;
-    void setMenuId(QString menu);
-
-    QString filename() const;
-    void setFilename(QString name);
-
-    int engine() const;
+    QString menu() const;
+    void setMenu(QString menu);
 
     void appendModel(QAbstractItemModel *model);
     QAbstractItemModel *modelAt(int i) const;
@@ -78,15 +65,13 @@ public:
 
 private:
     int m_id;
-    QString m_title;
-    int m_engine;
+    QString m_name;
     QString m_menuId;
-    QString m_filename;
     QList<QAbstractItemModel *> m_models;
     QHash<QString, QVariant> m_params;
 
 };
 
-Q_DECLARE_METATYPE(Report)
+//Q_DECLARE_METATYPE(Report*)
 
 #endif

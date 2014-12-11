@@ -31,7 +31,6 @@
 #include "iplugin.h"
 #include "user.h"
 #include "pluginmanager.h"
-#include "reportmanager.h"
 #include "version.h"
 #include "coreconstants.h"
 
@@ -50,13 +49,11 @@ using namespace Core;
 
 static ICore *m_instance = 0;
 static PluginManager *m_pluginManager;
-static ReportManager *m_reportManager;
 
 ICore::ICore(QString configFile)
 {
     m_instance = this;
     m_pluginManager = new PluginManager(this);
-    m_reportManager = new ReportManager(this);
 
     m_systemSettings = new Settings(configFile.isEmpty() ? CONFIG_FILENAME : configFile, QSettings::IniFormat);
     m_userSettings = new Settings(QSettings::UserScope, QApplication::applicationName());
@@ -83,11 +80,6 @@ ICore *ICore::instance()
 PluginManager *ICore::pluginManager()
 {
     return m_pluginManager;
-}
-
-ReportManager *ICore::reportManager()
-{
-    return m_reportManager;
 }
 
 void ICore::loadPlugins()

@@ -29,10 +29,16 @@
  ***************************************************************************/
 #include "report.h"
 
+//CuteReport
+//#include "cutereport.h"
+//#include "reportcore.h"
+//#include "reportinterface.h"
+//#include "reportpreview.h"
+//#include "../plugins/standard/core_plugins/storage/sql/sql.h"
+
 Report::Report(QObject *parent) :
     QObject(parent),
-    m_id(-1),
-    m_engine(OpenOfficeEngine)
+    m_id(-1)
 {
 }
 
@@ -41,51 +47,29 @@ void Report::setId(int id)
     m_id = id;
 }
 
-Report::Report(int engine) :
-    m_id(-1),
-    m_engine(engine)
-{
-
-}
-
 int Report::id() const
 {
     return m_id;
 }
 
-QString Report::title() const
+QString Report::name() const
 {
-    return m_title;
+    return m_name;
 }
 
-void Report::setTitle(QString title)
+void Report::setName(QString title)
 {
-    m_title = title;
+    m_name = title;
 }
 
-QString Report::menuId() const
+QString Report::menu() const
 {
     return m_menuId;
 }
 
-void Report::setMenuId(QString menu)
+void Report::setMenu(QString menu)
 {
     m_menuId = menu;
-}
-
-QString Report::filename() const
-{
-    return m_filename;
-}
-
-void Report::setFilename(QString name)
-{
-    m_filename = name;
-}
-
-int Report::engine() const
-{
-    return m_engine;
 }
 
 void Report::appendModel(QAbstractItemModel *model)

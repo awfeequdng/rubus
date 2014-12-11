@@ -62,6 +62,7 @@ ReportManager::ReportManager(QObject *parent) :
     QObject(parent)
 {
     m_instance = this;
+    //qRegisterMetaType<Report>("Report");
 }
 
 ReportManager *ReportManager::instance()
@@ -69,7 +70,7 @@ ReportManager *ReportManager::instance()
     return m_instance;
 }
 
-Report *ReportManager::loadReport(int id)
+Report &ReportManager::loadReport(int id)
 {
 //    QSqlQuery sql;
 //    Report rep;
@@ -97,8 +98,8 @@ void ReportManager::registerMenuId(QString id, QString title)
     instance()->m_menus.insert(id,title);
 }
 
-QList<Report *> ReportManager::reportsByMenuId(QString menuId)
-{
+//QList<Report> ReportManager::reportsByMenuId(QString menuId)
+//{
 //    QSqlQuery sql;
 //    sql.exec(QString("SELECT re_id,re_name,re_type,re_note "
 //                     "FROM reports "
@@ -122,9 +123,9 @@ QList<Report *> ReportManager::reportsByMenuId(QString menuId)
 //    }
 
 //    return reps;
-}
+//}
 
-void ReportManager::showReport(Report *rep)
+void ReportManager::showReport(const Report &rep)
 {
     if (rep.engine() == Report::OpenOfficeEngine) {
         OOoReportBuilder builder;
@@ -227,7 +228,7 @@ void ReportManager::showReport(Report *rep)
 //    }
 }
 
-void ReportManager::printReport(Report *rep, QString printerName, int copies,  bool showDialog)
+void ReportManager::printReport(const Report &rep, QString printerName, int copies,  bool showDialog)
 {
 #ifdef NCREPORT
     if (rep.engine() == Report::NcReportEngine) {
@@ -251,7 +252,7 @@ void ReportManager::printReport(Report *rep, QString printerName, int copies,  b
         while(parms.hasNext()) {
             parms.next();
             report.addParameter(parms.key(),parms.value());
-        }        
+        }
 
         if (!report.hasError()){
             report.runReportToPrinter(copies, showDialog, 0, printerName);

@@ -290,6 +290,6 @@ void ICore::initMainWindow()
         QApplication::quit();
     }
 
-    emit mainWindowDataLoaded(m_mainwindowQml, QUrl());
+    emit mainWindowDataLoaded(m_mainwindowQml, QUrl(QML_BASE_DIR "/mainwindow.qml"));
 }
 

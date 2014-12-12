@@ -29,12 +29,20 @@
  ***************************************************************************/
 #include "report.h"
 
-//CuteReport
-//#include "cutereport.h"
-//#include "reportcore.h"
-//#include "reportinterface.h"
-//#include "reportpreview.h"
-//#include "../plugins/standard/core_plugins/storage/sql/sql.h"
+#ifdef CUTEREPORT
+#include "cutereport.h"
+#include "reportcore.h"
+#include "reportinterface.h"
+#include "reportpreview.h"
+#include "storageinterface.h"
+#endif
+
+#include <QtSql>
+
+
+#ifdef CUTEREPORT
+static CuteReport::ReportCore *m_cuteReport = 0;
+#endif
 
 Report::Report(QObject *parent) :
     QObject(parent),
@@ -42,12 +50,12 @@ Report::Report(QObject *parent) :
 {
 }
 
-void Report::setId(int id)
+void Report::setReportId(int id)
 {
     m_id = id;
 }
 
-int Report::id() const
+int Report::reportId() const
 {
     return m_id;
 }
@@ -107,7 +115,89 @@ QHash<QString, QVariant> Report::paramentrs() const
     return m_params;
 }
 
+bool Report::load()
+{
+    return true;
+}
+
+bool Report::save()
+{
+    return true;
+}
+
 bool Report::isValid() const
 {
     return m_id > 0;
+}
+
+void Report::show()
+{
+#ifdef CUTEREPORT
+    if (!m_cuteReport) {
+        QSettings sett;
+        if (sett.value("CuteReport/PluginsPath").toString().isEmpty()) {
+            sett.setValue("CuteReport/PluginsPath", CUTEREPORT_BUILD_PLUGINS);
+        }
+
+        m_cuteReport =  new CuteReport::ReportCore(&sett);
+        CuteReport::StorageInterface *storage = static_cast<CuteReport::StorageInterface*>(m_cuteReport->storage("Standard::SQL"));
+        if (storage) {
+            storage->setProperty("connectionId", QSqlDatabase::database().connectionName());
+            storage->setProperty("tableName", "reports");
+            storage->setProperty("columnData","re_data");
+            storage->setProperty("columnId", "re_id");
+            m_cuteReport->setDefaultStorage("Standard::SQL");
+        } else {
+            setError(QString("can't cast to StorageSql"));
+            return;
+        }
+    }
+
+    QString err;
+    CuteReport::ReportInterface * report = m_cuteReport->loadReport(QString("sql://<%1>").arg(reportId()), &err);
+
+    if (!report) {
+        setError(QString("Can't load report %1, error: ").arg(name()) + err);
+        return;
+    }
+
+    int i = 0;
+    QListIterator<QAbstractItemModel*> iter(models());
+    while (iter.next()) {
+        i++;
+        QAbstractItemModel *model = iter.next();
+        report->setVariableValue(QString("model%1").arg(i), qlonglong(model));
+    }
+
+
+    report->setVariables(paramentrs());
+
+
+    CuteReport::ReportPreview * preview = new CuteReport::ReportPreview(m_cuteReport);
+    if (report) {
+        preview->setReportCore(m_cuteReport);
+        preview->connectReport(report);
+        preview->showMaximized();
+
+        preview->run();
+    }
+#endif
+}
+
+void Report::print(QString printerName, int copies, bool showDialog)
+{
+    Q_UNUSED(printerName)
+    Q_UNUSED(copies)
+    Q_UNUSED(showDialog)
+}
+
+QString Report::errorString() const
+{
+    return m_errorString;
+}
+
+void Report::setError(const QString &error)
+{
+    m_errorString = error;
+    emit errorStringChanged();
 }

@@ -113,7 +113,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<User>("Rubus", 1, 0, "User");
     qmlRegisterType<Cryptor>("Rubus", 1, 0, "Cryptor");
     qmlRegisterType<SqlModel>("Rubus", 1, 0, "SqlModel");
-    //qmlRegisterType<Report>("Rubus", 1, 0, "Report");
+    qmlRegisterType<Report>("Rubus", 1, 0, "Report");
 
     QTranslator translator;
     translator.load("rubus_ru");
@@ -126,7 +126,7 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;    
     engine.setBaseUrl(QUrl(QML_BASE_DIR));
-    engine.addImportPath(QML_BASE_DIR);
+    engine.addImportPath("C:/Projects/rubus/src");
     engine.rootContext()->setContextProperty("core", &core);
     engine.rootContext()->setContextProperty("settings", sett);
     bool logged = false;

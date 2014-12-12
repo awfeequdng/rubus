@@ -3,7 +3,7 @@
 }
 TEMPLATE = app
 
-QT += qml quick widgets core
+QT += qml quick core
 
 SOURCES += main.cpp
 
@@ -26,5 +26,6 @@ include(deployment.pri)
 OTHER_FILES += \
     qml/SigninDialog.qml \
     ../../shared/qml/mainwindow.qml \
-    ../../shared/qml/Reports.qml
+    ../../shared/qml/Reports.qml \
+    ../../shared/qml/ReportEdit.qml \
 

@@ -5,10 +5,11 @@ PLUGINS_DIR = $$ROOT_DIR/plugins
 
 QT += sql xml widgets
 CONFIG -= debug_and_release
-INCLUDEPATH += \
-              thirdparty/qaivlib
+INCLUDEPATH +=
 
-
-QML_BASE_DIR = $$PWD/shared/qml
+QML_BASE_DIR = $$PWD
 
 DEFINES += QML_BASE_DIR=\\\"$$QML_BASE_DIR\\\"
+
+OTHER_FILES += \
+

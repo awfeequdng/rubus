@@ -2,7 +2,7 @@
     error( Can not find the common.pri file! )
 }
 
-QT       += sql xml core gui
+QT       += sql xml core
 
 greaterThan(QT_MAJOR_VERSION, 4): {
     QT += printsupport
@@ -15,23 +15,25 @@ TARGET = RubusCore
 TEMPLATE = lib
 
 DEFINES += CORE_LIBRARY
-#DEFINES += NCREPORT
-#DEFINES += CUTEREPORT
 
-#win32 {
-#    CUTEREPORT_PATH = C:/Projects/cutereport/cutereport
-#    CUTEREPORT_BUILD = C:/Projects/cutereport/build-CuteReport-Qt4_8_5_mingw/Debug/build
-#}
+DEFINES += CUTEREPORT
 
-#unix {
-#    CUTEREPORT_PATH = /home/wulff/projects/cutereport
-#    CUTEREPORT_BUILD = /home/wulff/projects/build-CuteReport-Qt4_8_6_32/debug/build
-#    QMAKE_LFLAGS += -Wl,--rpath=$$CUTEREPORT_BUILD
-#}
+win32 {
+    CUTEREPORT_PATH = C:/Projects/cutereport/cutereport
+    CUTEREPORT_BUILD = C:/Projects/cutereport/build-CuteReport-Desktop_Qt_5_3_0_MinGW_32bit-Debug/build
+}
 
-#CUTEREPORT_BUILD_PLUGINS = $$CUTEREPORT_BUILD/cutereport/plugins
-#LIBS += -L$$CUTEREPORT_BUILD
-#LIBS += -lCuteReport -lCuteReportWidgets
+unix {
+    CUTEREPORT_PATH = /home/wulff/projects/cutereport
+    CUTEREPORT_BUILD = /home/wulff/projects/build-CuteReport-Qt4_8_6_32/debug/build
+    QMAKE_LFLAGS += -Wl,--rpath=$$CUTEREPORT_BUILD
+}
+
+CUTEREPORT_BUILD_PLUGINS = $$CUTEREPORT_BUILD/cutereport/plugins
+LIBS += -L$$CUTEREPORT_BUILD
+LIBS += -lCuteReport -lCuteReportWidgets
+
+message($$LIBS)
 
 DEFINES += CUTEREPORT_BUILD=\\\"$$CUTEREPORT_BUILD\\\"
 DEFINES += CUTEREPORT_BUILD_PLUGINS=\\\"$$CUTEREPORT_BUILD_PLUGINS\\\"

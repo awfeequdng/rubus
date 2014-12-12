@@ -3,13 +3,17 @@ import QtQuick.Window 2.0
 import QtQuick.Controls 1.1
 import QtQuick.Controls.Styles 1.1
 import Rubus 1.0
+import shared.qml 1.0
 
 Window {
+    id : reports
     width: 500
     height: 300
 
     SystemPalette {id: syspal}
     color: syspal.window
+
+
 
     SqlModel {
         id: model
@@ -48,25 +52,24 @@ Window {
             delegate:typeDelegate
         }
 
-
+        Report {
+            id: report
+        }
 
 
         model: model
 
-//        highlightOnFocus: Rectangle {
-//            color: "lightblue"
-//            width: parent.width
-//        }
-
-
-
-
-
-
-        //selection
+        ReportEdit {
+            id : repEdit
+        }
 
         onDoubleClicked: {
-            console.log(model.primaryKeyValue(currentRow))
+//            var reportEdit = Qt.createQmlObject(core.loadQmlObject("ReportEdit"), reports, "");
+//            reportEdit.show();
+            repEdit.show()
+//            console.log(model.primaryKeyValue(currentRow))
+//            report.reportId = model.primaryKeyValue(currentRow)
+//            report.show()
         }
     }
 }

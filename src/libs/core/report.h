@@ -41,10 +41,15 @@ QT_END_NAMESPACE
 class CORE_EXPORT Report : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(int reportId READ reportId WRITE setReportId NOTIFY reportIdChanged)
+    Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
+    Q_PROPERTY(QString menu READ menu WRITE setMenu NOTIFY menuChanged)
+    Q_PROPERTY(QString errorString READ errorString NOTIFY errorStringChanged)
 public:
     explicit Report(QObject *parent = 0);
-    void setId(int id);
-    int id() const;
+
+    void setReportId(int reportId);
+    int reportId() const;
 
     QString name() const;
     void setName(QString name);
@@ -61,7 +66,21 @@ public:
     QVariant parametrValue(QString paramName) const;
     QHash<QString, QVariant> paramentrs() const;
 
+    Q_INVOKABLE bool load();
+    Q_INVOKABLE bool save();
+
     bool isValid() const;
+
+    Q_INVOKABLE void show();
+    Q_INVOKABLE void print(QString printerName, int copies,  bool showDialog);
+
+    QString errorString() const;
+
+signals:
+    void reportIdChanged();
+    void nameChanged();
+    void menuChanged();
+    void errorStringChanged();
 
 private:
     int m_id;
@@ -69,6 +88,9 @@ private:
     QString m_menuId;
     QList<QAbstractItemModel *> m_models;
     QHash<QString, QVariant> m_params;
+    QString m_errorString;
+
+    void setError(const QString &error);
 
 };
 

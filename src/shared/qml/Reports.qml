@@ -13,63 +13,121 @@ Window {
     SystemPalette {id: syspal}
     color: syspal.window
 
+    Report {
+        id : report
+    }
+
+    Action {
+        id: acAdd
+        text: qsTr("Add")
+
+        onTriggered: {
+            tabs.currentIndex = 0
+        }
+    }
+
+    Action {
+        id: acEdit
+        text: qsTr("Edit")
+
+        onTriggered: {
+            tabs.currentIndex = 0
+        }
+    }
+
+    Action {
+        id: acDelete
+        text: qsTr("Delete")
+
+        onTriggered: {
+            tabs.currentIndex = 0
+        }
+    }
+
+    Action {
+        id: acPreview
+        text: qsTr("Preview")
+
+        onTriggered: {
+            report.reportId = reportModel.primaryKeyValue( currentRow )
+            report.show()
+        }
+    }
 
 
     SqlModel {
-        id: model
-        query: "SELECT re_id, re_name, re_type FROM reports"
+        id: reportModel
+        query: "SELECT re_id, re_name, re_menu FROM reports"
     }
 
-    Component {
-        id: typeDelegate
-        Text {
-            anchors.verticalCenter: parent.verticalCenter
-            color: styleData.textColor
-            elide: styleData.elideMode
-            //text: Report.CuteReportEngine
-            renderType: Text.NativeRendering
-            style: Text.Normal
-        }
-    }
-
-    TableView {
-        focus: true
+    TabView {
+        id: tabs
+        tabsVisible: false
         anchors.fill: parent
-        TableViewColumn {
-            role: "re_id"
-            title: "Id"
-            width: 100
-        }
-        TableViewColumn {
-            role: "re_name"
-            title: "Name"
-            width: 200
-        }
-        TableViewColumn {
-            role: "re_type"
-            title: "Type"
-            width: 200
-            delegate:typeDelegate
+
+        onCurrentIndexChanged: {
+            switch(currentIndex) {
+            case 0: reports.title = qsTr("Reports");
+                break;
+            case 1: reports.title = qsTr("Edit report");
+                break;
+            }
         }
 
-        Report {
-            id: report
+        Tab {
+            id: tabTable
+            title: "Table"
+
+            TableView {
+                id: table
+                focus: true
+                anchors.fill: parent
+                TableViewColumn {
+                    role: "re_id"
+                    title: qsTr("Id")
+                    width: 50
+                }
+                TableViewColumn {
+                    role: "re_name"
+                    title: qsTr("Name")
+                    width: 200
+                }
+                TableViewColumn {
+                    role: "re_menu"
+                    title: qsTr("Menu")
+                    width: 200
+                }
+
+                model: reportModel
+
+                onDoubleClicked: {
+                    report.reportId = reportModel.primaryKeyValue( currentRow )
+                    if (!report.load()) {
+                        console.error(report.errorString)
+                    } else {
+                        tabs.currentIndex = 1
+                    }
+                }
+            }
         }
-
-
-        model: model
 
         ReportEdit {
-            id : repEdit
-        }
+            id: tabEdit
+            title: "Edit"
 
-        onDoubleClicked: {
-//            var reportEdit = Qt.createQmlObject(core.loadQmlObject("ReportEdit"), reports, "");
-//            reportEdit.show();
-            repEdit.show()
-//            console.log(model.primaryKeyValue(currentRow))
-//            report.reportId = model.primaryKeyValue(currentRow)
-//            report.show()
+            onCancel: {
+                tabs.currentIndex = 0
+            }
+
+            onSaved : {
+                tabs.currentIndex = 0
+                reportModel.refresh()
+            }
         }
+    }
+
+
+    Component.onCompleted: {
+        tabTable.active = true
     }
 }

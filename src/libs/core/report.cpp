@@ -122,6 +122,7 @@ bool Report::load()
 
 bool Report::save()
 {
+    emit saved();
     return true;
 }
 

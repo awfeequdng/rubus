@@ -117,11 +117,50 @@ QHash<QString, QVariant> Report::paramentrs() const
 
 bool Report::load()
 {
+    if (m_id > 0) {
+        QSqlQuery sql;
+        sql.exec(QString("SELECT re_name, re_menu FROM reports WHERE re_id = %1").arg(m_id));
+
+        if (sql.lastError().isValid()) {
+            setError(sql.lastError().text());
+            return false;
+        }
+
+        sql.next();
+        setName(sql.value(0).toString());
+        setMenu(sql.value(1).toString());
+    } else {
+        m_id = -1;
+    }
+
+    emit loaded();
     return true;
 }
 
 bool Report::save()
 {
+    QSqlQuery sql;
+    if (m_id == -1) {
+        sql.prepare("INSERT INTO reports (re_name, re_menu, re_data) "
+                    "VALUES (:name, :menu, :data)");
+    } else {
+        sql.prepare("UPDATE reports SET re_name = :name, "
+                    "re_menu = :menu, "
+                    "re_data = :data "
+                    "WHERE re_id = :id");
+        sql.bindValue(":id", m_id);
+    }
+
+    sql.bindValue(":name", m_name);
+    sql.bindValue(":menu", m_menuId);
+    sql.bindValue(":data", QString());
+
+    if (!sql.exec()) {
+        qCritical() << sql.lastError();
+        setError(sql.lastError().text());
+        return false;
+    }
+
     emit saved();
     return true;
 }

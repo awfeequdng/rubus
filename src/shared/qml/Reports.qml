@@ -1,7 +1,8 @@
-import QtQuick 2.0
+import QtQuick 2.2
 import QtQuick.Window 2.0
 import QtQuick.Controls 1.1
 import QtQuick.Controls.Styles 1.1
+import QtQuick.Dialogs 1.1
 import Rubus 1.0
 import shared.qml 1.0
 
@@ -22,7 +23,11 @@ Window {
         text: qsTr("Add")
 
         onTriggered: {
-            tabs.currentIndex = 0
+            if ( !editTab.item.load( -1 ) ) {
+                console.log("Error")
+            } else {
+                tabs.currentIndex = 1
+            }
         }
     }
 
@@ -31,7 +36,11 @@ Window {
         text: qsTr("Edit")
 
         onTriggered: {
-            tabs.currentIndex = 0
+            if (!editTab.item.load( tabTable.item.currentId() )) {
+                console.log("Error")
+            } else {
+                tabs.currentIndex = 1
+            }
         }
     }
 
@@ -49,7 +58,7 @@ Window {
         text: qsTr("Preview")
 
         onTriggered: {
-            report.reportId = reportModel.primaryKeyValue( currentRow )
+            report.reportId =
             report.show()
         }
     }
@@ -76,9 +85,15 @@ Window {
 
         Tab {
             id: tabTable
+            active: true
             title: "Table"
 
+
             TableView {
+                function currentId() {
+                   return reportModel.primaryKeyValue( table.currentRow )
+                }
+
                 id: table
                 focus: true
                 anchors.fill: parent
@@ -101,33 +116,34 @@ Window {
                 model: reportModel
 
                 onDoubleClicked: {
-                    report.reportId = reportModel.primaryKeyValue( currentRow )
-                    if (!report.load()) {
-                        console.error(report.errorString)
-                    } else {
-                        tabs.currentIndex = 1
-                    }
+                    acEdit.trigger()
                 }
             }
         }
 
-        ReportEdit {
-            id: tabEdit
-            title: "Edit"
 
-            onCancel: {
-                tabs.currentIndex = 0
-            }
+        Tab {
+            id: editTab
+            active: true
+            source: "ReportEdit.qml"
+        }
 
-            onSaved : {
+        Connections {
+            target: editTab.item
+
+            onSave : {
                 tabs.currentIndex = 0
                 reportModel.refresh()
+            }
+
+            onCancel : {
+                tabs.currentIndex = 0
             }
         }
     }
 
 
     Component.onCompleted: {
-        tabTable.active = true
+        tabs.currentIndex = 0
     }
 }

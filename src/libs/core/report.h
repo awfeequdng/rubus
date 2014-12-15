@@ -82,6 +82,7 @@ signals:
     void menuChanged();
     void errorStringChanged();
     void saved();
+    void loaded();
 
 private:
     int m_id;

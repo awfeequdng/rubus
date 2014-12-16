@@ -198,7 +198,7 @@ bool User::save()
         qCritical() << sql.lastError();
         m_errorString = sql.lastError().text();
         return false;
-    }
+    }    
 
     return true;
 }

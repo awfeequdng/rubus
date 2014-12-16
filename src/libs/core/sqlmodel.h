@@ -17,6 +17,7 @@ class CORE_EXPORT SqlModel : public QAbstractItemModel
     Q_PROPERTY(QString where READ where WRITE setWhere NOTIFY whereChanged)
     Q_PROPERTY(QString orderBy READ orderBy WRITE setOrderBy NOTIFY orderByChanged)
     Q_PROPERTY(QString primaryKeyRole READ primaryKeyRole WRITE setPrimaryKeyRole NOTIFY primaryKeyColumnChanged)
+    Q_PROPERTY(QString deleteQuery READ deleteQuery WRITE setDeleteQuery NOTIFY deleteQueryChanged)
 public:
     explicit SqlModel(QObject *parent = 0);
 
@@ -35,10 +36,14 @@ public:
     QString primaryKeyRole() const;
     void setPrimaryKeyRole(const QString &column);
 
+    QString deleteQuery() const;
+    void setDeleteQuery(const QString &query);
+
     QString errorString() const;
     Q_INVOKABLE QVariant value(int row, int role) const;
     Q_INVOKABLE QVariant value(int row, QString rolename) const;
     Q_INVOKABLE QVariant primaryKeyValue(int row) const;
+    Q_INVOKABLE bool removeRow(int row);
 
     Q_INVOKABLE void refresh();
 
@@ -48,6 +53,8 @@ public:
     int columnCount(const QModelIndex &parent) const;
     QVariant data(const QModelIndex &index, int role) const;
     QHash<int, QByteArray> roleNames() const;
+    bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
+    bool submit();
 
 signals:
     void queryChanged();
@@ -56,6 +63,7 @@ signals:
     void whereChanged();
     void orderByChanged();
     void primaryKeyColumnChanged();
+    void deleteQueryChanged();
 
 public slots:
 
@@ -66,6 +74,10 @@ private:
     QString m_where;
     QString m_order;
     QString m_pkeyRole;
+    QString m_deleteQuery;
+    QString m_errorString;
+
+    QString m_deletedIds;
 
 };
 

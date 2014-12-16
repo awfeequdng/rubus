@@ -50,10 +50,9 @@ FOREIGN KEY (ii_item) REFERENCES items ( it_id )  ON DELETE CASCADE ON UPDATE CA
 CREATE TABLE reports (
 re_id serial,
 re_name varchar(100) NOT NULL,
-re_type int NOT NULL,
 re_menu varchar(100) NOT NULL,
 re_note text,
-re_data xml,
+re_data text,
 PRIMARY KEY (re_id)
 );
 

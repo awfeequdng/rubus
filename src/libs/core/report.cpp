@@ -80,6 +80,16 @@ void Report::setMenu(QString menu)
     m_menuId = menu;
 }
 
+QUrl Report::fromFile() const
+{
+    return m_fromFile;
+}
+
+void Report::setFromFile(const QUrl &file)
+{
+    m_fromFile = file;
+}
+
 void Report::appendModel(QAbstractItemModel *model)
 {
     m_models.append(model);
@@ -131,6 +141,10 @@ bool Report::load()
         setMenu(sql.value(1).toString());
     } else {
         m_id = -1;
+        m_name.clear();
+        m_menuId.clear();
+        m_fromFile.clear();
+        m_data.clear();
     }
 
     emit loaded();
@@ -139,6 +153,36 @@ bool Report::load()
 
 bool Report::save()
 {
+    if (!m_fromFile.isEmpty()) {
+        QFile f(m_fromFile.toLocalFile());
+
+        if (!f.exists()) {
+            setError(tr("File \"%1\" not exists").arg(m_fromFile.toString()));
+            return false;
+        }
+
+        if (!f.open(QIODevice::ReadOnly)) {
+            setError(tr("Can't open file \"%1\"").arg(m_fromFile.toLocalFile()));
+            return false;
+        }
+
+        m_data = f.readAll();
+        f.close();
+
+    } else if (m_id > 0){
+
+        QSqlQuery sql;
+        sql.exec(QString("SELECT re_data FROM reports WHERE re_id = %1").arg(m_id));
+
+        if (sql.lastError().isValid()) {
+            setError(sql.lastError().text());
+            return false;
+        }
+
+        sql.next();
+        m_data = sql.value(0).toByteArray();
+    }
+
     QSqlQuery sql;
     if (m_id == -1) {
         sql.prepare("INSERT INTO reports (re_name, re_menu, re_data) "
@@ -151,14 +195,24 @@ bool Report::save()
         sql.bindValue(":id", m_id);
     }
 
+
     sql.bindValue(":name", m_name);
     sql.bindValue(":menu", m_menuId);
-    sql.bindValue(":data", QString());
+    sql.bindValue(":data", m_data);
 
     if (!sql.exec()) {
         qCritical() << sql.lastError();
         setError(sql.lastError().text());
         return false;
+    }
+
+    if (m_id == -1) {
+        sql.exec("SELECT CURRVAL(pg_get_serial_sequence('reports', 're_id'))");
+        if (sql.next()) {
+            m_id = sql.value(0).toInt();
+        } else {
+            qWarning() << "sql can't next in select currval";
+        }
     }
 
     emit saved();

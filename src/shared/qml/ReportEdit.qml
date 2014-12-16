@@ -3,7 +3,7 @@ import QtQuick.Window 2.0
 import QtQuick.Controls 1.1
 import QtQuick.Controls.Styles 1.1
 import QtQuick.Layouts 1.1
-import QtQuick.Dialogs 1.1
+import QtQuick.Dialogs 1.2
 import Rubus 1.0
 import shared.qml 1.0
 
@@ -26,7 +26,18 @@ Item {
         onLoaded: {
             edName.text = report.name
             edMenu.text = report.menu
+            edFile.text = ""
         }
+    }
+
+    function currentId() {
+        return report.reportId;
+    }
+
+    onCancel: {
+        edName.text = ""
+        edMenu.text = ""
+        edFile.text = ""
     }
 
     MessageDialog {
@@ -34,6 +45,16 @@ Item {
         title: "Error"
         icon: StandardIcon.Critical
         standardButtons: StandardButton.Ok
+    }
+
+    FileDialog {
+        id: fileDialog
+        title: "Please choose a file"
+        nameFilters: [ "CuteReport files (*.qtrp)", "All files (*)" ]
+        onAccepted: {
+            edFile.text = Qt.resolvedUrl(fileDialog.fileUrl)
+
+        }
     }
 
     function load(id) {
@@ -76,11 +97,34 @@ Item {
             Binding { target: report;  property: "menu"; value: edMenu.text}
         }
 
+        Label {
+            text: qsTr("From file:")
+        }
+
+        RowLayout {
+            TextField {
+                id: edFile
+                Layout.fillWidth: true
+                Binding { target: report;  property: "fromFile"; value: edFile.text }
+            }
+
+            Button {
+                id:btnChooseFile
+                text: "..."
+                Layout.preferredWidth:  40
+
+                onClicked: {
+                    fileDialog.open()
+                }
+            }
+        }
+
         Item {
             Layout.columnSpan: 2
             Layout.fillWidth: true
             Layout.fillHeight: true
         }
+
 
         RowLayout {
             Layout.columnSpan: 2

@@ -19,10 +19,12 @@ void SqlModel::setQuery(const QString &query)
         m_query = new QSqlQuery();
     }
 
+    emit beginResetModel();
     m_query->exec(query);
 
     if (m_query->lastError().isValid()) {
         qCritical() << m_query->lastError();
+        m_errorString = m_query->lastError().text();
         emit errorStringChanged();
         return;
     }
@@ -33,6 +35,7 @@ void SqlModel::setQuery(const QString &query)
         m_roles.insert(Qt::UserRole + i + 1, rec.fieldName(i).toUtf8());
     }
 
+    emit endResetModel();
     emit queryChanged();
 }
 
@@ -76,9 +79,19 @@ void SqlModel::setPrimaryKeyRole(const QString &column)
     m_pkeyRole = column;
 }
 
+QString SqlModel::deleteQuery() const
+{
+    return m_deleteQuery;
+}
+
+void SqlModel::setDeleteQuery(const QString &query)
+{
+    m_deleteQuery = query;
+}
+
 QString SqlModel::errorString() const
 {
-    return m_query ? m_query->lastError().text() : QString();
+    return m_errorString;
 }
 
 QVariant SqlModel::value(int row, int role) const
@@ -110,6 +123,11 @@ QVariant SqlModel::primaryKeyValue(int row) const
     return m_pkeyRole.isEmpty() ?
                 value(row, Qt::UserRole + 1) :
                 value(row, m_pkeyRole);
+}
+
+bool SqlModel::removeRow(int row)
+{
+    return QAbstractItemModel::removeRow(row, QModelIndex());
 }
 
 void SqlModel::refresh()
@@ -158,4 +176,38 @@ QVariant SqlModel::data(const QModelIndex &index, int role) const
 QHash<int, QByteArray> SqlModel::roleNames() const
 {
     return m_roles;
+}
+
+bool SqlModel::removeRows(int row, int count, const QModelIndex &parent)
+{
+    Q_UNUSED(count)
+    Q_UNUSED(parent)
+
+    if (!m_deletedIds.isEmpty()) {
+        m_deletedIds.append(",");
+    }
+    m_deletedIds.append("'" + primaryKeyValue(row).toString() + "'");
+
+    return true;
+}
+
+bool SqlModel::submit()
+{
+    if (m_deletedIds.isEmpty()) {
+        return true;
+    }
+
+    QSqlQuery sql;
+    sql.prepare(m_deleteQuery);
+    sql.bindValue(":id", m_deletedIds);
+
+    m_deletedIds.clear();
+
+    if (!sql.exec()) {
+        m_errorString = sql.lastError().text();
+        return false;
+    }
+
+    emit resetInternalData();
+    return true;
 }

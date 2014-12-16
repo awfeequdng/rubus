@@ -32,6 +32,7 @@
 
 #include <QVariant>
 #include <QObject>
+#include <QUrl>
 #include "core_global.h"
 
 QT_BEGIN_NAMESPACE
@@ -45,6 +46,8 @@ class CORE_EXPORT Report : public QObject
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
     Q_PROPERTY(QString menu READ menu WRITE setMenu NOTIFY menuChanged)
     Q_PROPERTY(QString errorString READ errorString NOTIFY errorStringChanged)
+    Q_PROPERTY(QUrl fromFile READ fromFile WRITE setFromFile NOTIFY fromFileChanged)
+
 public:
     explicit Report(QObject *parent = 0);
 
@@ -56,6 +59,9 @@ public:
 
     QString menu() const;
     void setMenu(QString menu);
+
+    QUrl fromFile() const;
+    void setFromFile(const QUrl &file);
 
     void appendModel(QAbstractItemModel *model);
     QAbstractItemModel *modelAt(int i) const;
@@ -81,6 +87,7 @@ signals:
     void nameChanged();
     void menuChanged();
     void errorStringChanged();
+    void fromFileChanged();
     void saved();
     void loaded();
 
@@ -88,6 +95,8 @@ private:
     int m_id;
     QString m_name;
     QString m_menuId;
+    QString m_data;
+    QUrl m_fromFile;
     QList<QAbstractItemModel *> m_models;
     QHash<QString, QVariant> m_params;
     QString m_errorString;

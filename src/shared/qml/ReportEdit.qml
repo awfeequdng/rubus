@@ -81,9 +81,9 @@ Item {
             text: qsTr("Name:")
         }
 
-        TextField {
+        TextField {            
             id: edName
-            Layout.fillWidth: true
+            Layout.fillWidth: true            
             Binding { target: report;  property: "name"; value: edName.text}
         }
 

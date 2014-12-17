@@ -15,33 +15,30 @@ ApplicationWindow {
     SystemPalette {id: syspal}
     color: syspal.window
 
-    Reports {
-        id : reports_
-
-    }
-
     Action {
         id: acReport
         text: qsTr("Reports")
         shortcut: Qt.Key_F4
+        enabled: user.permission("Core.Reports")
 
         onTriggered: {
-            //var rep = Qt.createQmlObject(core.loadQmlObject("Reports"), mainwindow, "c:\Projects\rubus\src\shared\qml");
-            //rep.show();
-            reports_.show()
+            var rep = Qt.createQmlObject(core.loadQmlObject("Reports"), mainwindow, "");
+            rep.show();
         }
     }
 
     menuBar: MenuBar {
         Menu {
             title : "General"
-            MenuItem {
-                text : "Users"
-                enabled: user.permission("Users")
-            }
+//            MenuItem {
+//                text : "Users"
+//                visible: action.enabled
+//                enabled: user.permission("Core.Users")
+//            }
 
             MenuItem {
                 action : acReport
+                visible: action.enabled
             }
 
             MenuSeparator {}

@@ -11,7 +11,8 @@ Window {
     id : reports
     width: 500
     height: 300
-    title: qsTr("Reports");
+    title: qsTr("Reports")
+
 
     SystemPalette {id: syspal}
     color: syspal.window
@@ -20,9 +21,22 @@ Window {
         id : report
     }
 
+    MessageDialog {
+        id : deleteDialog
+        title: "Delete"
+        text: qsTr("Delete selected reports?")
+        icon: StandardIcon.Warning
+        standardButtons: StandardButton.Yes | StandardButton.No
+
+        onYes: {
+            tabTable.item.deleteSelections();
+        }
+    }
+
     Action {
         id: acAdd
         text: qsTr("Add")
+        shortcut: "Insert"
 
         onTriggered: {
             if ( !editTab.item.load( -1 ) ) {
@@ -51,9 +65,10 @@ Window {
     Action {
         id: acDelete
         text: qsTr("Delete")
+        shortcut: StandardKey.Delete
 
         onTriggered: {
-            tabTable.item.deleteSelections();
+            deleteDialog.open()
         }
     }
 
@@ -71,8 +86,8 @@ Window {
     SqlModel {
         id: reportModel
         query: "SELECT re_id, re_name, re_menu FROM reports"
-        deleteQuery: "DELETE FROM reports WHERE re_id IN (:id)"
         primaryKeyRole: "re_id"
+        tableName: "reports"
     }
 
 
@@ -80,16 +95,20 @@ Window {
         id: tabs
         tabsVisible: false
         anchors.fill: parent
+        focus:  true
 
         onCurrentIndexChanged: {
             if (currentIndex === 0)
                 reports.title = qsTr("Reports");
         }
 
+        onVisibleChanged: console.log(visible)
+
         Tab {
             id: tabTable
             active: true
             title: "Table"
+            focus:  true
 
             ColumnLayout {
                 anchors.fill: parent
@@ -121,11 +140,11 @@ Window {
                 }
 
                 TableView {
+                    id: table
                     Layout.fillHeight: true
                     Layout.fillWidth: true
                     selectionMode: SelectionMode.ExtendedSelection
-
-                    id: table
+                    sortIndicatorVisible: true
                     focus: true
                     TableViewColumn {
                         role: "re_id"
@@ -142,7 +161,6 @@ Window {
                         title: qsTr("Menu")
                         width: 200
                     }
-
                     model: reportModel
 
                     onDoubleClicked: {
@@ -162,6 +180,8 @@ Window {
                     Item { Layout.fillWidth: true}
                 }
             }
+
+
         }
 
 
@@ -197,4 +217,5 @@ Window {
         tabs.currentIndex = 0
     }
 
+    //onVisibleChanged:
 }

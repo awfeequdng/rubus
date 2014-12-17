@@ -47,6 +47,7 @@ QString SqlModel::select() const
 void SqlModel::setSelect(const QString &select)
 {
     m_select = select;
+    setQuery(m_select + m_where + m_order);
 }
 
 QString SqlModel::where() const
@@ -57,6 +58,7 @@ QString SqlModel::where() const
 void SqlModel::setWhere(const QString &where)
 {
     m_where = where;
+    setQuery(m_select + m_where + m_order);
 }
 
 QString SqlModel::orderBy() const
@@ -67,6 +69,8 @@ QString SqlModel::orderBy() const
 void SqlModel::setOrderBy(const QString &order)
 {
     m_order = order;
+
+    setQuery(m_select + m_where + m_order);
 }
 
 QString SqlModel::primaryKeyRole() const
@@ -79,14 +83,14 @@ void SqlModel::setPrimaryKeyRole(const QString &column)
     m_pkeyRole = column;
 }
 
-QString SqlModel::deleteQuery() const
+QString SqlModel::tableName() const
 {
-    return m_deleteQuery;
+    return m_tableName;
 }
 
-void SqlModel::setDeleteQuery(const QString &query)
+void SqlModel::setTableName(const QString &name)
 {
-    m_deleteQuery = query;
+    m_tableName = name;
 }
 
 QString SqlModel::errorString() const
@@ -186,28 +190,40 @@ bool SqlModel::removeRows(int row, int count, const QModelIndex &parent)
     if (!m_deletedIds.isEmpty()) {
         m_deletedIds.append(",");
     }
-    m_deletedIds.append("'" + primaryKeyValue(row).toString() + "'");
+    m_deletedIds.append(primaryKeyValue(row).toString() );
 
     return true;
 }
 
 bool SqlModel::submit()
 {
-    if (m_deletedIds.isEmpty()) {
+    if (m_tableName.isEmpty() || m_deletedIds.isEmpty()) {
         return true;
     }
 
     QSqlQuery sql;
-    sql.prepare(m_deleteQuery);
-    sql.bindValue(":id", m_deletedIds);
+    sql.exec(QString("DELETE FROM %1 WHERE %2 IN (%3)")
+             .arg(m_tableName)
+             .arg(m_pkeyRole.isEmpty() ? m_query->record().field(0).name() : m_pkeyRole)
+             .arg(m_deletedIds));
 
     m_deletedIds.clear();
 
-    if (!sql.exec()) {
+    if (sql.lastError().isValid()) {
         m_errorString = sql.lastError().text();
         return false;
     }
 
-    emit resetInternalData();
+    refresh();
     return true;
+}
+
+void SqlModel::sort(int column, Qt::SortOrder order)
+{
+    m_query->first();
+    qDebug() << column << m_query->record().field(column).name();
+    QString orderBy = " ORDER BY ";
+    orderBy += m_query->record().field(column).name();
+    orderBy += order == Qt::AscendingOrder ? " ASC" : " DESC";
+    setOrderBy(orderBy);
 }

@@ -24,8 +24,8 @@ win32 {
 }
 
 unix {
-    CUTEREPORT_PATH = /home/wulff/projects/cutereport
-    CUTEREPORT_BUILD = /home/wulff/projects/build-CuteReport-Qt4_8_6_32/debug/build
+    CUTEREPORT_PATH = /home/wulff/projects/cutereport/cutereport
+    CUTEREPORT_BUILD = /home/wulff/projects/cutereport/build-CuteReport-Desktop_Qt_5_4_0_GCC_64bit/Debug/build
     QMAKE_LFLAGS += -Wl,--rpath=$$CUTEREPORT_BUILD
 }
 

@@ -46,7 +46,7 @@ Window {
     flags: Qt.Dialog
     modality: Qt.WindowModal
     width: 300
-    height: 120
+    height: lay.implicitHeight + 10
     title: "Rubus " + core.version
 
     SystemPalette {id: syspal}
@@ -64,6 +64,7 @@ Window {
     }
 
     GridLayout {
+        id: lay
         columns: 2
         anchors.fill: parent
         anchors.margins: 10
@@ -148,7 +149,6 @@ Window {
 
     Component.onCompleted : {
         visible = true
-
         if (username == "") {
             edLogin.focus = true
         } else {

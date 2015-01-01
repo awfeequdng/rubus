@@ -18,7 +18,7 @@ INCLUDEPATH += ../../libs/core \
 LIBS += -L$$LIB_DIR -lRubusCore
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
-QML_IMPORT_PATH = $$QML_BASE_DIR
+QML_IMPORT_PATH = $$PWD
 
 # Default rules for deployment.
 include(deployment.pri)

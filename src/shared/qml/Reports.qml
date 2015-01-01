@@ -161,8 +161,9 @@ Window {
                         title: qsTr("Menu")
                         width: 200
                     }
-                    model: reportModel
-
+                    model: ProxyModel {
+                        source: reportModel
+                    }
                     onDoubleClicked: {
                         acEdit.trigger()
                     }

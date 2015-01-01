@@ -42,6 +42,7 @@
 #include "sqlmodel.h"
 #include "report.h"
 #include "reportmanager.h"
+#include "sortfiltermodel.h"
 
 QString m_configFile;
 QString m_user;
@@ -114,6 +115,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<Cryptor>("Rubus", 1, 0, "Cryptor");
     qmlRegisterType<SqlModel>("Rubus", 1, 0, "SqlModel");
     qmlRegisterType<Report>("Rubus", 1, 0, "Report");
+    qmlRegisterType<Report>("Rubus", 1, 0, "ProxyModel");
 
     QTranslator translator;
     translator.load("rubus_ru");
@@ -126,7 +128,7 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;    
     engine.setBaseUrl(QUrl(QML_BASE_DIR));
-    engine.addImportPath("C:/Projects/rubus/src");
+    engine.addImportPath("/home/wulff0/projects/rubus/src/");
     engine.rootContext()->setContextProperty("core", &core);
     engine.rootContext()->setContextProperty("settings", sett);
     bool logged = false;

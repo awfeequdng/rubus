@@ -50,7 +50,8 @@ SOURCES += \
     user.cpp \
     iplugin.cpp \
     settings.cpp \
-    sqlmodel.cpp
+    sqlmodel.cpp \
+    sortfiltermodel.cpp
 
 HEADERS +=\
     core.h \
@@ -63,7 +64,8 @@ HEADERS +=\
     version.h \
     iplugin.h \
     settings.h \
-    sqlmodel.h
+    sqlmodel.h \
+    sortfiltermodel.h
 
 RESOURCES +=
 

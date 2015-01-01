@@ -175,6 +175,7 @@ QByteArray ICore::loadQmlObject(const QString &name) const
     QByteArray arr;
     if(m_storageQml == Constants::Internal::QMLSTORAGE_FILE) {
         QString path = QML_BASE_DIR "/";
+        qDebug() << path;
         QUrl url(path + name + ".qml"); //TODO check ext
 
         QFile f(url.toString(QUrl::RemoveScheme));

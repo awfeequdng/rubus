@@ -115,7 +115,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<Cryptor>("Rubus", 1, 0, "Cryptor");
     qmlRegisterType<SqlModel>("Rubus", 1, 0, "SqlModel");
     qmlRegisterType<Report>("Rubus", 1, 0, "Report");
-    qmlRegisterType<Report>("Rubus", 1, 0, "ProxyModel");
+    qmlRegisterType<SortFilterModel>("Rubus", 1, 0, "ProxyModel");
 
     QTranslator translator;
     translator.load("rubus_ru");
@@ -126,14 +126,11 @@ int main(int argc, char *argv[])
     Core::ICore core(m_configFile);
     Settings *sett = core.settings(QSettings::UserScope);
 
-    QQmlApplicationEngine engine;    
-    engine.setBaseUrl(QUrl(QML_BASE_DIR));
-    engine.addImportPath("/home/wulff0/projects/rubus/src/");
+    QQmlApplicationEngine engine;
+    engine.addImportPath("plugins");
     engine.rootContext()->setContextProperty("core", &core);
     engine.rootContext()->setContextProperty("settings", sett);
     bool logged = false;
-
-    QObject::connect(&core, SIGNAL(mainWindowDataLoaded(QByteArray, QUrl)), &engine, SLOT(loadData(QByteArray,QUrl)));
 
     if (!m_user.isEmpty() && !m_pwd.isEmpty()) {
         logged = core.login(m_user, m_pwd);
@@ -150,6 +147,8 @@ int main(int argc, char *argv[])
 
             if (!logged) {
                 QMessageBox::critical(0, "Core error", core.errorString());
+            } else {
+                engine.load(QUrl("qrc:/qml/MainWindow.qml"));
             }
         }
     }

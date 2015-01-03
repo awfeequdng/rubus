@@ -7,8 +7,6 @@ QT += sql xml widgets
 CONFIG -= debug_and_release
 INCLUDEPATH +=
 
-QML_BASE_DIR = $$PWD/shared/qml
-
 DEFINES += QML_BASE_DIR=\\\"$$QML_BASE_DIR\\\"
 
 OTHER_FILES += \

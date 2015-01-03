@@ -69,7 +69,7 @@ public:
     Q_INVOKABLE bool login(QString username, QString password);
     Q_INVOKABLE bool logout();
 
-    static void registerWidget(QString name, QWidget *widget);
+    //static void registerWidget(QString name, QWidget *widget);
 
     static void registerAction(QString id, QAction * action);
     static void registerActions(QMap<QString, QAction *> map);
@@ -89,7 +89,7 @@ public:
 
     Q_INVOKABLE static User *currentUser();
     Q_INVOKABLE QByteArray loadQmlObject(const QString &name) const;
-    QByteArray mainWndowQml() const { return m_mainwindowQml; }
+    //QByteArray mainWndowQml() const { return m_mainwindowQml; }
 
     void loadParameters();
     void saveParameters();
@@ -103,7 +103,7 @@ signals:
     void hostChanged();
     void databaseChanged();
     void portChanged();
-    void mainWindowDataLoaded(const QByteArray & data, const QUrl & url);
+    //void mainWindowDataLoaded(const QByteArray & data, const QUrl & url);
 
 public slots:
 
@@ -111,7 +111,7 @@ private:
     void loadConfig();
     void saveConfig();
 
-    void initMainWindow();
+    //void initMainWindow();
 
     QString m_databaseHost;
     QString m_databaseName;
@@ -121,7 +121,6 @@ private:
     User *m_currentUser;
     QString m_reportStoragePath;
     QString m_configFile;
-    QByteArray m_mainwindowQml;
     QString m_storageQml;
 
     Settings *m_systemSettings;

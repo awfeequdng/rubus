@@ -120,8 +120,7 @@ bool ICore::login(QString username, QString password)
             return false;
         }
         emit logged();
-        loadParameters();
-        initMainWindow();
+        //loadParameters();
     } else {
         qDebug() << db.lastError();
         m_errorString = db.lastError().text();
@@ -140,10 +139,10 @@ bool ICore::logout()
     return true;
 }
 
-void ICore::registerWidget(QString name, QWidget *widget)
-{
-    //m_mainWindow->registerWidget(name, widget);
-}
+//void ICore::registerWidget(QString name, QWidget *widget)
+//{
+//    //m_mainWindow->registerWidget(name, widget);
+//}
 
 void ICore::registerAction(QString id, QAction *action)
 {
@@ -274,23 +273,24 @@ void ICore::saveConfig()
     m_systemSettings->setValue("port",m_databasePort);
 }
 
-void ICore::initMainWindow()
-{
-    QJsonObject obj = m_currentUser->parameter("mainwindow");
-    if (obj.empty()) {
-        qCritical() << "not settings for MainWindow";
-        QApplication::quit();
-        return;
-    }
+//void ICore::initMainWindow()
+//{
+//    QJsonObject obj = m_currentUser->parameter("mainwindow");
 
-    QVariantMap map = obj.toVariantMap();
-    m_mainwindowQml = loadQmlObject(map.value("objectname").toString());
+//    if (obj.empty()) {
+//        qCritical() << "not settings for MainWindow";
+//        QApplication::quit();
+//        return;
+//    }
 
-    if (m_mainwindowQml.isEmpty()) {
-        qCritical() << "MainWindow qml is empty!";
-        QApplication::quit();
-    }
+//    QVariantMap map = obj.toVariantMap();
+//    m_mainwindowQml = loadQmlObject(map.value("objectname").toString());
 
-    emit mainWindowDataLoaded(m_mainwindowQml, QUrl(QML_BASE_DIR "/mainwindow.qml"));
-}
+//    if (m_mainwindowQml.isEmpty()) {
+//        qCritical() << "MainWindow qml is empty!";
+//        QApplication::quit();
+//    }
+
+//    emit mainWindowDataLoaded(m_mainwindowQml, QUrl(QML_BASE_DIR "/mainwindow.qml"));
+//}
 

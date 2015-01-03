@@ -25,7 +25,5 @@ include(deployment.pri)
 
 OTHER_FILES += \
     qml/SigninDialog.qml \
-    ../../shared/qml/mainwindow.qml \
-    ../../shared/qml/Reports.qml \
-    ../../shared/qml/ReportEdit.qml \
+    qml/MainWindow.qml \
 

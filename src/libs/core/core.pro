@@ -2,14 +2,7 @@
     error( Can not find the common.pri file! )
 }
 
-QT       += sql xml core
-
-greaterThan(QT_MAJOR_VERSION, 4): {
-    QT += printsupport
-} else {
-    include(qjson/qjson-backport.pri)
-    INCLUDEPATH += qjson
-}
+QT       += sql xml core printsupport
 
 TARGET = RubusCore
 TEMPLATE = lib
@@ -32,8 +25,6 @@ unix {
 CUTEREPORT_BUILD_PLUGINS = $$CUTEREPORT_BUILD/cutereport/plugins
 LIBS += -L$$CUTEREPORT_BUILD
 LIBS += -lCuteReport -lCuteReportWidgets
-
-message($$LIBS)
 
 DEFINES += CUTEREPORT_BUILD=\\\"$$CUTEREPORT_BUILD\\\"
 DEFINES += CUTEREPORT_BUILD_PLUGINS=\\\"$$CUTEREPORT_BUILD_PLUGINS\\\"

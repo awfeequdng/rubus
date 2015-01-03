@@ -4,7 +4,7 @@ TEMPLATE = subdirs
 SUBDIRS += \
     #thirdparty \
     libs \
-    #plugins \
+    plugins \
     apps \
 
 CONFIG += ordered

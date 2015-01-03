@@ -3,7 +3,7 @@ import QtQuick.Window 2.0
 import QtQuick.Controls 1.2
 import QtQuick.Layouts 1.1
 import Rubus 1.0
-import shared.qml 1.0
+import Contractors 1.0
 
 ApplicationWindow {
     property User user: core.currentUser();
@@ -15,6 +15,10 @@ ApplicationWindow {
     SystemPalette {id: syspal}
     color: syspal.window
 
+//    Contractor {
+//        id: dd
+//    }
+
     Action {
         id: acReport
         text: qsTr("Reports")
@@ -22,8 +26,8 @@ ApplicationWindow {
         enabled: user.permission("Core.Reports")
 
         onTriggered: {
-            var rep = Qt.createQmlObject(core.loadQmlObject("Reports"), mainwindow, "");
-            rep.show();
+            //var rep = Qt.createQmlObject(core.loadQmlObject("Reports"), mainwindow, "");
+            //rep.show();
         }
     }
 

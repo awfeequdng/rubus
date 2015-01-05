@@ -8,8 +8,10 @@ TARGET = RubusCore
 TEMPLATE = lib
 
 DEFINES += CORE_LIBRARY
-
 DEFINES += CUTEREPORT
+
+target.path = $$LIB_DIR
+INSTALLS += target
 
 win32 {
     CUTEREPORT_PATH = C:/Projects/cutereport/cutereport

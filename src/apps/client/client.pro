@@ -20,10 +20,10 @@ LIBS += -L$$LIB_DIR -lRubusCore
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH = $$PWD
 
-# Default rules for deployment.
-include(deployment.pri)
-
 OTHER_FILES += \
     qml/SigninDialog.qml \
     qml/MainWindow.qml \
+
+target.path = $$ROOT_DIR
+INSTALLS += target
 

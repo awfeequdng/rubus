@@ -19,8 +19,16 @@ HEADERS += \
     contractors_plugin.h \
     contractor.h
 
-DISTFILES = qmldir
+DISTFILES = qmldir \
+    ContractorTable.qml
+
 DESTDIR = $$PLUGINS_DIR/$$uri
 
-QMAKE_POST_LINK += $$QMAKE_COPY $$replace($$list($$quote($$PWD/qmldir) $$DESTDIR), /, $$QMAKE_DIR_SEP)
+qmlfiles.path = $$DESTDIR
+qmlfiles.files = ContractorTable.qml  qmldir
 
+INSTALLS+= qmlfiles
+
+#QMAKE_POST_LINK += $$QMAKE_COPY $$replace($$list($$quote($$PWD/qmldir) $$DESTDIR), /, $$QMAKE_DIR_SEP)
+#QMAKE_POST_LINK += $$QMAKE_COPY $$replace($$list($$quote($$PWD/ContractorTable.qml) $$DESTDIR), /, $$QMAKE_DIR_SEP)
+#QMAKE_POST_LINK += $$QMAKE_COPY $$quote($$copyfile) $$quote($$copydest) $$escape_expand(\\n\\t)

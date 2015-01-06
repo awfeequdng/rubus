@@ -19,9 +19,9 @@ ApplicationWindow {
         id: dd
     }
 
-    ContractorTable {
-        id: contrs
-    }
+//    ContractorTable {
+//        id: contrs
+//    }
 
     Action {
         id: acReport

@@ -24,7 +24,7 @@ DISTFILES = qmldir \
 
 DESTDIR = $$PLUGINS_DIR/$$uri
 
-qmlfiles.path = $$DESTDIR
+qmlfiles.path = $$OUT_PWD/$$DESTDIR
 qmlfiles.files = ContractorTable.qml  qmldir
 
 INSTALLS+= qmlfiles

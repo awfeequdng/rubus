@@ -21,15 +21,6 @@ QAbstractItemModel *SortFilterModel::source() const
     return QSortFilterProxyModel::sourceModel();
 }
 
-void SortFilterModel::setTest(const QString &name)
-{
-
-}
-
-QString SortFilterModel::test() const
-{
-
-}
 
 bool SortFilterModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
 {

@@ -10,7 +10,7 @@ TEMPLATE = lib
 DEFINES += CORE_LIBRARY
 DEFINES += CUTEREPORT
 
-target.path = $$LIB_DIR
+target.path = $$OUT_PWD/$$LIB_DIR
 INSTALLS += target
 
 win32 {
@@ -20,7 +20,7 @@ win32 {
 
 unix {
     CUTEREPORT_PATH = /home/wulff/projects/cutereport/cutereport
-    CUTEREPORT_BUILD = /home/wulff/projects/cutereport/build-CuteReport-Desktop_Qt_5_4_0_GCC_64bit/Debug/build
+    CUTEREPORT_BUILD = /home/wulff/projects/cutereport/build-CuteReport-Desktop_Qt_5_4_0_GCC_32bit/Debug/build
     QMAKE_LFLAGS += -Wl,--rpath=$$CUTEREPORT_BUILD
 }
 

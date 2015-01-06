@@ -24,6 +24,6 @@ OTHER_FILES += \
     qml/SigninDialog.qml \
     qml/MainWindow.qml \
 
-target.path = $$ROOT_DIR
+target.path = $$OUT_PWD/$$ROOT_DIR
 INSTALLS += target
 

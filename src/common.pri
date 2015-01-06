@@ -10,3 +10,9 @@ INCLUDEPATH +=
 DEFINES += QML_BASE_DIR=\\\"$$QML_BASE_DIR\\\"
 
 OTHER_FILES += \
+
+
+#[General]
+#host=192.168.50.178
+#database=rubus
+#potr=5432

@@ -1,12 +1,22 @@
 import qbs.base 1.0
 
 DynamicLibrary {
-    name: "core"
+    name: "RubusCore"
 
     property string qmlBaseDir: ""
     property bool cutereport : true
-    property string qutereportBuild : "/home/wulff/projects/cutereport/build-CuteReport-Desktop_Qt_5_4_0_GCC_32bit/Debug/build"
-    property string qutereportSrc : "/home/wulff/projects/cutereport/cutereport"
+    property string qutereportBuild : {
+        if (qbs.targetOS.contains('windows'))
+            return "C:/projects/cutereport/build-CuteReport-Desktop_Qt_5_4_0_MinGW_32bit/Debug/build";
+        else
+            return "/home/wulff/projects/cutereport/build-CuteReport-Desktop_Qt_5_4_0_GCC_32bit/Debug/build";
+    }
+    property string qutereportSrc :  {
+        if (qbs.targetOS.contains('windows'))
+            return "C:/projects/cutereport/cutereport";
+        else
+            return "/home/wulff/projects/cutereport/cutereport";
+    }
 
     Depends { name: 'cpp' }
     Depends { name: "Qt"; submodules: ["core", "gui", "network", "sql", "widgets"] }

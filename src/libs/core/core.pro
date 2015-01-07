@@ -15,7 +15,7 @@ INSTALLS += target
 
 win32 {
     CUTEREPORT_PATH = C:/Projects/cutereport/cutereport
-    CUTEREPORT_BUILD = C:/Projects/cutereport/build-CuteReport-Desktop_Qt_5_3_0_MinGW_32bit-Debug/build
+    CUTEREPORT_BUILD = C:/projects/cutereport/build-CuteReport-Desktop_Qt_5_4_0_MinGW_32bit/Debug/build
 }
 
 unix {

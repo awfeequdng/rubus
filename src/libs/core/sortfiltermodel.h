@@ -3,7 +3,7 @@
 
 #include "core_global.h"
 
-#include <QWidget>
+//#include <QWidget>
 #include <QSortFilterProxyModel>
 #include <QVariant>
 

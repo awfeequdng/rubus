@@ -21,6 +21,12 @@ DynamicLibrary {
     Depends { name: 'cpp' }
     Depends { name: "Qt"; submodules: ["core", "gui", "network", "sql", "widgets"] }
 
+    Group {
+        fileTagsFilter: product.type
+        qbs.installDir: buildPathLib
+        qbs.install: true
+    }
+
     cpp.defines : {
         var defines = [
                     "CORE_LIBRARY",
@@ -68,10 +74,11 @@ DynamicLibrary {
         return paths;
     }
 
+    cpp.rpaths : [buildPathLib, qutereportBuild]
+
     files : [
         "core_global.h",
         "cryptor.h",
-        "qw.h",
         "version.h",
         "coreconstants.h",
         "core.cpp",

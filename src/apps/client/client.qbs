@@ -14,5 +14,11 @@ Application {
         "main.cpp",
     ]
 
+    Group {
+        fileTagsFilter: product.type
+        qbs.installDir: buildPathBin
+        qbs.install: true
+    }
+
     destinationDirectory: buildPathBin
 }

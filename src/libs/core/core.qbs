@@ -23,7 +23,7 @@ DynamicLibrary {
 
     Group {
         fileTagsFilter: product.type
-        qbs.installDir: buildPathLib
+        qbs.installDir: libInstallDir
         qbs.install: true
     }
 
@@ -74,7 +74,7 @@ DynamicLibrary {
         return paths;
     }
 
-    cpp.rpaths : [buildPathLib, qutereportBuild]
+    cpp.rpaths : [qutereportBuild]
 
     files : [
         "core_global.h",
@@ -98,6 +98,4 @@ DynamicLibrary {
         "sortfiltermodel.cpp",
         "sortfiltermodel.h",
     ]
-
-    destinationDirectory: buildPathLib
 }

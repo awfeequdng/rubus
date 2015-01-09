@@ -15,13 +15,13 @@ ApplicationWindow {
     SystemPalette {id: syspal}
     color: syspal.window
 
-    Contractor {
+    Contractors  {
         id: dd
     }
 
-//    ContractorTable {
-//        id: contrs
-//    }
+    ContractorTablet  {
+        id: contrs
+    }
 
     Action {
         id: acReport
@@ -30,8 +30,9 @@ ApplicationWindow {
         enabled: user.permission("Core.Reports")
 
         onTriggered: {
-            var rep = Qt.createQmlObject(core.loadQmlObject("Reports"), mainwindow, "");
-            //rep.show();
+//            var rep = Qt.createQmlObject(core.loadQmlObject("Reports"), mainwindow, "");
+//            //rep.show();
+            contrs.show();
         }
     }
 

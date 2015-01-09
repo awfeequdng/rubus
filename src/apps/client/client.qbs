@@ -16,9 +16,15 @@ Application {
 
     Group {
         fileTagsFilter: product.type
-        qbs.installDir: buildPathBin
+        qbs.installDir: appInstallDir
         qbs.install: true
     }
 
-    destinationDirectory: buildPathBin
+    Group {
+        name: "QML"
+        prefix: ""
+        files : ["qml/*.qml"]
+    }
+
+    cpp.rpaths : libRPaths
 }

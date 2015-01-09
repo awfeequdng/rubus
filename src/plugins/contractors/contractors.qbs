@@ -8,7 +8,6 @@ DynamicLibrary {
     Depends { name: "RubusCore"}
 
     Qt.core.config : ["plugin"]
-
     cpp.includePaths : ["../../libs/core"]
 
     files : ["*.cpp", "*.h"]
@@ -17,7 +16,13 @@ DynamicLibrary {
         name: "QML"
         files: ["qml/qmldir", "qml/*.qml"]
         qbs.install: true
-        qbs.installDir: buildPathPlugin
+        qbs.installDir: pluginsInstallDir + "/" + product.name
     }
-    destinationDirectory: buildPathPlugin
+
+    Group {
+        fileTagsFilter: ["dynamiclibrary"]
+        qbs.installDir: pluginsInstallDir + "/" + product.name
+        qbs.install: true
+    }
+
 }

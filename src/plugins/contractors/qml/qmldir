@@ -1,4 +1,4 @@
 module Contractors
 ContractorTable 1.0 ContractorTable.qml
-plugin contractors
+plugin Contractors
 

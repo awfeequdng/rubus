@@ -12,14 +12,10 @@ ApplicationWindow {
     width: settings.value("mainwindow/width", 500)
     height: settings.value("mainwindow/height", 200)
     title: "Rubus v" + core.version + " | " + user.name;
-    SystemPalette {id: syspal}
+    SystemPalette { id: syspal }
     color: syspal.window
 
-    Contractors  {
-        id: dd
-    }
-
-    ContractorTablet  {
+    ContractorTable  {
         id: contrs
     }
 

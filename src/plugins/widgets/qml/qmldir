@@ -1,0 +1,4 @@
+module Rubus.Widgets
+
+plugin Widgets
+

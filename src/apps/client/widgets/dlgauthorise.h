@@ -28,35 +28,58 @@
  *   GNU General Public License for more details.                          *
  ***************************************************************************/
 
-#ifndef DLGAUTHSETTINGS_H
-#define DLGAUTHSETTINGS_H
+#ifndef DLGAUTHORISE_H
+#define DLGAUTHORISE_H
 
 #include <QDialog>
+#include <QMessageBox>
+#include <QShowEvent>
+#include "cryptor.h"
+#include "dlgauthsettings.h"
+#include "core.h"
 
-#include "core_global.h"
+
 
 namespace Ui {
-class DlgAuthSettings;
+class DlgAuthorise;
 }
 
-class CORE_EXPORT DlgAuthSettings : public QDialog
+class DlgAuthorise : public QDialog
 {
-    Q_OBJECT
-    
+    Q_OBJECT    
 public:
-    explicit DlgAuthSettings(QWidget *parent = 0);
-    ~DlgAuthSettings();
+    explicit DlgAuthorise(QWidget *parent = 0);
+    ~DlgAuthorise();
 
-    QString hostname() const;
-    QString database() const;
-    int port() const;
+    void setUserName(const QString &name);
+    void setPassword(const QString &pwd);
 
-    void setHostname(const QString host);
-    void setDatabase(const QString database);
-    void setPort(const int port);
+    QString username();
+    bool isRemember();
+
+public slots:
+    void accept();
+    int exec();
+    bool authorise();
+
+
+
+
+private slots:
+    void showAuthSettings();
     
 private:
-    Ui::DlgAuthSettings *ui;
+    Ui::DlgAuthorise *ui;
+    Core::ICore *m_core;
+
+    bool m_canChangeSettingDatabase;
+
+    void loadSettings();
+    void saveSettings();
+
+
+protected:
+    void showEvent ( QShowEvent * event );
 };
 
-#endif // DLGAUTHSETTINGS_H
+#endif // DLGAUTHORISE_H

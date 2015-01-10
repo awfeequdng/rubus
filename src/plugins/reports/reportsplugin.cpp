@@ -44,12 +44,12 @@ ReportsPlugin::ReportsPlugin(QObject *parent) :
     IPlugin(parent)
 {
     m_instance = this;
-    m_reportManager = new ReportManager(this);
+    //m_reportManager = new ReportManager(this);
 }
 
 ReportsPlugin::~ReportsPlugin()
 {
-    delete m_reportManager;
+    //delete m_reportManager;
 }
 
 
@@ -65,7 +65,7 @@ int ReportsPlugin::version() const
 
 bool ReportsPlugin::initialize()
 {
-    m_reportDlg = new ReportsDialog(ICore::mainWindow());
+    m_reportDlg = new ReportsDialog();
 
     m_acReportManager = new QAction(tr("Report manager"),this);
     connect(m_acReportManager, SIGNAL(triggered()), SLOT(showReportManager()));

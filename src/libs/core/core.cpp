@@ -30,9 +30,7 @@
 #include "core.h"
 #include "iplugin.h"
 #include "user.h"
-#include "widgets/mainwindow.h"
 #include "pluginmanager.h"
-#include "reportmanager.h"
 #include "version.h"
 
 #include <QDebug>
@@ -48,16 +46,12 @@
 using namespace Core;
 
 static ICore *m_instance = 0;
-static MainWindow *m_mainWindow;
 static PluginManager *m_pluginManager;
-static ReportManager *m_reportManager;
 
-ICore::ICore(MainWindow *mainWindow, QString configFile)
+ICore::ICore(QWidget *mainWindow, QString configFile)
 {
     m_instance = this;
-    m_mainWindow = mainWindow;
     m_pluginManager = new PluginManager(this);
-    m_reportManager = new ReportManager(this);
 
     loadConfig(configFile.isEmpty() ? CONFIG_FILENAME : configFile);
 }
@@ -66,8 +60,6 @@ ICore::~ICore()
 {
     saveConfig();
     m_instance = 0;
-    m_mainWindow = 0;
-
     delete m_pluginManager;
     m_pluginManager = 0;
 }
@@ -82,19 +74,9 @@ PluginManager *ICore::pluginManager()
     return m_pluginManager;
 }
 
-ReportManager *ICore::reportManager()
-{
-    return m_reportManager;
-}
-
 void ICore::loadPlugins()
 {
     pluginManager()->loadPlugins();
-}
-
-MainWindow *ICore::mainWindow()
-{
-    return m_mainWindow;
 }
 
 bool ICore::login(QString username, QString password)
@@ -147,7 +129,7 @@ bool ICore::logout()
 
 void ICore::registerWidget(QString name, QWidget *widget)
 {
-    m_mainWindow->registerWidget(name, widget);
+    //m_mainWindow->registerWidget(name, widget);
 }
 
 void ICore::registerAction(QString id, QAction *action)

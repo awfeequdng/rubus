@@ -62,7 +62,7 @@ public:
     static void showReport(Report &rep);
     void printReport(Report &rep, QString printerName, int copies, bool showDialog = false);
 
-    static QList<Report> reportsByMenuId(QString menuId);
+    static QList<Report*> reportsByMenuId(QString menuId);
     static NCReportSource reportDatabaseSource(int reportId);
 
 signals:

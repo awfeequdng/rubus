@@ -35,6 +35,7 @@
 
 #include <QtSql>
 #include <QDebug>
+#include <QMessageBox>
 
 UserEditWidget::UserEditWidget(QWidget *parent) :
     EditWidgetInterface(parent),

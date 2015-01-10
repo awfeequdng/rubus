@@ -52,7 +52,7 @@ private slots:
 
 private:
 
-    QList<Report> m_reports;
+    QList<Report*> m_reports;
     QMenu *m_menu;
 
 };

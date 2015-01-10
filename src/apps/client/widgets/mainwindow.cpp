@@ -265,7 +265,7 @@ void MainWindow::generateMainWidgetsFromXml(const QString &xml)
     }
 }
 
-QMenu *Core::MainWindow::getMenu(const QDomNode &node)
+QMenu *MainWindow::getMenu(const QDomNode &node)
 {
     if (node.nodeName() != "menu") {
         return 0;

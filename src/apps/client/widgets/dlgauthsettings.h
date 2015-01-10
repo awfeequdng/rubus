@@ -27,82 +27,34 @@
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
  *   GNU General Public License for more details.                          *
  ***************************************************************************/
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
 
-#include <QMainWindow>
-#include <QMap>
-#include <QtGui>
-#include <QStackedWidget>
-#include <QtXml/QDomDocument>
+#ifndef DLGAUTHSETTINGS_H
+#define DLGAUTHSETTINGS_H
 
-#include "core_global.h"
+#include <QDialog>
 
-namespace Core {
-class ICore;
+namespace Ui {
+class DlgAuthSettings;
+}
 
-
-class CORE_EXPORT MainWindow : public QMainWindow
+class DlgAuthSettings : public QDialog
 {
     Q_OBJECT
+    
 public:
-    explicit MainWindow(QString configFile, QWidget *parent = 0);
-    ~MainWindow();
+    explicit DlgAuthSettings(QWidget *parent = 0);
+    ~DlgAuthSettings();
 
-    void init();
+    QString hostname() const;
+    QString database() const;
+    int port() const;
 
-    QWidget *mainWidget(QString name) const;
-    void registerWidget(QString name, QWidget *widget);
-
-private slots:
-    void closeSession();
-    void changePassword();
-
-    void coreLogged();
-    void coreLoggedOut();
-
-    void mainWidgetActionTrigred(QAction * action);
-
-protected:
-    void closeEvent(QCloseEvent * event);
-
-
+    void setHostname(const QString host);
+    void setDatabase(const QString database);
+    void setPort(const int port);
+    
 private:
-    ICore *m_core;
-    QMenuBar *m_menuBar;
-    QToolBar *m_tbMainWidget;
-    QToolBar *m_tbMainWidgetActions;
-
-    QAction *m_acCloseSession;
-    QAction *m_acChangePassword;
-    QAction *m_acClose;
-
-    QMap<QString, QWidget *> m_widgetById;
-    QMap<QString, int> m_widgetIndex;
-    QStackedWidget *m_mainWidgets;
-    QString m_configFile;
-
-private:
-    void setupWidgets();
-
-    void updateWindowTitle();
-    void setupWidgetActions(QString name);
-
-    void addWidget(const QDomNode &node);
-
-    void parseAppArgs();
-    void generateMenuFromXml(const QString &xml);
-    void generateMainWidgetsFromXml(const QString &xml);
-
-    QMenu *getMenu(const QDomNode &node);
-
-
-protected:
-
-
-
+    Ui::DlgAuthSettings *ui;
 };
 
-} //namespace Core
-
-#endif // MAINWINDOW_H
+#endif // DLGAUTHSETTINGS_H

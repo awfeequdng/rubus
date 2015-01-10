@@ -166,7 +166,7 @@ void ContractorTableDialog::deleteSelected()
 void ContractorTableDialog::slotPrint(Report &r)
 {
     r.appendModel(m_model);
-    ReportManager::showReport(r);
+    //ReportManager::showReport(r);
 }
 
 void ContractorTableDialog::viewDoubleClicked(QModelIndex index)

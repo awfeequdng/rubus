@@ -31,6 +31,7 @@
 #define EDITWIDGETINTERFACE_H
 
 #include <QtGui>
+#include <QWidget>
 
 #include "widgets_global.h"
 

@@ -140,8 +140,8 @@ void ReportsDialog::removeSelected()
 
 void ReportsDialog::previewCurrent()
 {
-    Report rep = ReportManager::loadReport(currentId());
-    ReportManager::instance()->showReport(rep);
+    //Report rep = ReportManager::loadReport(currentId());
+    //ReportManager::instance()->showReport(rep);
 }
 
 void ReportsDialog::slotToTable()

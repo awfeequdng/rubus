@@ -89,7 +89,7 @@ bool ReportEditWidget::load(int id)
     } else {
         ui->edId->setValue(0);
         ui->edName->setText(QString());
-        ui->cmbType->setCurrentKey(Report::NcReportEngine);
+        //ui->cmbType->setCurrentKey();
         ui->cmbMenu->setCurrentIndex(-1);
     }
 
@@ -197,23 +197,23 @@ void ReportEditWidget::saveToFile()
     dlg.setNameFilters(filters);
 
     QString ext;
-    int type = ui->cmbType->currentKey().toInt();
-    switch (type) {
-    case Report::NcReportEngine :
-        ext = ".ncr";
-        dlg.selectFilter(filters.at(1));
-        break;
-    case Report::CuteReportEngine :
-        ext = ".xml";
-        dlg.selectFilter(filters.at(2));
-        break;
-    case Report::OpenOfficeEngine :
-        ext = ".ods";
-        dlg.selectFilter(filters.at(3));
-        break;
-    default:
-        break;
-    }
+//    int type = ui->cmbType->currentKey().toInt();
+//    switch (type) {
+//    case Report::NcReportEngine :
+//        ext = ".ncr";
+//        dlg.selectFilter(filters.at(1));
+//        break;
+//    case Report::CuteReportEngine :
+//        ext = ".xml";
+//        dlg.selectFilter(filters.at(2));
+//        break;
+//    case Report::OpenOfficeEngine :
+//        ext = ".ods";
+//        dlg.selectFilter(filters.at(3));
+//        break;
+//    default:
+//        break;
+//    }
 
     dlg.selectFile(ui->edName->text() + ext);
     if (dlg.exec() == QDialog::Accepted) {

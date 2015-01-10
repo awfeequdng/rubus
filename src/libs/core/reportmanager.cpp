@@ -40,14 +40,6 @@
 #include "reportpreview.h"
 #include "../plugins/standard/core_plugins/storage/sql/sql.h"
 
-//NcReport
-#include "ncreport.h"
-#include "ncreportoutput.h"
-#include "ncreportpreviewoutput.h"
-#include "ncreportpreviewwindow.h"
-#include "ncreportprinteroutput.h"
-#include "ncreportsource.h"
-
 #include <QAbstractItemModel>
 #include <QtSql>
 #include <QSettings>
@@ -136,41 +128,41 @@ void ReportManager::showReport(Report &rep)
     }
 
 
-    if (rep.engine() == Report::NcReportEngine) {
-        NCReport report;
-        report.setReportSource(reportDatabaseSource(rep.id()));
-        NCReportOutput *output= new NCReportPreviewOutput;
-        output->setAutoDelete(false);
-        report.setOutput(output);
+//    if (rep.engine() == Report::NcReportEngine) {
+//        NCReport report;
+//        report.setReportSource(reportDatabaseSource(rep.id()));
+//        NCReportOutput *output= new NCReportPreviewOutput;
+//        output->setAutoDelete(false);
+//        report.setOutput(output);
 
-        int i = 0;
-        QListIterator<QAbstractItemModel*> iter(rep.models());
-        while (iter.hasNext()) {
-            i++;
-            QAbstractItemModel *model = iter.next();
-            report.addItemModel(model, QString("model%1").arg(i));
-        }
+//        int i = 0;
+//        QListIterator<QAbstractItemModel*> iter(rep.models());
+//        while (iter.hasNext()) {
+//            i++;
+//            QAbstractItemModel *model = iter.next();
+//            report.addItemModel(model, QString("model%1").arg(i));
+//        }
 
-        QHashIterator<QString,QVariant> parms(rep.paramentrs());
-        while(parms.hasNext()) {
-            parms.next();
-            report.addParameter(parms.key(),parms.value());
-        }
+//        QHashIterator<QString,QVariant> parms(rep.paramentrs());
+//        while(parms.hasNext()) {
+//            parms.next();
+//            report.addParameter(parms.key(),parms.value());
+//        }
 
-        report.runReport();
+//        report.runReport();
 
-        if (!report.hasError()){
-            NCReportPreviewWindow *pv = new NCReportPreviewWindow();
-            pv->setOutput((NCReportPreviewOutput*)report.output());
-            pv->setWindowModality( Qt::ApplicationModal);
-            pv->setAttribute( Qt::WA_DeleteOnClose );
-            pv->show();
-        } else {
-            qCritical() << report.lastErrorMsg();
-        }
+//        if (!report.hasError()){
+//            NCReportPreviewWindow *pv = new NCReportPreviewWindow();
+//            pv->setOutput((NCReportPreviewOutput*)report.output());
+//            pv->setWindowModality( Qt::ApplicationModal);
+//            pv->setAttribute( Qt::WA_DeleteOnClose );
+//            pv->show();
+//        } else {
+//            qCritical() << report.lastErrorMsg();
+//        }
 
-        return;
-    }
+//        return;
+//    }
 
 
     if (rep.engine() == Report::CuteReportEngine) {
@@ -181,7 +173,7 @@ void ReportManager::showReport(Report &rep)
             }
 
             m_cuteReport =  new CuteReport::ReportCore(&sett);
-            StorageSql *storage = static_cast<StorageSql*>(m_cuteReport->storageModule("Standard::SQL"));
+            StorageSql *storage = static_cast<StorageSql*>(m_cuteReport->storage("Standard::SQL"));
             if (storage) {
                 //storage->setConnectionId(QSqlDatabase::database().connectionName());
                 //storage->setTableName("reports");
@@ -229,46 +221,46 @@ void ReportManager::printReport(Report &rep, QString printerName, int copies,  b
 {
     if (rep.engine() == Report::NcReportEngine) {
 
-        NCReport report;
-        report.setReportSource(reportDatabaseSource(rep.id()));
+//        NCReport report;
+//        report.setReportSource(reportDatabaseSource(rep.id()));
 
-        NCReportOutput *output = new NCReportPrinterOutput();
-        output->setAutoDelete(false);
-        report.setOutput(output);
+//        NCReportOutput *output = new NCReportPrinterOutput();
+//        output->setAutoDelete(false);
+//        report.setOutput(output);
 
-        int i = 0;
-        QListIterator<QAbstractItemModel*> iter(rep.models());
-        while (iter.next()) {
-            i++;
-            QAbstractItemModel *model = iter.next();
-            report.addItemModel(model, QString("model%1").arg(i));
-        }
+//        int i = 0;
+//        QListIterator<QAbstractItemModel*> iter(rep.models());
+//        while (iter.next()) {
+//            i++;
+//            QAbstractItemModel *model = iter.next();
+//            report.addItemModel(model, QString("model%1").arg(i));
+//        }
 
-        QHashIterator<QString,QVariant> parms(rep.paramentrs());
-        while(parms.hasNext()) {
-            parms.next();
-            report.addParameter(parms.key(),parms.value());
-        }        
+//        QHashIterator<QString,QVariant> parms(rep.paramentrs());
+//        while(parms.hasNext()) {
+//            parms.next();
+//            report.addParameter(parms.key(),parms.value());
+//        }
 
-        if (!report.hasError()){
-            report.runReportToPrinter(copies, showDialog, 0, printerName);
-        } else {
-            qCritical() << report.lastErrorMsg();
-        }
+//        if (!report.hasError()){
+//            report.runReportToPrinter(copies, showDialog, 0, printerName);
+//        } else {
+//            qCritical() << report.lastErrorMsg();
+//        }
 
-        return;
+//        return;
     }
 }
 
-NCReportSource ReportManager::reportDatabaseSource(int reportId)
-{
-    NCReportSource rs;
-    rs.setSourceType(NCReportSource::Database);
-    rs.setConnectionID(QSqlDatabase::database().connectionName());
-    rs.setTableName("reports");
-    rs.setColumnName("re_data");
-    rs.setKeyColumnName("re_id");
-    rs.setKeyValue(QString::number(reportId));
+//NCReportSource ReportManager::reportDatabaseSource(int reportId)
+//{
+//    NCReportSource rs;
+//    rs.setSourceType(NCReportSource::Database);
+//    rs.setConnectionID(QSqlDatabase::database().connectionName());
+//    rs.setTableName("reports");
+//    rs.setColumnName("re_data");
+//    rs.setKeyColumnName("re_id");
+//    rs.setKeyValue(QString::number(reportId));
 
-    return rs;
-}
+//    return rs;
+//}

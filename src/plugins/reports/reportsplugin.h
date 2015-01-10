@@ -60,7 +60,7 @@ public slots:
 private:
     QAction *m_acReportManager;
 
-    ReportManager *m_reportManager;
+    //ReportManager *m_reportManager;
     ReportsDialog *m_reportDlg;
 };
 

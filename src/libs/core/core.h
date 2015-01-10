@@ -34,37 +34,28 @@
 #include <QMap>
 
 #include "core_global.h"
-#include "widgets/mainwindow.h"
 
-
-class EditWidgetInterface;
 class QAction;
-class ReportManager;
 
 namespace Core {
 
 class User;
-class MainWindow;
 class IPlugin;
 class PluginManager;
 
 class CORE_EXPORT ICore : public QObject
 {
     Q_OBJECT
-    friend class MainWindow;
-    explicit ICore(MainWindow *mainWindow, QString configFile = QString());
 
 public:
+    explicit ICore(QWidget *mainWindow, QString configFile = QString());
 
     ~ICore();
 
     static ICore *instance();
     static PluginManager *pluginManager();
-    static ReportManager *reportManager();
 
     static void loadPlugins();
-
-    static MainWindow *mainWindow();
 
     bool login(QString username, QString password);
     bool logout();

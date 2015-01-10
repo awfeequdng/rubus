@@ -27,62 +27,80 @@
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
  *   GNU General Public License for more details.                          *
  ***************************************************************************/
+#ifndef MAINWINDOW_H
+#define MAINWINDOW_H
 
-#ifndef DLGAUTHORISE_H
-#define DLGAUTHORISE_H
+#include <QMainWindow>
+#include <QMap>
+#include <QtGui>
+#include <QStackedWidget>
+#include <QtXml/QDomDocument>
 
-#include <QDialog>
-#include <QMessageBox>
-#include <QShowEvent>
-
-#include "core_global.h"
-#include "cryptor.h"
-#include "dlgauthsettings.h"
-#include "core.h"
-
-
-
-namespace Ui {
-class DlgAuthorise;
+namespace Core {
+    class ICore;
 }
 
-class CORE_EXPORT DlgAuthorise : public QDialog
+class MainWindow : public QMainWindow
 {
     Q_OBJECT
-    
 public:
-    explicit DlgAuthorise(QWidget *parent = 0);
-    ~DlgAuthorise();
+    explicit MainWindow(QString configFile, QWidget *parent = 0);
+    ~MainWindow();
 
-    void setUserName(const QString &name);
-    void setPassword(const QString &pwd);
+    void init();
 
-    QString username();
-    bool isRemember();
-
-public slots:
-    void accept();
-    int exec();
-    bool authorise();
-
-
-
+    QWidget *mainWidget(QString name) const;
+    void registerWidget(QString name, QWidget *widget);
 
 private slots:
-    void showAuthSettings();
-    
+    void closeSession();
+    void changePassword();
+
+    void coreLogged();
+    void coreLoggedOut();
+
+    void mainWidgetActionTrigred(QAction * action);
+
+protected:
+    void closeEvent(QCloseEvent * event);
+
+
 private:
-    Ui::DlgAuthorise *ui;
     Core::ICore *m_core;
+    QMenuBar *m_menuBar;
+    QToolBar *m_tbMainWidget;
+    QToolBar *m_tbMainWidgetActions;
 
-    bool m_canChangeSettingDatabase;
+    QAction *m_acCloseSession;
+    QAction *m_acChangePassword;
+    QAction *m_acClose;
 
-    void loadSettings();
-    void saveSettings();
+    QMap<QString, QWidget *> m_widgetById;
+    QMap<QString, int> m_widgetIndex;
+    QStackedWidget *m_mainWidgets;
+    QString m_configFile;
+
+private:
+    void setupWidgets();
+
+    void updateWindowTitle();
+    void setupWidgetActions(QString name);
+
+    void addWidget(const QDomNode &node);
+
+    void parseAppArgs();
+    void generateMenuFromXml(const QString &xml);
+    void generateMainWidgetsFromXml(const QString &xml);
+
+    QMenu *getMenu(const QDomNode &node);
 
 
 protected:
-    void showEvent ( QShowEvent * event );
+
+
+
 };
 
-#endif // DLGAUTHORISE_H
+//} //namespace Core
+
+#endif // MAINWINDOW_H

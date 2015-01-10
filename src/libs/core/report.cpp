@@ -29,62 +29,65 @@
  ***************************************************************************/
 #include "report.h"
 
-Report::Report() :
-    m_id(-1),
-    m_engine(OpenOfficeEngine)
+#ifdef CUTEREPORT
+#include "cutereport.h"
+#include "reportcore.h"
+#include "reportinterface.h"
+#include "reportpreview.h"
+#include "storageinterface.h"
+#endif
+
+#include <QtSql>
+
+
+#ifdef CUTEREPORT
+static CuteReport::ReportCore *m_cuteReport = 0;
+#endif
+
+Report::Report(QObject *parent) :
+    QObject(parent),
+    m_id(-1)
 {
 }
 
-void Report::setId(int id)
+void Report::setReportId(int id)
 {
     m_id = id;
 }
 
-Report::Report(int engine) :
-    m_id(-1),
-    m_engine(engine)
-{
-
-}
-
-int Report::id() const
+int Report::reportId() const
 {
     return m_id;
 }
 
-QString Report::title() const
+QString Report::name() const
 {
-    return m_title;
+    return m_name;
 }
 
-void Report::setTitle(QString title)
+void Report::setName(QString title)
 {
-    m_title = title;
+    m_name = title;
 }
 
-QString Report::menuId() const
+QString Report::menu() const
 {
     return m_menuId;
 }
 
-void Report::setMenuId(QString menu)
+void Report::setMenu(QString menu)
 {
     m_menuId = menu;
 }
 
-QString Report::filename() const
+QUrl Report::fromFile() const
 {
-    return m_filename;
+    return m_fromFile;
 }
 
-void Report::setFilename(QString name)
+void Report::setFromFile(const QUrl &file)
 {
-    m_filename = name;
-}
-
-int Report::engine() const
-{
-    return m_engine;
+    m_fromFile = file;
 }
 
 void Report::appendModel(QAbstractItemModel *model)
@@ -122,7 +125,173 @@ QHash<QString, QVariant> Report::paramentrs() const
     return m_params;
 }
 
+bool Report::load()
+{
+    if (m_id > 0) {
+        QSqlQuery sql;
+        sql.exec(QString("SELECT re_name, re_menu FROM reports WHERE re_id = %1").arg(m_id));
+
+        if (sql.lastError().isValid()) {
+            setError(sql.lastError().text());
+            return false;
+        }
+
+        sql.next();
+        setName(sql.value(0).toString());
+        setMenu(sql.value(1).toString());
+    } else {
+        m_id = -1;
+        m_name.clear();
+        m_menuId.clear();
+        m_fromFile.clear();
+        m_data.clear();
+    }
+
+    emit loaded();
+    return true;
+}
+
+bool Report::save()
+{
+    if (!m_fromFile.isEmpty()) {
+        QFile f(m_fromFile.toLocalFile());
+
+        if (!f.exists()) {
+            setError(tr("File \"%1\" not exists").arg(m_fromFile.toString()));
+            return false;
+        }
+
+        if (!f.open(QIODevice::ReadOnly)) {
+            setError(tr("Can't open file \"%1\"").arg(m_fromFile.toLocalFile()));
+            return false;
+        }
+
+        m_data = f.readAll();
+        f.close();
+
+    } else if (m_id > 0){
+
+        QSqlQuery sql;
+        sql.exec(QString("SELECT re_data FROM reports WHERE re_id = %1").arg(m_id));
+
+        if (sql.lastError().isValid()) {
+            setError(sql.lastError().text());
+            return false;
+        }
+
+        sql.next();
+        m_data = sql.value(0).toByteArray();
+    }
+
+    QSqlQuery sql;
+    if (m_id == -1) {
+        sql.prepare("INSERT INTO reports (re_name, re_menu, re_data) "
+                    "VALUES (:name, :menu, :data)");
+    } else {
+        sql.prepare("UPDATE reports SET re_name = :name, "
+                    "re_menu = :menu, "
+                    "re_data = :data "
+                    "WHERE re_id = :id");
+        sql.bindValue(":id", m_id);
+    }
+
+
+    sql.bindValue(":name", m_name);
+    sql.bindValue(":menu", m_menuId);
+    sql.bindValue(":data", m_data);
+
+    if (!sql.exec()) {
+        qCritical() << sql.lastError();
+        setError(sql.lastError().text());
+        return false;
+    }
+
+    if (m_id == -1) {
+        sql.exec("SELECT CURRVAL(pg_get_serial_sequence('reports', 're_id'))");
+        if (sql.next()) {
+            m_id = sql.value(0).toInt();
+        } else {
+            qWarning() << "sql can't next in select currval";
+        }
+    }
+
+    emit saved();
+    return true;
+}
+
 bool Report::isValid() const
 {
     return m_id > 0;
+}
+
+void Report::show()
+{
+#ifdef CUTEREPORT
+    if (!m_cuteReport) {
+        QSettings sett;
+        if (sett.value("CuteReport/PluginsPath").toString().isEmpty()) {
+            sett.setValue("CuteReport/PluginsPath", CUTEREPORT_BUILD_PLUGINS);
+        }
+
+        m_cuteReport =  new CuteReport::ReportCore(&sett);
+        CuteReport::StorageInterface *storage = static_cast<CuteReport::StorageInterface*>(m_cuteReport->storage("Standard::SQL"));
+        if (storage) {
+            storage->setProperty("connectionId", QSqlDatabase::database().connectionName());
+            storage->setProperty("tableName", "reports");
+            storage->setProperty("columnData","re_data");
+            storage->setProperty("columnId", "re_id");
+            m_cuteReport->setDefaultStorage("Standard::SQL");
+        } else {
+            setError(QString("can't cast to StorageSql"));
+            return;
+        }
+    }
+
+    QString err;
+    CuteReport::ReportInterface * report = m_cuteReport->loadReport(QString("sql://<%1>").arg(reportId()), &err);
+
+    if (!report) {
+        setError(QString("Can't load report %1, error: ").arg(name()) + err);
+        return;
+    }
+
+    int i = 0;
+    QListIterator<QAbstractItemModel*> iter(models());
+    while (iter.next()) {
+        i++;
+        QAbstractItemModel *model = iter.next();
+        report->setVariableValue(QString("model%1").arg(i), qlonglong(model));
+    }
+
+
+    report->setVariables(paramentrs());
+
+
+    CuteReport::ReportPreview * preview = new CuteReport::ReportPreview(m_cuteReport);
+    if (report) {
+        preview->setReportCore(m_cuteReport);
+        preview->connectReport(report);
+        preview->showMaximized();
+
+        preview->run();
+    }
+#endif
+}
+
+void Report::print(QString printerName, int copies, bool showDialog)
+{
+    Q_UNUSED(printerName)
+    Q_UNUSED(copies)
+    Q_UNUSED(showDialog)
+}
+
+QString Report::errorString() const
+{
+    return m_errorString;
+}
+
+void Report::setError(const QString &error)
+{
+    m_errorString = error;
+    emit errorStringChanged();
 }

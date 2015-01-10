@@ -32,36 +32,36 @@
 
 #include <QVariant>
 #include <QObject>
+#include <QUrl>
 #include "core_global.h"
 
 QT_BEGIN_NAMESPACE
 class QAbstractItemModel;
 QT_END_NAMESPACE
 
-class CORE_EXPORT Report
+class CORE_EXPORT Report : public QObject
 {
+    Q_OBJECT
+    Q_PROPERTY(int reportId READ reportId WRITE setReportId NOTIFY reportIdChanged)
+    Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
+    Q_PROPERTY(QString menu READ menu WRITE setMenu NOTIFY menuChanged)
+    Q_PROPERTY(QString errorString READ errorString NOTIFY errorStringChanged)
+    Q_PROPERTY(QUrl fromFile READ fromFile WRITE setFromFile NOTIFY fromFileChanged)
+
 public:
-    enum Engine {
-        OpenOfficeEngine = 0,
-        NcReportEngine = 1,
-        CuteReportEngine = 2
-    };
+    explicit Report(QObject *parent = 0);
 
-    explicit Report();
-    Report(int engine);
-    void setId(int id);
-    int id() const;
+    void setReportId(int reportId);
+    int reportId() const;
 
-    QString title() const;
-    void setTitle(QString title);
+    QString name() const;
+    void setName(QString name);
 
-    QString menuId() const;
-    void setMenuId(QString menu);
+    QString menu() const;
+    void setMenu(QString menu);
 
-    QString filename() const;
-    void setFilename(QString name);
-
-    int engine() const;
+    QUrl fromFile() const;
+    void setFromFile(const QUrl &file);
 
     void appendModel(QAbstractItemModel *model);
     QAbstractItemModel *modelAt(int i) const;
@@ -72,19 +72,39 @@ public:
     QVariant parametrValue(QString paramName) const;
     QHash<QString, QVariant> paramentrs() const;
 
+    Q_INVOKABLE bool load();
+    Q_INVOKABLE bool save();
+
     bool isValid() const;
+
+    Q_INVOKABLE void show();
+    Q_INVOKABLE void print(QString printerName, int copies,  bool showDialog);
+
+    QString errorString() const;
+
+signals:
+    void reportIdChanged();
+    void nameChanged();
+    void menuChanged();
+    void errorStringChanged();
+    void fromFileChanged();
+    void saved();
+    void loaded();
 
 private:
     int m_id;
-    QString m_title;
-    int m_engine;
+    QString m_name;
     QString m_menuId;
-    QString m_filename;
+    QString m_data;
+    QUrl m_fromFile;
     QList<QAbstractItemModel *> m_models;
     QHash<QString, QVariant> m_params;
+    QString m_errorString;
+
+    void setError(const QString &error);
 
 };
 
-Q_DECLARE_METATYPE(Report)
+//Q_DECLARE_METATYPE(Report*)
 
 #endif

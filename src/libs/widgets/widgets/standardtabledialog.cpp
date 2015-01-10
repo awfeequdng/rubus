@@ -57,6 +57,6 @@ StandardTableDialog::~StandardTableDialog()
 
 void StandardTableDialog::slotPrint(Report &report)
 {
-    ReportManager::showReport(report);
+    //ReportManager::showReport(report);
 }
 

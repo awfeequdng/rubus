@@ -27,7 +27,7 @@
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
  *   GNU General Public License for more details.                          *
  ***************************************************************************/
-#include "mainwindow.h"
+#include "widgets/mainwindow.h"
 #include "core.h"
 #include "widgets/dlgauthorise.h"
 
@@ -95,7 +95,7 @@ int main(int argc, char *argv[])
     a.installTranslator(&translator);
 
     parseAppArgs();
-    Core::MainWindow w(m_configFile);
+    MainWindow w(m_configFile);
 
     DlgAuthorise dlg;
     dlg.setUserName(m_user);

@@ -163,7 +163,7 @@ void UserTableDialog::deleteSelected()
 void UserTableDialog::slotPrint(Report &r)
 {
     r.appendModel(m_model);
-    ReportManager::showReport(r);
+    //ReportManager::showReport(r);
 }
 
 void UserTableDialog::viewDoubleClicked(QModelIndex index)

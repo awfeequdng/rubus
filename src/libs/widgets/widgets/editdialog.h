@@ -36,6 +36,8 @@
 #include "widgets_global.h"
 #include "widgets/editwidgetinterface.h"
 
+class QVBoxLayout;
+
 class WIDGETS_EXPORT EditDialog : public QDialog
 {
     Q_OBJECT

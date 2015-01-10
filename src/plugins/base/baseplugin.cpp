@@ -96,7 +96,7 @@ bool BasePlugin::initialize()
     m_itemDialog->setModel(m_itemModel, ItemModel::IdCol);
 
     m_contractorDialog = new ContractorTableDialog();
-    m_userTableDialog = new UserTableDialog(ICore::mainWindow());
+    m_userTableDialog = new UserTableDialog();
 
     return true;
 }

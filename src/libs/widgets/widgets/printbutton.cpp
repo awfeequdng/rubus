@@ -50,17 +50,16 @@ PrintButton::PrintButton(QWidget *parent) :
 void PrintButton::populateMenu(QString menuId)
 {
     m_menu->clear();
+    qDeleteAll(m_reports);
     m_reports.clear();
-    m_reports = ReportManager::reportsByMenuId(menuId);
+    //m_reports = ReportManager::reportsByMenuId(menuId);
 
-    QListIterator<Report> iter(m_reports);
+    QListIterator<Report*> iter(m_reports);
     while(iter.hasNext()) {
-        Report r = iter.next();
+        Report *r = iter.next();
 
-        QAction *ac = new QAction(r.title(),this);
+        QAction *ac = new QAction(r->name(),this);
         m_menu->addAction(ac);
-
-
 
         ac->setData(QVariant::fromValue(r));
     }
@@ -71,15 +70,15 @@ void PrintButton::populateMenu(QString menuId)
 void PrintButton::onMenuTriggered(QAction *ac)
 {
 
-    Report r = static_cast<Report>(ac->data().value<Report>());
+//    Report r = static_cast<Report>(ac->data().value<Report>());
 
-    emit print(r);
+//    emit print(r);
 }
 
 void PrintButton::onClick()
 {
-    if (m_reports.count() > 0) {
-        Report rep = m_reports.at(0);
-        emit print(rep);
-    }
+//    if (m_reports.count() > 0) {
+//        Report rep = m_reports.at(0);
+//        emit print(rep);
+//    }
 }

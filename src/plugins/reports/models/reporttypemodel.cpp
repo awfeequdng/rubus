@@ -33,9 +33,9 @@
 ReportTypeModel::ReportTypeModel(QObject *parent) :
     AdvItemModel(parent)
 {
-    m_nameById.insert(Report::OpenOfficeEngine, tr("OO Calc"));
-    m_nameById.insert(Report::NcReportEngine, tr("NcReport"));
-    m_nameById.insert(Report::CuteReportEngine, tr("CuteReport"));
+    //m_nameById.insert(Report::OpenOfficeEngine, tr("OO Calc"));
+    //m_nameById.insert(Report::NcReportEngine, tr("NcReport"));
+    //m_nameById.insert(Report::CuteReportEngine, tr("CuteReport"));
 
     m_items = m_nameById.keys();
 }

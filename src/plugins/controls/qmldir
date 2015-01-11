@@ -1,4 +1,4 @@
 module Rubus.Widgets
-
+AdvTableView 1.0 AdvTableView.qml
 plugin Widgets
 

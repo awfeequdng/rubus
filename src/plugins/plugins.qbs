@@ -4,5 +4,5 @@ Project {
     name: "Plugins"
 
     references : [ "contractors/contractors.qbs",
-                   "widgets/widgets.qbs"]
+                   "controls/controls.qbs"]
 }

@@ -12,6 +12,8 @@ Application {
     files : [
         "client.qrc",
         "main.cpp",
+        "mainwindow.cpp",
+        "mainwindow.h",
     ]
 
     Group {

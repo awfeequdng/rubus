@@ -1,6 +1,6 @@
 import "../rubusPlugin.qbs" as RubusPlugin
 
 RubusPlugin {
-    name: "Contractors"
+    name: "Contractors"    
 }
 

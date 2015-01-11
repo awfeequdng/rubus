@@ -8,6 +8,8 @@ DynamicLibrary {
     Qt.core.config : ["plugin"]
     cpp.includePaths : ["../../libs/core"]
 
+    property string uri: pluginsInstallDir + "/" + name;
+
     Group {
         name: "Sources"
         files : ["*.cpp", "*.h"]
@@ -17,12 +19,12 @@ DynamicLibrary {
         name: "Qml"
         files: ["qmldir", "*.qml"]
         qbs.install: true
-        qbs.installDir: pluginsInstallDir + "/" + product.name
+        qbs.installDir: uri
     }
 
     Group {
         fileTagsFilter: ["dynamiclibrary"]
-        qbs.installDir: pluginsInstallDir + "/" + product.name
+        qbs.installDir: uri
         qbs.install: true
     }
 }

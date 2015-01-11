@@ -43,6 +43,7 @@
 #include "report.h"
 #include "reportmanager.h"
 #include "sortfiltermodel.h"
+#include "mainwindow.h"
 
 QString m_configFile;
 QString m_user;
@@ -127,6 +128,8 @@ int main(int argc, char *argv[])
     Settings *sett = core.settings(QSettings::UserScope);
 
     QQmlApplicationEngine engine;
+    MainWindow mw(&engine);
+
     engine.addImportPath("plugins");
     engine.rootContext()->setContextProperty("core", &core);
     engine.rootContext()->setContextProperty("settings", sett);
@@ -147,8 +150,6 @@ int main(int argc, char *argv[])
 
             if (!logged) {
                 QMessageBox::critical(0, "Core error", core.errorString());
-            } else {
-                engine.load(QUrl("qrc:/qml/MainWindow.qml"));
             }
         }
     }

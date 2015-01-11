@@ -15,7 +15,7 @@ ApplicationWindow {
     SystemPalette { id: syspal }
     color: syspal.window
 
-    ContractorTable  {
+    Contractor  {
         id: contrs
     }
 

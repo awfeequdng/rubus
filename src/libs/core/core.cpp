@@ -46,11 +46,13 @@
 using namespace Core;
 
 static ICore *m_instance = 0;
-static PluginManager *m_pluginManager;
+static PluginManager *m_pluginManager = 0;
+static QWidget *m_mainwindow = 0;
 
-ICore::ICore(QWidget *mainWindow, QString configFile)
+ICore::ICore(QWidget *mainwindow, QString configFile)
 {
     m_instance = this;
+    m_mainwindow = mainwindow;
     m_pluginManager = new PluginManager(this);
 
     loadConfig(configFile.isEmpty() ? CONFIG_FILENAME : configFile);
@@ -72,6 +74,11 @@ ICore *ICore::instance()
 PluginManager *ICore::pluginManager()
 {
     return m_pluginManager;
+}
+
+QWidget *ICore::mainwindow()
+{
+    return m_mainwindow;
 }
 
 void ICore::loadPlugins()
@@ -129,7 +136,12 @@ bool ICore::logout()
 
 void ICore::registerWidget(QString name, QWidget *widget)
 {
-    //m_mainWindow->registerWidget(name, widget);
+   m_instance->m_widgetById.insert(name, widget);
+}
+
+QWidget *ICore::widgetByName(const QString &name)
+{
+    return m_instance->m_widgetById.value(name, 0);
 }
 
 void ICore::registerAction(QString id, QAction *action)

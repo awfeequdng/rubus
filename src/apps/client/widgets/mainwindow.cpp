@@ -67,8 +67,8 @@ MainWindow::MainWindow(QString configFile, QWidget *parent) :
     m_acClose->setShortcut(Qt::ALT + Qt::Key_F4);
     connect(m_acClose, SIGNAL(triggered()), SLOT(close()));
 
-    ICore::registerAction("Core.CloseSession", m_acCloseSession);
-    ICore::registerAction("MainWindow.Close",m_acClose);
+    ICore::registerAction(Constants::A_CLOSESESSION, m_acCloseSession);
+    ICore::registerAction(Constants::A_CLOSE, m_acClose);
 
     QSettings sett;
     restoreGeometry(sett.value("MainGeometry").toByteArray());
@@ -118,16 +118,6 @@ void MainWindow::init()
     setCentralWidget(m_mainWidgets);
 }
 
-QWidget *MainWindow::mainWidget(QString name) const
-{
-    return m_widgetById.value(name, 0);
-}
-
-void MainWindow::registerWidget(QString name, QWidget *widget)
-{
-    m_widgetById.insert(name, widget);
-}
-
 void MainWindow::closeSession()
 {
     //TODO discription this    
@@ -143,6 +133,7 @@ void MainWindow::changePassword()
 void MainWindow::coreLogged()
 {
     updateWindowTitle();
+
     setupWidgets();
     generateMenuFromXml(ICore::currentUser()->gui());
 
@@ -179,7 +170,12 @@ void MainWindow::setupWidgets()
     m_widgetIndex.clear();
 
     generateMainWidgetsFromXml(ICore::currentUser()->gui());
+
     m_tbMainWidget->setVisible(m_mainWidgets->count() > 1);
+
+//    if (m_mainWidgets->count() > 0) {
+//        m_mainWidgets->setCurrentIndex(0);
+//    }
 }
 
 void MainWindow::updateWindowTitle()
@@ -212,7 +208,7 @@ void MainWindow::setupWidgetActions(QString name)
 void MainWindow::addWidget(const QDomNode &node)
 {
     QString name = node.toElement().attribute("id");
-    QWidget *mwidget = m_widgetById.value(name, 0);
+    QWidget *mwidget = ICore::widgetByName(name);
 
     if (mwidget) {
         QString title = node.toElement().text();
@@ -261,6 +257,7 @@ void MainWindow::generateMainWidgetsFromXml(const QString &xml)
 
     QDomNodeList list = widgets.childNodes();
     for (int i = 0; i < list.count(); i++) {
+        //qDebug() << list.at(i).toElement().text();
         addWidget(list.at(i));
     }
 }

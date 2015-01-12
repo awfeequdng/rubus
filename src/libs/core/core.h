@@ -48,23 +48,25 @@ class CORE_EXPORT ICore : public QObject
     Q_OBJECT
 
 public:
-    explicit ICore(QWidget *mainWindow, QString configFile = QString());
+    explicit ICore(QWidget *mainwindow, QString configFile = QString());
 
     ~ICore();
 
     static ICore *instance();
     static PluginManager *pluginManager();
-
+    static QWidget *mainwindow();
     static void loadPlugins();
 
     bool login(QString username, QString password);
     bool logout();
 
     static void registerWidget(QString name, QWidget *widget);
+    static QWidget *widgetByName(const QString &name);
 
     static void registerAction(QString id, QAction * action);
     static void registerActions(QMap<QString, QAction *> map);
     static QAction * actionById(QString id);
+
 
     QString databaseHost() const { return m_databaseHost; }
     void setDatabaseHost(QString host) { m_databaseHost = host; }
@@ -106,6 +108,7 @@ private:
     QString m_reportStoragePath;
     QString m_configFile;
 
+    QMap<QString, QWidget *> m_widgetById;
     QMap<QString, QAction *> m_actionById;
 };
 

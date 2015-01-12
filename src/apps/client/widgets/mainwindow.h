@@ -49,9 +49,6 @@ public:
 
     void init();
 
-    QWidget *mainWidget(QString name) const;
-    void registerWidget(QString name, QWidget *widget);
-
 private slots:
     void closeSession();
     void changePassword();
@@ -75,7 +72,6 @@ private:
     QAction *m_acChangePassword;
     QAction *m_acClose;
 
-    QMap<QString, QWidget *> m_widgetById;
     QMap<QString, int> m_widgetIndex;
     QStackedWidget *m_mainWidgets;
     QString m_configFile;

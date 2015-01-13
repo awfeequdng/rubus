@@ -42,15 +42,21 @@
     </layout>
    </item>
    <item>
-    <widget class="QAdvancedTableView" name="tableView"/>
+    <widget class="AdvTableView" name="tableView">
+     <property name="font">
+      <font>
+       <family>Tahoma</family>
+      </font>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>
  <customwidgets>
   <customwidget>
-   <class>QAdvancedTableView</class>
+   <class>AdvTableView</class>
    <extends>QTableView</extends>
-   <header>qadvancedtableview.h</header>
+   <header>advtableview.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

@@ -54,6 +54,7 @@ BasePlugin::~BasePlugin()
 {
     delete m_itemDialog;
     delete m_contractorDialog;
+    delete m_userTableDialog;
 }
 
 

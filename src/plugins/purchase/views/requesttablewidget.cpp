@@ -1,6 +1,6 @@
 #include "requesttablewidget.h"
 #include "ui_requesttablewidget.h"
-#include "qadvancedtableview.h"
+#include "advtableview.h"
 
 RequestTableWidget::RequestTableWidget(QWidget *parent) :
     QWidget(parent),
@@ -8,12 +8,6 @@ RequestTableWidget::RequestTableWidget(QWidget *parent) :
 {
     ui->setupUi(this);
     m_model = new QSqlQueryModel(this);
-
-//    ui->tableView->setAlternatingRowColors(true);
-//    ui->tableView->verticalHeader()->setDefaultSectionSize(30);
-//    ui->tableView->horizontalHeader()->setVisible(true);
-//    ui->tableView->setShowFilter(false);
-
 }
 
 RequestTableWidget::~RequestTableWidget()
@@ -23,9 +17,7 @@ RequestTableWidget::~RequestTableWidget()
 
 void RequestTableWidget::showEvent(QShowEvent *e)
 {
-    m_model->setQuery("SELECT * FROm contractors");
+    m_model->setQuery("SELECT * FROm requests");
     ui->tableView->setModel(m_model);
-    ui->tableView->setShowFilter(false);
-    ui->tableView->horizontalHeader()->setc
     QWidget::showEvent(e);
 }

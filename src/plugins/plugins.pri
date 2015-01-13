@@ -8,7 +8,7 @@ CONFIG += plugin
 INCLUDEPATH +=\
                 ../../libs/core \
                 ../../libs/widgets \
-                ../../thirdparty/qaivlib \
+                ../../libs/widgets/widgets \
 
 DESTDIR = $$PLUGINS_DIR
 

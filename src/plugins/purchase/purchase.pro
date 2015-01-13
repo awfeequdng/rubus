@@ -9,13 +9,15 @@ DEFINES += PURCHASE_LIBRARY
 
 SOURCES += \
     purchaseplugin.cpp \
-    views/requesttablewidget.cpp
+    views/requesttablewidget.cpp \
+    models/requestmodel.cpp
 
 HEADERS +=\
     purchaseplugin.h \    
     purchase_global.h \
     purchaseconstants.h \
-    views/requesttablewidget.h
+    views/requesttablewidget.h \
+    models/requestmodel.h
     
 
 unix {

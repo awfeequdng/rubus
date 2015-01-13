@@ -7,6 +7,7 @@
 namespace Ui {
 class RequestTableWidget;
 }
+class RequestModel;
 
 class RequestTableWidget : public QWidget
 {
@@ -21,7 +22,7 @@ protected:
 
 private:
     Ui::RequestTableWidget *ui;
-    QSqlQueryModel *m_model;
+    RequestModel *m_model;
 };
 
 #endif // REQUESTTABLEWIDGET_H

@@ -86,6 +86,7 @@ public:
     void saveParameters();
 
     static QString version();
+    static QByteArray scheme();
 
 
 

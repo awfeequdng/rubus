@@ -224,6 +224,18 @@ QString ICore::version()
             .arg(QString(Version::STAGE).isEmpty() ? "" : QString(" - %1").arg(Version::STAGE));
 }
 
+QByteArray ICore::scheme()
+{
+    QByteArray value;
+    QFile f(":/scheme.json");
+    if (f.open(QIODevice::ReadOnly)) {
+        value = f.readAll();
+        f.close();
+    }
+
+    return value;
+}
+
 void ICore::loadConfig(QString filename)
 {
     m_configFile = filename;

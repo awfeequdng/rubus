@@ -59,5 +59,6 @@ HEADERS +=\
     version.h \
     iplugin.h \
 
-RESOURCES +=
+RESOURCES += \
+    core.qrc
 

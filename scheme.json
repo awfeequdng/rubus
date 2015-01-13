@@ -1,0 +1,112 @@
+{
+	"ItemType" : {
+		"type" : "enum"
+		"items" : {
+			"1" : "Spareparts",
+			"2" : "Manufacture"
+		}
+	},
+	"Item" : {
+		"table" : {
+			"name" : "items",
+			"primarykey" : ["id"]
+		}
+		"fields" : {
+			"id" : {
+				"dbname" : "it_id",
+				"type" : "int",
+				"title" : "Id"
+			},
+			"name" : {
+				"dbname" : "it_name",
+				"type" : "string",
+				"title" : "Name"
+			},
+
+			"type" : {
+				"dbname" : "it_type",
+				"type" : "int",
+				"title" : "Type"
+			}
+		}
+	},
+
+	"ContractorType" : {
+		"type" : "enum"
+		"items" : {
+			"1" : "Organization",
+			"2" : "Emploee"
+		}
+	},
+	"Contractor" : {
+		"table" : {
+			"name" : "contractors",
+			"primarykey" : ["id"]
+		},
+		"fields" : {
+			"id" : {
+				"dbname" : "co_id",
+				"type" : "int",
+				"title" : "Id"
+			},
+			"name" : {
+				"dbname" : "co_name",
+				"type" : "string",
+				"title" : "Name"
+			},
+
+			"type" : {
+				"dbname" : "co_type",
+				"type" : "int",
+				"title" : "Type",
+				"lookup" : {
+					"master" : "ContractorType"
+				}
+			}
+		}
+	},
+
+	"Request" : {
+		"table" : {
+			"name" : "requests",
+			"primarykey" : ["id"]
+		},
+		"fields" : {
+			"id" : {
+				"dbname" : "re_id",
+				"type" : "int",
+				"title" : "Id"
+			},
+			"date_due" : {
+				"dbname" : "re_date_due",
+				"type" : "date",
+				"title" : "Id"
+			},
+			"item" : {
+				"dbname" : "re_item",
+				"type" : "int",
+				"title" : "Item",
+				"lookup" : {
+					"master" : "Item",
+					"fieldId" : "id",
+					"fieldTitle" : "name"
+				}
+			},
+			"qty" : {
+				"dbname" : "re_qty",
+				"type" : "double",
+				"title" : "Qty"
+			},
+			"supplier" : {
+				"dbname" : "re_supplier",
+				"type" : "int",
+				"title" : "Supplier",
+				"lookup" : {
+					"master" : "Contractor",
+					"fieldId" : "id",
+					"fieldTitle" : "name"
+				}
+			}
+		}
+	}
+}

@@ -34,7 +34,8 @@ HEADERS += \
     advitemmodel.h \
     widgets/advheaderview.h \
     widgets/advtableview.h \
-    widgets/tabledialog.h
+    widgets/tabledialog.h \
+    widgets/advschemetableview.h
 
 SOURCES += \
     widgets/advcombobox.cpp \
@@ -53,7 +54,8 @@ SOURCES += \
     advitemmodel.cpp \
     widgets/advheaderview.cpp \
     widgets/advtableview.cpp \
-    widgets/tabledialog.cpp
+    widgets/tabledialog.cpp \
+    widgets/advschemetableview.cpp
 
 FORMS += \
     widgets/standardtabledialog.ui

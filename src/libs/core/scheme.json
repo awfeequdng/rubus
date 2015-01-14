@@ -69,7 +69,7 @@
     "Request" : {
         "tableview" : {
             "columns" : {
-                "order" : ["id", "due_date", "equipment", "item", "qty"],
+                "order" : ["id", "date_due", "equipment", "item", "qty"],
                 "hidden" : ["id"],
                 "width" : {"id": 80, "due_date": 120, "equipment": 200, "qty": 100}
             }
@@ -77,7 +77,11 @@
         "sql" : {
             "tablename" : "requests",
             "primarykey" : ["id"],
-            "select" : "SELECT re_id, re_item, re_date, re_storage FROM requests"
+            "select" : "SELECT re_date, re_item, it_name || '(' || it_article || ')' as item, \
+                       re_equipment_type, et_name, re_qty, re_balance, re_storage, st_name, re_note FROM requests \
+                       JOIN items ON it_id = re_item \
+                       JOIN storages ON st_id = re_storage \
+                       JOIN equipment_types ON et_id = re_equipment_type"
         },
         "fields" : {
 			"id" : {
@@ -86,17 +90,17 @@
 				"title" : "Id"
 			},
             "equipment" : {
-                "dbname" : "re_equipment_type",
+                "dbname" : "et_name",
                 "type" : "string",
                 "title" : "Equipment"
             },
-			"date_due" : {
-				"dbname" : "re_date_due",
+            "date" : {
+                "dbname" : "re_date",
 				"type" : "date",
-				"title" : "Id"
+                "title" : "Date create"
 			},
 			"item" : {
-				"dbname" : "re_item",
+                "dbname" : "item",
 				"type" : "int",
 				"title" : "Item",
 				"lookup" : {
@@ -110,7 +114,7 @@
 				"type" : "double",
 				"title" : "Qty"
 			},
-			"supplier" : {
+            "supplier" : {
 				"dbname" : "re_supplier",
 				"type" : "int",
 				"title" : "Supplier",

@@ -10,6 +10,8 @@ struct ModelField {
     QString title;
 };
 
+class QSqlQuery;
+
 class RequestModel : public QAbstractItemModel
 {
     Q_OBJECT
@@ -21,6 +23,9 @@ public:
 
     void setSchemeObject(const QString &objectName);
     QString schemeObject() const;
+
+    bool populate();
+    QString errorString() const;
 
     QModelIndex index(int row, int column, const QModelIndex &parent) const;
     QModelIndex parent(const QModelIndex &child) const;
@@ -42,6 +47,10 @@ private:
     QString m_selectQuery;
     QMap<QString, ModelField*> m_fieldByName;
     QStringList m_columns;
+    QMap<int, Qt::Alignment> m_columnAlign;
+    QSqlQuery *m_sql;
+    QString m_errorString;
+
 
 private:
     void parseScheme(const QString &json, const QString &objectName);

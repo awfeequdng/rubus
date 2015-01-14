@@ -4,10 +4,13 @@
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QDebug>
+#include <QtSql>
 
 RequestModel::RequestModel(QObject *parent) :
-    QAbstractItemModel(parent)
+    QAbstractItemModel(parent),
+    m_sql(0)
 {
+
 }
 
 void RequestModel::setScheme(const QString &json)
@@ -32,6 +35,34 @@ QString RequestModel::schemeObject() const
     return m_schemeObject;
 }
 
+bool RequestModel::populate()
+{
+    if (m_selectQuery.isEmpty()) {
+        m_errorString = tr("Select query is empty!");
+        return false;
+    }
+
+    if (!m_sql) {
+        m_sql = new QSqlQuery();
+    }
+
+    emit beginResetModel();
+    m_sql->exec(m_selectQuery);
+    emit endResetModel();
+
+    if (m_sql->lastError().isValid()) {
+        m_errorString = m_sql->lastError().text();
+        return false;
+    }
+
+    return true;
+}
+
+QString RequestModel::errorString() const
+{
+    return m_errorString;
+}
+
 QModelIndex RequestModel::index(int row, int column, const QModelIndex &parent) const
 {
     Q_UNUSED(parent)
@@ -47,7 +78,7 @@ QModelIndex RequestModel::parent(const QModelIndex &child) const
 int RequestModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent)
-    return 0;
+    return m_sql ? m_sql->size() : 0;
 }
 
 int RequestModel::columnCount(const QModelIndex &parent) const
@@ -58,12 +89,25 @@ int RequestModel::columnCount(const QModelIndex &parent) const
 
 QVariant RequestModel::data(const QModelIndex &index, int role) const
 {
-    if (!index.isValid()) {
+    if (!index.isValid() || !m_sql) {
         return QVariant();
     }
 
-    if (role == Qt::DisplayRole) {
+    if (!m_sql->seek(index.row())) {
+        qWarning() << QString("can't do seek");
         return QVariant();
+    }
+
+    QSqlRecord rec = m_sql->record();
+    ModelField *f = m_fieldByName.value(m_columns.at(index.column()));
+
+    if (!f) {
+        return QVariant();
+    }
+
+    if (role == Qt::DisplayRole || role == Qt::EditRole) {
+        QSqlField sqlf = rec.field(f->dbName);
+        return sqlf.isValid() ? sqlf.value() : tr("No Field");
     }
 
     return QVariant();
@@ -79,12 +123,15 @@ bool RequestModel::setData(const QModelIndex &index, const QVariant &value, int 
 
 QVariant RequestModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    if (!m_columns.isEmpty()
-            && orientation == Qt::Horizontal
-            && role == Qt::DisplayRole) {
-        qDebug() << m_columns.at(section);
-        //return m_fieldByName.value(m_columns.at(section))->title;
-        return QString();
+    if (!m_columns.isEmpty() && orientation == Qt::Horizontal) {
+        if (role == Qt::DisplayRole) {
+            ModelField *f = m_fieldByName.value(m_columns.at(section));
+            return f ? f->title : m_columns.at(section) + "?";
+        }
+
+        if (role == Qt::TextAlignmentRole) {
+            return QVariant(m_columnAlign.value(section, Qt::AlignLeft | Qt::AlignVCenter));
+        }
     }
 
     return QAbstractItemModel::headerData(section, orientation, role);
@@ -157,7 +204,7 @@ void RequestModel::parseFields(QJsonObject object)
     QMapIterator<QString, QVariant> i(fields.toVariantMap());
     while (i.hasNext()) {
         i.next();
-        QJsonObject obj = i.value().toJsonObject();
+        QJsonObject obj = QJsonObject::fromVariantMap(i.value().toMap());
         ModelField *field = new ModelField;
         field->name = i.key();
         field->title = obj.value("title").toString();
@@ -188,5 +235,16 @@ void RequestModel::parseColumns(QJsonObject object)
 
     for(int i = 0; i < arr.count(); i++) {
         m_columns.append(arr.at(i).toString());
+
+        ModelField *f = m_fieldByName.value(arr.at(i).toString());
+        if (f) {
+            Qt::Alignment align;
+            if (f->type == QVariant::Double || f->type == QVariant::Int) {
+                align = Qt::AlignVCenter | Qt::AlignRight;
+            } else {
+                align = Qt::AlignVCenter | Qt::AlignLeft;
+            }
+            m_columnAlign.insert(i, align);
+        }
     }
 }

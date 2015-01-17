@@ -8,6 +8,8 @@ struct ModelField {
     QString dbName;
     QVariant::Type type;
     QString title;
+    QString format;
+    bool lookup;
 };
 
 class QSqlQuery;
@@ -57,6 +59,7 @@ private:
     QString generateSelectQuery() const;
     void parseFields(QJsonObject object);
     void parseColumns(QJsonObject object);
+    QVariant::Type typeFromString(const QString &type);
 };
 
 #endif // REQUESTMODEL_H

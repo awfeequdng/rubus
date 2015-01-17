@@ -110,6 +110,10 @@ QVariant RequestModel::data(const QModelIndex &index, int role) const
         return sqlf.isValid() ? sqlf.value() : tr("No Field");
     }
 
+    if (role == Qt::TextAlignmentRole) {
+        return headerData(index.column(), Qt::Horizontal, role);
+    }
+
     return QVariant();
 }
 
@@ -208,8 +212,12 @@ void RequestModel::parseFields(QJsonObject object)
         ModelField *field = new ModelField;
         field->name = i.key();
         field->title = obj.value("title").toString();
-        field->type = QVariant::String;
+        field->lookup = obj.contains("lookup");
+        field->type = field->lookup ?
+                    QVariant::String :
+                    typeFromString(obj.value("type").toString());
         field->dbName = obj.value("dbname").toString();
+        field->format = obj.value("format").toString();
 
         m_fieldByName.insert(field->name, field);
     }
@@ -241,10 +249,40 @@ void RequestModel::parseColumns(QJsonObject object)
             Qt::Alignment align;
             if (f->type == QVariant::Double || f->type == QVariant::Int) {
                 align = Qt::AlignVCenter | Qt::AlignRight;
+            } else if (f->type == QVariant::DateTime || f->type == QVariant::Date || f->type == QVariant::Time) {
+                align = Qt::AlignVCenter | Qt::AlignHCenter;
             } else {
                 align = Qt::AlignVCenter | Qt::AlignLeft;
             }
+
             m_columnAlign.insert(i, align);
         }
     }
+}
+
+QVariant::Type RequestModel::typeFromString(const QString &type)
+{
+    if (type.isEmpty()) {
+        return QVariant::String;
+    }
+
+    QVariant::Type t = QVariant::nameToType(type.toLatin1());
+
+    if (t != QVariant::Invalid) {
+        return t;
+    }
+
+    if (type.toLower() == QString("string")) {
+        t = QVariant::String;
+    } else if (type.toLower() == QString("date")) {
+        t = QVariant::Date;
+    } else if (type.toLower() == QString("datetime")) {
+        t = QVariant::DateTime;
+    } else if (type.toLower() == QString("time")) {
+        t = QVariant::Time;
+    } else {
+        t = QVariant::Invalid;
+    }
+
+    return t;
 }

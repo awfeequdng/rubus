@@ -69,61 +69,74 @@
     "Request" : {
         "tableview" : {
             "columns" : {
-                "order" : ["id", "date_due", "equipment", "item", "qty"],
+                "order" : ["id", "date", "equipment", "item", "qty"],
                 "hidden" : ["id"],
-                "width" : {"id": 80, "due_date": 120, "equipment": 200, "qty": 100}
+                "width" : {"id": 80, "date": 120, "equipment": 200, "qty": 100}
             }
         },
         "sql" : {
             "tablename" : "requests",
-            "primarykey" : ["id"],
-            "select" : "SELECT re_date, re_item, it_name || '(' || it_article || ')' as item, \
-                       re_equipment_type, et_name, re_qty, re_balance, re_storage, st_name, re_note FROM requests \
-                       JOIN items ON it_id = re_item \
-                       JOIN storages ON st_id = re_storage \
-                       JOIN equipment_types ON et_id = re_equipment_type"
+            "select" : {
+                "query" : "select * from v_requests",
+                "primarykey" : ["re_id"]
+            },
+            "choose" : {
+                "query" : "select * from v_requests",
+                "primarykey" : ["re_id"],
+                "lookupfield" : "item"
+            }
         },
         "fields" : {
-			"id" : {
-				"dbname" : "re_id",
-				"type" : "int",
-				"title" : "Id"
-			},
+            "id" : {
+                "dbname" : "re_id",
+                "type" : "int",
+                "title" : "Id"
+            },
             "equipment" : {
                 "dbname" : "et_name",
-                "type" : "string",
-                "title" : "Equipment"
+                "type" : "int",
+                "title" : "Equipment",
+                "lookup" : {
+                    "query" : "SELECT et_id, et_name FROM equipment_types",
+                    "fieldKeys" : ["et_id"],
+                    "fieldName" : "re_name"
+                }
             },
             "date" : {
                 "dbname" : "re_date",
-				"type" : "date",
-                "title" : "Date create"
-			},
-			"item" : {
-                "dbname" : "item",
-				"type" : "int",
-				"title" : "Item",
-				"lookup" : {
-					"master" : "Item",
-					"fieldId" : "id",
-					"fieldTitle" : "name"
-				}
-			},
-			"qty" : {
-				"dbname" : "re_qty",
-				"type" : "double",
-				"title" : "Qty"
-			},
-            "supplier" : {
-				"dbname" : "re_supplier",
-				"type" : "int",
-				"title" : "Supplier",
-				"lookup" : {
-					"master" : "Contractor",
-					"fieldId" : "id",
-					"fieldTitle" : "name"
-				}
-			}
-		}
-	}
+                "type" : "Date",
+                "title" : "Date create",
+                "format" : "dd.MM.yyyy"
+            },
+            "item" : {
+                "dbname" : "re_item",
+                "type" : "int",
+                "title" : "Item",
+                "lookup" : {
+                    "query" : "SELECT it_id, it_name, ie_equipment_type FROM items \
+                               JOIN items_equipment_types ON it_id = ie_item",
+                    "fieldKeys" : ["it_id"],
+                    "fieldName" : "it_name",
+
+                    "filer" : {
+                        "fieldSourceValue" : "equipment",
+                        "fieldFilter" : "ie_equipment_type"
+                    }
+                }
+            },
+            "qty" : {
+                "dbname" : "re_qty",
+                "type" : "double",
+                "title" : "Qty"
+            },
+            "storage" : {
+                "dbname" : "re_storage",
+                "type" : "int",
+                "title" : "Storage",
+                "lookup" : {
+                    "query" : "SELECT st_id, st_name FROM storages"
+                }
+            }
+        }
+    }
 }

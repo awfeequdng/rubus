@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>scheme.json</file>
+        <file>schemeRubus.json</file>
     </qresource>
 </RCC>

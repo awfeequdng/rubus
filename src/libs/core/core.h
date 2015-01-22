@@ -32,10 +32,12 @@
 
 #include <QObject>
 #include <QMap>
+#include <QJsonObject>
 
 #include "core_global.h"
 
 class QAction;
+class Field;
 
 namespace Core {
 
@@ -86,9 +88,12 @@ public:
     void saveParameters();
 
     static QString version();
-    static QByteArray scheme();
+    static QByteArray schemeSource();
+    static QJsonObject scheme();
 
 
+    static QMap<QString, Field *> fields(const QString &object);
+    static QJsonObject schemeObject(const QString &name);
 
 signals:
     void logged();
@@ -108,6 +113,7 @@ private:
     User *m_currentUser;
     QString m_reportStoragePath;
     QString m_configFile;
+    QJsonObject m_scheme;
 
     QMap<QString, QWidget *> m_widgetById;
     QMap<QString, QAction *> m_actionById;

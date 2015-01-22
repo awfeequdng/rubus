@@ -47,6 +47,7 @@ SOURCES += \
     report.cpp \
     user.cpp \
     iplugin.cpp \
+    field.cpp
 
 HEADERS +=\
     core.h \
@@ -58,6 +59,7 @@ HEADERS +=\
     user.h \
     version.h \
     iplugin.h \
+    field.h
 
 RESOURCES += \
     core.qrc

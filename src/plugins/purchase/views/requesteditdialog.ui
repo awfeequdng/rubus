@@ -6,32 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>399</width>
-    <height>247</height>
+    <width>400</width>
+    <height>316</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
   <layout class="QFormLayout" name="formLayout">
-   <property name="horizontalSpacing">
-    <number>4</number>
-   </property>
-   <property name="verticalSpacing">
-    <number>4</number>
-   </property>
-   <property name="leftMargin">
-    <number>6</number>
-   </property>
-   <property name="topMargin">
-    <number>6</number>
-   </property>
-   <property name="rightMargin">
-    <number>6</number>
-   </property>
-   <property name="bottomMargin">
-    <number>6</number>
-   </property>
    <item row="0" column="0">
     <widget class="QLabel" name="label_6">
      <property name="text">
@@ -89,7 +71,7 @@
     </widget>
    </item>
    <item row="2" column="1">
-    <widget class="QComboBox" name="cmbStorage"/>
+    <widget class="AdvComboBox" name="cmbStorage"/>
    </item>
    <item row="3" column="0">
     <widget class="QLabel" name="label">
@@ -102,7 +84,7 @@
     </widget>
    </item>
    <item row="3" column="1">
-    <widget class="QComboBox" name="cmbEquipment"/>
+    <widget class="AdvComboBox" name="cmbEquipment"/>
    </item>
    <item row="4" column="0">
     <widget class="QLabel" name="label_2">
@@ -115,7 +97,7 @@
     </widget>
    </item>
    <item row="4" column="1">
-    <widget class="QComboBox" name="cmbItem"/>
+    <widget class="AdvComboBox" name="cmbItem"/>
    </item>
    <item row="5" column="0">
     <widget class="QLabel" name="label_4">
@@ -171,24 +153,7 @@
      </item>
     </layout>
    </item>
-   <item row="6" column="1">
-    <widget class="QTextEdit" name="edNote"/>
-   </item>
    <item row="7" column="0">
-    <widget class="QLabel" name="label_7">
-     <property name="text">
-      <string>Create user:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="7" column="1">
-    <widget class="QLabel" name="labUser">
-     <property name="text">
-      <string>TextLabel</string>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="0">
     <widget class="QLabel" name="label_10">
      <property name="text">
       <string>Note:</string>
@@ -198,8 +163,118 @@
      </property>
     </widget>
    </item>
+   <item row="7" column="1">
+    <widget class="QTextEdit" name="edNote">
+     <property name="tabStopWidth">
+      <number>80</number>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="0">
+    <widget class="QLabel" name="label_7">
+     <property name="text">
+      <string>Create user:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="1">
+    <widget class="QLabel" name="labUser">
+     <property name="text">
+      <string>TextLabel</string>
+     </property>
+    </widget>
+   </item>
+   <item row="10" column="0" colspan="2">
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btnSave">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>30</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Ok</string>
+       </property>
+       <property name="autoDefault">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btnCancel">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>30</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Cancel</string>
+       </property>
+       <property name="autoDefault">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>AdvComboBox</class>
+   <extends>QComboBox</extends>
+   <header>advcombobox.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>btnSave</sender>
+   <signal>clicked()</signal>
+   <receiver>RequestEditDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>370</x>
+     <y>291</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>395</x>
+     <y>270</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnCancel</sender>
+   <signal>clicked()</signal>
+   <receiver>RequestEditDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>289</x>
+     <y>294</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>209</x>
+     <y>294</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

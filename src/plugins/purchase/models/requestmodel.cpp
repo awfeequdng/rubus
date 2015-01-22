@@ -186,7 +186,7 @@ void RequestModel::parseScheme(const QString &json, const QString &objectName)
    QJsonObject sqlObj = obj.value("sql").toObject();
 
    m_selectQuery = sqlObj.contains("select")
-           ? sqlObj.value("select").toString()
+           ? sqlObj.value("select").toObject().value("query").toString()
            : generateSelectQuery();
 }
 

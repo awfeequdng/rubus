@@ -109,7 +109,7 @@
                 "format" : "dd.MM.yyyy"
             },
             "item" : {
-                "dbname" : "re_item",
+                "dbname" : "item",
                 "type" : "int",
                 "title" : "Item",
                 "lookup" : {

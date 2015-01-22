@@ -11,7 +11,8 @@ SOURCES += \
     purchaseplugin.cpp \
     views/requesttablewidget.cpp \
     models/requestmodel.cpp \
-    views/requesteditdialog.cpp
+    views/requesteditdialog.cpp \
+    controller.cpp \
 
 HEADERS +=\
     purchaseplugin.h \    
@@ -19,7 +20,8 @@ HEADERS +=\
     purchaseconstants.h \
     views/requesttablewidget.h \
     models/requestmodel.h \
-    views/requesteditdialog.h
+    views/requesteditdialog.h \
+    controller.h \
     
 
 unix {
@@ -29,5 +31,6 @@ unix {
 
 FORMS += \
     views/requesttablewidget.ui \
-    views/requesteditdialog.ui
+    views/requesteditdialog.ui \
+    views/testedit.ui
 

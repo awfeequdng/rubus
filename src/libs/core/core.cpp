@@ -32,6 +32,7 @@
 #include "user.h"
 #include "pluginmanager.h"
 #include "version.h"
+#include "field.h"
 
 #include <QDebug>
 #include <QDir>
@@ -224,7 +225,7 @@ QString ICore::version()
             .arg(QString(Version::STAGE).isEmpty() ? "" : QString(" - %1").arg(Version::STAGE));
 }
 
-QByteArray ICore::scheme()
+QByteArray ICore::schemeSource()
 {
     QByteArray value;
     QFile f(":/scheme.json");
@@ -234,6 +235,53 @@ QByteArray ICore::scheme()
     }
 
     return value;
+}
+
+QJsonObject ICore::scheme()
+{
+    if (!m_instance->m_scheme.isEmpty()) {
+        return m_instance->m_scheme;
+    }
+
+    QJsonParseError err;
+    QJsonDocument doc = QJsonDocument::fromJson(schemeSource(), &err);
+
+    if (err.error) {
+        qCritical() << "line:" << err.offset << "err: " << err.error << ":" << err.errorString();
+        return QJsonObject();
+    }
+
+    if (doc.isEmpty()) {
+        qCritical() << tr("Scheme is empty!");
+        return QJsonObject();
+    }
+
+    m_instance->m_scheme = doc.object();
+    return m_instance->m_scheme;
+}
+
+QMap<QString, Field *> ICore::fields(const QString &object)
+{
+    QMap<QString, Field *> fieldMap;
+    QJsonObject f = schemeObject(object).value("fields").toObject();
+    if (f.isEmpty()) {
+        qWarning() << "In object '" << object << "' fields not found!";
+        return fieldMap;
+    }
+
+    QMapIterator<QString, QVariant> i(f.toVariantMap());
+    while (i.hasNext()) {
+        i.next();
+        fieldMap.insert(i.key(), new Field(i.key(), object));
+    }
+
+    return fieldMap;
+}
+
+QJsonObject ICore::schemeObject(const QString &name)
+{
+    return scheme().value(name).toObject();
+
 }
 
 void ICore::loadConfig(QString filename)

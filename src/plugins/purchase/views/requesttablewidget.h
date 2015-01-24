@@ -8,7 +8,8 @@ namespace Ui {
 class RequestTableWidget;
 }
 class RequestModel;
-class RequestEditDialog;
+class RequestEditWidget;
+class EditDialog;
 class Controller;
 
 class RequestTableWidget : public QWidget
@@ -19,6 +20,8 @@ public:
     explicit RequestTableWidget(QWidget *parent = 0);
     ~RequestTableWidget();
 
+    int currentId() const;
+    void refresh();
 
 public slots:
     void add();
@@ -31,7 +34,8 @@ protected:
 private:
     Ui::RequestTableWidget *ui;
     RequestModel *m_model;
-    RequestEditDialog *m_editDlg;
+    EditDialog *m_editDlg;
+
     Controller *m_controller;
 };
 

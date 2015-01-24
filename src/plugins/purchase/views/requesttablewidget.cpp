@@ -1,13 +1,13 @@
 #include "requesttablewidget.h"
 #include "ui_requesttablewidget.h"
-#include "requesteditdialog.h"
-
-#include "advschemetableview.h"
+#include "requesteditwidget.h"
+#include "editdialog.h"
+#include "advtableview.h"
 #include "models/requestmodel.h"
 #include "core.h"
-#include "controller.h"
 
 #include <QMessageBox>
+#include <QDebug>
 
 RequestTableWidget::RequestTableWidget(QWidget *parent) :
     QWidget(parent),
@@ -15,17 +15,9 @@ RequestTableWidget::RequestTableWidget(QWidget *parent) :
 {
     ui->setupUi(this);
     m_model = new RequestModel(this);
-    m_model->setScheme(Core::ICore::schemeSource());
-    m_model->setSchemeObject("Request");
+    ui->tableView->setModel(m_model);
 
-    ui->tableView->setScheme(Core::ICore::schemeSource());
-    ui->tableView->setSchemeObject("Request");
-
-
-    m_editDlg = new RequestEditDialog(this);
-    m_controller = new Controller(this);
-    m_controller->setSchemeObject("Request");
-    m_editDlg->setController(m_controller);
+    m_editDlg = new EditDialog(new RequestEditWidget(), this);
 
     connect(ui->btnAdd, SIGNAL(clicked()), SLOT(add()));
     connect(ui->btnEdit, SIGNAL(clicked()), SLOT(editCurrent()));
@@ -37,24 +29,28 @@ RequestTableWidget::~RequestTableWidget()
     delete ui;
 }
 
+int RequestTableWidget::currentId() const
+{
+    return ui->tableView->currentId().toInt();
+}
+
+void RequestTableWidget::refresh()
+{
+    m_model->populate();
+}
+
 void RequestTableWidget::add()
 {
-    if (!m_controller->load()) {
-        QMessageBox::critical(this, tr("Error"), m_controller->errorString());
-        return;
+    if (m_editDlg->exec() == QDialog::Accepted) {
+        refresh();
     }
-
-    m_editDlg->exec();
 }
 
 void RequestTableWidget::editCurrent()
 {
-    if (!m_controller->load()) {
-        QMessageBox::critical(this, tr("Error"), m_controller->errorString());
-        return;
+    if (m_editDlg->exec(currentId()) == QDialog::Accepted) {
+        refresh();
     }
-
-    m_editDlg->exec();
 }
 
 void RequestTableWidget::deleteSelected()
@@ -67,6 +63,6 @@ void RequestTableWidget::showEvent(QShowEvent *e)
     if (!m_model->populate()) {
         QMessageBox::critical(this, tr("Error"), m_model->errorString());
     }
-    ui->tableView->setModel(m_model);
+
     QWidget::showEvent(e);
 }

@@ -38,6 +38,7 @@ class AdvLineEdit;
 class WIDGETS_EXPORT AdvComboBox : public QComboBox
 {
     Q_OBJECT
+    Q_PROPERTY(QVariant currentKey READ currentKey WRITE setCurrentKey NOTIFY keyChanged)
 public:
     explicit AdvComboBox(QWidget *parent = 0);
 

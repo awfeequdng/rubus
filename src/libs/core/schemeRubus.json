@@ -1,7 +1,44 @@
 {
     "Request" : {
-        "editview" : {
+        "models" : {
+            "select" : {
+                "query" : ""
+            }
+        },
 
+        "controller" : {
+            "table" : "requests",
+            "fields" : {
+                "id" : {
+                    "field" : "re_id",
+                    "type" : "int",
+                },
+                "equipment" : {
+                    "fieldname" : "re_equipment_type",
+                    "type" : "int",
+                },
+                "date" : {
+                    "fieldname" : "re_date",
+                    "type" : "Date",
+                },
+                "item" : {
+                    "fieldname" : "re_item",
+                    "type" : "int"
+                },
+                "qty" : {
+                    "fieldname" : "re_qty",
+                    "type" : "double",
+                },
+                "storage" : {
+                    "fieldname" : "re_storage",
+                    "type" : "int"
+                },
+                "balance" : {
+                    "fieldname" : "re_balance",
+                    "type" : "double"
+                }
+            }
         }
     }
+
 }

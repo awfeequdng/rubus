@@ -10,18 +10,16 @@ DEFINES += PURCHASE_LIBRARY
 SOURCES += \
     purchaseplugin.cpp \
     views/requesttablewidget.cpp \
-    models/requestmodel.cpp \
-    views/requesteditdialog.cpp \
-    controller.cpp \
+    views/requesteditwidget.cpp \
+    models/requestmodel.cpp
 
 HEADERS +=\
     purchaseplugin.h \    
     purchase_global.h \
     purchaseconstants.h \
     views/requesttablewidget.h \
-    models/requestmodel.h \
-    views/requesteditdialog.h \
-    controller.h \
+    views/requesteditwidget.h \
+    models/requestmodel.h
     
 
 unix {
@@ -31,6 +29,5 @@ unix {
 
 FORMS += \
     views/requesttablewidget.ui \
-    views/requesteditdialog.ui \
-    views/testedit.ui
+    views/requesteditwidget.ui
 

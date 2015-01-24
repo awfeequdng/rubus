@@ -53,7 +53,7 @@ public:
     void setWindowTitle ( const QString & s);
 
 signals:
-    void windowTitleChanged(QString title);
+    //void windowTitleChanged(QString title);
     void dataChanged();
     void saved();
     void loaded();

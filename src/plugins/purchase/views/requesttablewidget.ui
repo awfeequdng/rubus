@@ -42,7 +42,7 @@
     </layout>
    </item>
    <item>
-    <widget class="AdvSchemeTableView" name="tableView">
+    <widget class="AdvTableView" name="tableView">
      <property name="font">
       <font>
        <family>Tahoma</family>
@@ -116,9 +116,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>AdvSchemeTableView</class>
+   <class>AdvTableView</class>
    <extends>QTableView</extends>
-   <header>advschemetableview.h</header>
+   <header>advtableview.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

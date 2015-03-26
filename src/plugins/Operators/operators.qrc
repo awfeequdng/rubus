@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/operator.png</file>
+    </qresource>
+</RCC>

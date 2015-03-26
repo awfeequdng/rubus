@@ -3,12 +3,7 @@
 
 #include "advitemmodel.h"
 
-namespace Internal {
-struct Item {
-    int id;
-    QString name;
-};
-}
+class QSqlQuery;
 
 class OperatorModel : public AdvItemModel
 {
@@ -16,12 +11,20 @@ class OperatorModel : public AdvItemModel
 public:
     enum Cols {
         IdCol = 0,
-        NameCol = 1
+        TempCol,
+        NameCol,
+        BeginEducCol,
+        DateAttestCol,
+        DateRemoveCol,
+        JobCol,
+        ShiftCol,
+        AttestatorCol
     };
 
     explicit OperatorModel(QObject *parent = 0);
 
     bool populate();
+    void setLocation(int location);
 
     int rowCount(const QModelIndex &parent) const;
     int columnCount(const QModelIndex &parent) const;
@@ -32,11 +35,11 @@ public:
 signals:
 
 public slots:
-    bool submit();
 
 private:
-    QList<Internal::Item *> m_items;
+    QSqlQuery *m_sql;
     QString m_removedIds;
+    int m_location;
 };
 
 #endif //  OPERATORMODEL_H

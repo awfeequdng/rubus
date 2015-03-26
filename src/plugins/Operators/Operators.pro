@@ -9,15 +9,15 @@ DEFINES += OPERATORS_LIBRARY
 
 SOURCES += \
     operatorsplugin.cpp \
-    widgets/operatortablewidget.cpp \
-    models/operatormodel.cpp
+    models/operatormodel.cpp \
+    widgets/operatortablewidget.cpp
 
 HEADERS +=\
     operatorsplugin.h \    
     operators_global.h \
     operatorsconstants.h \
-    widgets/operatortablewidget.h \
-    models/operatormodel.h
+    models/operatormodel.h \
+    widgets/operatortablewidget.h
     
 
 unix {
@@ -27,4 +27,7 @@ unix {
 
 RESOURCES += \
     operators.qrc
+
+FORMS += \
+    widgets/operatortablewidget.ui
 

@@ -3,16 +3,24 @@
 
 #include <QWidget>
 
+namespace Ui {
+class OperatorTableWidget;
+}
+
+class OperatorModel;
+
 class OperatorTableWidget : public QWidget
 {
     Q_OBJECT
+
 public:
     explicit OperatorTableWidget(QWidget *parent = 0);
+    ~OperatorTableWidget();
 
-signals:
+private:
+    Ui::OperatorTableWidget *ui;
 
-public slots:
-
+    OperatorModel *m_model;
 };
 
 #endif // OPERATORTABLEWIDGET_H

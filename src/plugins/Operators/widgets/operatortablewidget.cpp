@@ -1,9 +1,18 @@
 #include "operatortablewidget.h"
+#include "ui_operatortablewidget.h"
 
-#include <QIcon>
+#include "models/operatormodel.h"
 
 OperatorTableWidget::OperatorTableWidget(QWidget *parent) :
-    QWidget(parent)
+    QWidget(parent),
+    ui(new Ui::OperatorTableWidget)
 {
-    setWindowIcon(QIcon(":/images/operator.png"));
+    ui->setupUi(this);
+
+    m_model = new OperatorModel(this);
+}
+
+OperatorTableWidget::~OperatorTableWidget()
+{
+    delete ui;
 }

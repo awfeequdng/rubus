@@ -212,9 +212,9 @@ void ICore::saveParameters()
             }
         }
 
-        if (!currentUser()->save()) {
-            qCritical() << currentUser()->errorString();
-        }
+//        if (!currentUser()->save()) {
+//            qCritical() << currentUser()->errorString();
+//        }
 }
 
 QString ICore::version()

@@ -48,6 +48,8 @@ protected:
 private:
    bool colIsStretch(int index) const;
 
+   void resizeSections();
+
 };
 
 #endif // HEADERVIEW_H

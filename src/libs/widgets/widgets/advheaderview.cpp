@@ -151,17 +151,20 @@ bool AdvHeaderView::colIsStretch(int index) const
     return m_colStretch.value(index, true);
 }
 
-
-void AdvHeaderView::setModel(QAbstractItemModel *model)
+void AdvHeaderView::resizeSections()
 {
-    QHeaderView::setModel(model);
-
     for (int i = 0; i < count(); i++) {
         resizeSection(i, !m_savedSize.isEmpty()
                       ? m_savedSize.value(i)
                       : m_defaultSectionSize.value(i));
-
     }
+}
+
+
+void AdvHeaderView::setModel(QAbstractItemModel *model)
+{
+    QHeaderView::setModel(model);
+    resizeSections();
 }
 
 void AdvHeaderView::resizeSection(int logicalIndex, int size)
@@ -238,5 +241,6 @@ bool AdvHeaderView::restoreGeometry(const QByteArray &geometry)
         m_savedSize.insert(i, size);
     }
 
+    resizeSections();
     return true;
 }

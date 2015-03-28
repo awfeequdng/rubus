@@ -17,7 +17,7 @@ bool OperatorModel::populate()
         m_sql = new QSqlQuery();
     }
 
-    m_sql.exec(QString("SELECT oper.co_id as id, oper.co_name as name, op_date_begin_education, "
+    m_sql->exec(QString("SELECT oper.co_id as id, oper.co_name as name, op_date_begin_education, "
              "op_date_attestation, op_remove_attestation, oj_name, sh_name, "
              "attest.co_name as attestator, oper.op_attestator as attestator_id "
              "FROM operators as oper "
@@ -51,7 +51,7 @@ int OperatorModel::rowCount(const QModelIndex &parent) const
 int OperatorModel::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent)
-    return 2;
+    return 9;
 }
 
 QVariant OperatorModel::data(const QModelIndex &index, int role) const
@@ -68,14 +68,14 @@ QVariant OperatorModel::data(const QModelIndex &index, int role) const
     if (role == Qt::DisplayRole || role == Qt::EditRole) {
         switch(index.column()) {;
         case IdCol: return m_sql->value("id").toInt();
-        case TempCol: return 0;
+        case DownCol: return 0;
         case NameCol: return m_sql->value("name").toString();
-        case BeginEducCol: return tr("Education");
-        case DateAttestCol: return tr("Attestation");
-        case DateRemoveCol: return tr("Remove");
-        case JobCol: return tr("Job");
-        case ShiftCol: return tr("Shift");
-        case AttestatorCol: return tr("Attestator");
+        case BeginEducCol: return dateToString(m_sql->value("op_date_begin_education").toDate());
+        case DateAttestCol: return dateToString(m_sql->value("op_date_attestation").toDate());
+        case DateRemoveCol: return dateToString(m_sql->value("op_remove_attestation").toDate());
+        case JobCol: return m_sql->value("oj_name").toString();
+        case ShiftCol: return m_sql->value("sh_name").toString();
+        case AttestatorCol: return m_sql->value("attestator").toString();
         }
     }
 
@@ -88,7 +88,7 @@ QVariant OperatorModel::headerData(int section, Qt::Orientation orientation, int
         if (role == Qt::DisplayRole) {
             switch(section) {
             case IdCol: return tr("Id");
-            case TempCol: return tr("Temp");
+            case DownCol: return tr("Down");
             case NameCol: return tr("Name");
             case BeginEducCol: return tr("Education");
             case DateAttestCol: return tr("Attestation");
@@ -101,7 +101,7 @@ QVariant OperatorModel::headerData(int section, Qt::Orientation orientation, int
         if (role == Qt::TextAlignmentRole) {
             switch(section) {
             case IdCol: return Qt::AlignCenter;
-            case TempCol: return Qt::AlignLeft + Qt::AlignVCenter;
+            case DownCol: return Qt::AlignCenter;
             case NameCol: return Qt::AlignLeft + Qt::AlignVCenter;
             case BeginEducCol: return Qt::AlignCenter;
             case DateAttestCol: return Qt::AlignCenter;
@@ -119,5 +119,10 @@ QVariant OperatorModel::headerData(int section, Qt::Orientation orientation, int
 bool OperatorModel::removeRows(int row, int count, const QModelIndex &parent)
 {
     return true;
+}
+
+QString OperatorModel::dateToString(const QDate &date) const
+{
+    return date.toString("dd.MM.yyyy");
 }
 

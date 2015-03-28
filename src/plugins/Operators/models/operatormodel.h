@@ -11,7 +11,7 @@ class OperatorModel : public AdvItemModel
 public:
     enum Cols {
         IdCol = 0,
-        TempCol,
+        DownCol,
         NameCol,
         BeginEducCol,
         DateAttestCol,
@@ -40,6 +40,8 @@ private:
     QSqlQuery *m_sql;
     QString m_removedIds;
     int m_location;
+
+    QString dateToString(const QDate &date) const;
 };
 
 #endif //  OPERATORMODEL_H

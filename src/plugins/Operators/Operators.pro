@@ -10,14 +10,16 @@ DEFINES += OPERATORS_LIBRARY
 SOURCES += \
     operatorsplugin.cpp \
     models/operatormodel.cpp \
-    widgets/operatortablewidget.cpp
+    widgets/operatortablewidget.cpp \
+    widgets/operatoreditwidget.cpp
 
 HEADERS +=\
     operatorsplugin.h \    
     operators_global.h \
     operatorsconstants.h \
     models/operatormodel.h \
-    widgets/operatortablewidget.h
+    widgets/operatortablewidget.h \
+    widgets/operatoreditwidget.h
     
 
 unix {
@@ -29,5 +31,6 @@ RESOURCES += \
     operators.qrc
 
 FORMS += \
-    widgets/operatortablewidget.ui
+    widgets/operatortablewidget.ui \
+    widgets/operatoreditwidget.ui
 

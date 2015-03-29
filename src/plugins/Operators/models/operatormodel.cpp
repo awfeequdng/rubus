@@ -18,7 +18,7 @@ bool OperatorModel::populate()
     }
 
     m_sql->exec(QString("SELECT oper.co_id as id, oper.co_name as name, op_date_begin_education, "
-             "op_date_attestation, op_remove_attestation, oj_name, sh_name, "
+             "op_date_attestation, op_remove_attestation, oj_name, sh_name, op_down, "
              "attest.co_name as attestator, oper.op_attestator as attestator_id "
              "FROM operators as oper "
              "JOIN operator_jobs ON oj_id = op_job "
@@ -68,7 +68,7 @@ QVariant OperatorModel::data(const QModelIndex &index, int role) const
     if (role == Qt::DisplayRole || role == Qt::EditRole) {
         switch(index.column()) {;
         case IdCol: return m_sql->value("id").toInt();
-        case DownCol: return 0;
+        case DownCol: return m_sql->value("op_down").toInt();
         case NameCol: return m_sql->value("name").toString();
         case BeginEducCol: return dateToString(m_sql->value("op_date_begin_education").toDate());
         case DateAttestCol: return dateToString(m_sql->value("op_date_attestation").toDate());

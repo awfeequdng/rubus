@@ -22,6 +22,7 @@ public:
 
     void showEvent(QShowEvent *e);
     int currentId() const;
+    int currentLocation() const;
 
 public slots:
     void add();

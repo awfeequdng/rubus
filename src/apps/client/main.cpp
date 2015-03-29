@@ -90,6 +90,10 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
+#ifdef Q_OS_WIN
+    a.setFont(QFont("tahoma", 10));
+#endif
+
     QTranslator translator;
     translator.load("rubus_ru");
     a.installTranslator(&translator);

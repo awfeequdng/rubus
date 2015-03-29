@@ -194,15 +194,15 @@ void MainWindow::setupWidgetActions(QString name)
     m_tbMainWidgetActions->clear();
 
 
-//    QListIterator<QAction*> iter(m_widgetById.value(name));
-//    bool hasActions = iter.hasNext();
+    QListIterator<QAction*> iter(m_mainWidgets->currentWidget()->actions());
+    bool hasActions = iter.hasNext();
 
-//    while (iter.hasNext()) {
-//        QAction *act = iter.next();
-//        m_tbMainWidgetActions->addAction(act);
-//    }
+    while (iter.hasNext()) {
+        QAction *act = iter.next();
+        m_tbMainWidgetActions->addAction(act);
+    }
 
-//    m_tbMainWidgetActions->setVisible(hasActions);
+    m_tbMainWidgetActions->setVisible(hasActions);
 }
 
 void MainWindow::addWidget(const QDomNode &node)

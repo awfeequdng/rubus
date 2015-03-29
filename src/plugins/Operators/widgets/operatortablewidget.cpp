@@ -47,6 +47,9 @@ OperatorTableWidget::OperatorTableWidget(QWidget *parent) :
     ui->tableView->addAction(m_acAdd);
     ui->tableView->addAction(m_acEdit);
     ui->tableView->addAction(m_acRemove);
+    addAction(m_acAdd);
+    addAction(m_acEdit);
+    addAction(m_acRemove);
 
     connect(ui->tableView, SIGNAL(doubleClicked(QModelIndex)), SLOT(editCurrent()));
 
@@ -76,8 +79,14 @@ int OperatorTableWidget::currentId() const
     return ui->tableView->currentId().toInt();
 }
 
+int OperatorTableWidget::currentLocation() const
+{
+    return 10032;
+}
+
 void OperatorTableWidget::add()
 {
+    m_editWidget->setLocation(currentLocation());
     if (m_editDlg->exec()) {
         populate();
         ui->tableView->setCurrentId(m_editWidget->id());
@@ -86,6 +95,7 @@ void OperatorTableWidget::add()
 
 void OperatorTableWidget::editCurrent()
 {
+    m_editWidget->setLocation(currentLocation());
     if (m_editDlg->exec(currentId())) {
         populate();
         ui->tableView->setCurrentId(m_editWidget->id());

@@ -21,5 +21,6 @@ op_temp bool NOT NULL DEFAULT false,
 op_attestator int NOT NULL,
 op_job int NOT NULL,
 op_shift int NOT NULL,
+op_down int NOT NULL DEFAULT 0,
 PRIMARy KEY (co_id)
 ) INHERITS(contractors);

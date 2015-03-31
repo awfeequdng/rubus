@@ -11,6 +11,7 @@ class OperatorModel;
 class QSortFilterProxyModel;
 class OperatorEditWidget;
 class EditDialog;
+class QSqlQueryModel;
 
 class OperatorTableWidget : public QWidget
 {
@@ -30,6 +31,11 @@ public slots:
     void removeSelected();
 
     void populate();
+    void popalateLocation();
+    void export32();
+
+    void filter();
+
 
 private:
     Ui::OperatorTableWidget *ui;
@@ -38,11 +44,18 @@ private:
     QSortFilterProxyModel *m_proxyModel;
     OperatorEditWidget *m_editWidget;
     EditDialog *m_editDlg;
+    QSqlQueryModel *m_locationModel;
+    QSqlQueryModel *m_jobModel;
+    QSqlQueryModel *m_shiftModel;
 
     QAction *m_acAdd;
     QAction *m_acEdit;
     QAction *m_acRemove;
 
+    QAction *m_export;
+
+    QString selectedIds() const;
+    QDate dateFromString(const QString &string);
 };
 
 #endif // OPERATORTABLEWIDGET_H

@@ -21,10 +21,18 @@ public:
         AttestatorCol
     };
 
+    enum OperatorStates {
+        AllState = -1,
+        EducationgState = 0,
+        AttestatedState = 1,
+        RemovedState = 2
+    };
+
     explicit OperatorModel(QObject *parent = 0);
 
     bool populate();
     void setLocation(int location);
+    void setOperatorState(int state);
 
     int rowCount(const QModelIndex &parent) const;
     int columnCount(const QModelIndex &parent) const;
@@ -40,8 +48,10 @@ private:
     QSqlQuery *m_sql;
     QString m_removedIds;
     int m_location;
+    int m_state;
 
     QString dateToString(const QDate &date) const;
+    void addWhere(QString &where, const QString &added);
 };
 
 #endif //  OPERATORMODEL_H

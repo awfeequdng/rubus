@@ -16,6 +16,22 @@ bool OperatorModel::populate()
     if (!m_sql) {
         m_sql = new QSqlQuery();
     }
+    QString where;
+
+    if (m_state == EducationgState) {
+        addWhere(where, "op_date_begin_education IS NOT NULL AND op_date_attestation IS NULL "
+                 "AND op_remove_attestation IS NULL ");
+    } else if (m_state == AttestatedState) {
+        addWhere(where, "op_date_attestation IS NOT NULL "
+                 "AND op_remove_attestation IS NULL");
+    } else if (m_state == RemovedState) {
+        addWhere(where, "op_remove_attestation IS NOT NULL");
+    }
+
+    addWhere(where, "oper.co_type = 10");
+    addWhere(where, QString("sh_location = %1").arg(m_location));
+
+    where.prepend("WHERE ");
 
     m_sql->exec(QString("SELECT oper.co_id as id, oper.co_name as name, op_date_begin_education, "
              "op_date_attestation, op_remove_attestation, oj_name, sh_name, op_down, "
@@ -24,7 +40,7 @@ bool OperatorModel::populate()
              "JOIN operator_jobs ON oj_id = op_job "
              "JOIN contractors as attest ON attest.co_id = op_attestator "
              "JOIN shifts ON sh_id = oper.op_shift AND sh_location = oj_location "
-             "WHERE oper.co_type = 10 AND sh_location = %1").arg(m_location));
+             "%1").arg(where));
 
     if (m_sql->lastError().isValid()) {
         qCritical() << m_sql->lastError();
@@ -39,6 +55,11 @@ bool OperatorModel::populate()
 void OperatorModel::setLocation(int location)
 {
     m_location = location;
+}
+
+void OperatorModel::setOperatorState(int state)
+{
+    m_state = state;
 }
 
 
@@ -70,9 +91,9 @@ QVariant OperatorModel::data(const QModelIndex &index, int role) const
         case IdCol: return m_sql->value("id").toInt();
         case DownCol: return m_sql->value("op_down").toInt();
         case NameCol: return m_sql->value("name").toString();
-        case BeginEducCol: return dateToString(m_sql->value("op_date_begin_education").toDate());
-        case DateAttestCol: return dateToString(m_sql->value("op_date_attestation").toDate());
-        case DateRemoveCol: return dateToString(m_sql->value("op_remove_attestation").toDate());
+        case BeginEducCol: return m_sql->value("op_date_begin_education").toDate();
+        case DateAttestCol: return m_sql->value("op_date_attestation").toDate();
+        case DateRemoveCol: return m_sql->value("op_remove_attestation").toDate();
         case JobCol: return m_sql->value("oj_name").toString();
         case ShiftCol: return m_sql->value("sh_name").toString();
         case AttestatorCol: return m_sql->value("attestator").toString();
@@ -124,5 +145,14 @@ bool OperatorModel::removeRows(int row, int count, const QModelIndex &parent)
 QString OperatorModel::dateToString(const QDate &date) const
 {
     return date.toString("dd.MM.yyyy");
+}
+
+void OperatorModel::addWhere(QString &where, const QString &added)
+{
+    if (!where.isEmpty()) {
+        where.append(" AND ");
+    }
+
+    where.append(added);
 }
 

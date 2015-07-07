@@ -14,4 +14,4 @@ DESTDIR = $$PLUGINS_DIR
 
 LIBS += -L$$DESTDIR
 LIBS += -L$$LIB_DIR
-LIBS += -lRubusCore -lWidgets -lqaivlib
+LIBS += -lRubusCore -lWidgets

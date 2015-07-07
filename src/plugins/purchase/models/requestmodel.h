@@ -29,14 +29,13 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role) const;
     QVariant data(const QModelIndex &index, int role) const;
 
+    static QString stateName(int state);
+
 public slots:
     bool submit();
 
 private:
     QSqlQuery *m_sql;
-
-    // QAbstractItemModel interface
-public:
 };
 
 #endif // REQUESTMODEL_H

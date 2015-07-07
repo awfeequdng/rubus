@@ -4,6 +4,8 @@
 #include <QWidget>
 #include "widgets/editwidgetinterface.h"
 
+class QSqlQueryModel;
+
 namespace Ui {
 class RequestEditWidget;
 }
@@ -23,6 +25,13 @@ public slots:
 private:
     Ui::RequestEditWidget *ui;
     int m_id;
+
+    QSqlQueryModel *m_equipmentModel;
+    QSqlQueryModel *m_locationModel;
+    QSqlQueryModel *m_itemModel;
+
+    void populate();
+    int item() const;
 
 };
 

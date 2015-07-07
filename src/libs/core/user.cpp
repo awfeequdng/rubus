@@ -68,6 +68,15 @@ bool User::load()
         m_gui = sql.value(3).toString();
         m_location = parameterValue("location").toVariant().toInt();
         m_isExists = true;
+
+        QJsonArray locs = parameterValue("locations").toArray();
+        for (int i = 0; i < locs.size(); i++) {
+            if (!m_enabledLocations.isEmpty()) {
+                m_enabledLocations.append(",");
+            }
+            m_enabledLocations.append(QString::number(locs.at(i).toInt()));
+        }
+
     } else {
         //TODO init data user
     }
@@ -171,6 +180,11 @@ QString User::gui() const
 void User::setGui(const QString &gui)
 {
     m_gui = gui;
+}
+
+QString User::enabledLocations() const
+{
+    return m_enabledLocations;
 }
 
 

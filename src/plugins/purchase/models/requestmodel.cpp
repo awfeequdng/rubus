@@ -1,4 +1,5 @@
 #include "requestmodel.h"
+#include "purchaseconstants.h"
 
 #include <QDebug>
 #include <QtSql>
@@ -11,16 +12,21 @@ RequestModel::RequestModel(QObject *parent) :
 
 bool RequestModel::populate()
 {
+    emit beginResetModel();
+
     if (!m_sql)  {
         m_sql = new QSqlQuery();
     }
 
-    m_sql->exec("SELECT re_id, re_date, storage, item, equipment, re_qty, re_balance,unit FROM v_requests");
+    m_sql->exec("SELECT re_id, re_date, re_state, location, "
+                "item, equipment, re_qty, re_balance,unit FROM v_requests");
 
     if (m_sql->lastError().isValid()) {
         setErrorString(m_sql->lastError().text());
         return false;
     }
+
+    emit endResetModel();
 
     return true;
 }
@@ -51,7 +57,7 @@ QVariant RequestModel::headerData(int section, Qt::Orientation orientation, int 
             case IdCol : return tr("Id");
             case StateCol : return tr("State");
             case DateCol : return tr("Date");
-            case StorageCol : return tr("Storage");
+            case StorageCol : return tr("Location");
             case EquipmentCol : return tr("Equipment");
             case ItemCol : return tr("Item");
             case QtyCol : return tr("Qty");
@@ -88,9 +94,9 @@ QVariant RequestModel::data(const QModelIndex &index, int role) const
     if (role == Qt::DisplayRole) {
         switch (index.column()) {
         case IdCol : return rec.value("re_id").toInt();
-        case StateCol : return rec.value("re_state").toInt();
+        case StateCol : return stateName(rec.value("re_state").toInt());
         case DateCol : return rec.value("re_date").toDate();
-        case StorageCol : return rec.value("storage").toString();
+        case StorageCol : return rec.value("location").toString();
         case EquipmentCol : return rec.value("equipment").toString();
         case ItemCol : return rec.value("item").toString();
         case QtyCol : return QLocale::system().toString(rec.value("re_qty").toDouble(), 'f', 2).append( rec.value("unit").toString());
@@ -99,4 +105,17 @@ QVariant RequestModel::data(const QModelIndex &index, int role) const
     }
 
     return AdvItemModel::data(index, role);
+}
+
+QString RequestModel::stateName(int state)
+{
+    switch(state) {
+        case Constants::STATE_HIDDEN : return tr("Hidden");
+        case Constants::STATE_PUBLIC : return tr("Public");
+        case Constants::STATE_ORDERED : return tr("Ordered");
+        case Constants::STATE_PAID : return tr("Paid");
+        case Constants::STATE_DELIVERED : return tr("Delivered");
+        case Constants::STATE_RECEIVED : return tr("Received");
+    default : return tr("!Err!");
+    }
 }

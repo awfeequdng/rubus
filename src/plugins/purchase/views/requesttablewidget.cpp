@@ -15,6 +15,13 @@ RequestTableWidget::RequestTableWidget(QWidget *parent) :
 {
     ui->setupUi(this);
     m_model = new RequestModel(this);
+    ui->tableView->horizontalHeader()->setDefaultSectionSize(RequestModel::IdCol, 60);
+    ui->tableView->horizontalHeader()->setDefaultSectionSize(RequestModel::StateCol, 100);
+    ui->tableView->horizontalHeader()->setDefaultSectionSize(RequestModel::DateCol, 120);
+    ui->tableView->horizontalHeader()->setDefaultSectionSize(RequestModel::StorageCol, 120);
+    ui->tableView->horizontalHeader()->setDefaultSectionSize(RequestModel::EquipmentCol, 120);
+    ui->tableView->horizontalHeader()->setDefaultSectionSize(RequestModel::QtyCol, 80);
+    ui->tableView->horizontalHeader()->setDefaultSectionSize(RequestModel::BalanceCol, 80);
     ui->tableView->setModel(m_model);
 
     m_editDlg = new EditDialog(new RequestEditWidget(), this);

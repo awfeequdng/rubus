@@ -1,14 +1,23 @@
 #include "requesteditwidget.h"
 #include "ui_requesteditwidget.h"
+#include "user.h"
+#include "core.h"
+#include "purchaseconstants.h"
+#include "models/requestmodel.h"
 
 #include <QtSql>
 #include <QDebug>
+#include <QMessageBox>
 
 RequestEditWidget::RequestEditWidget(QWidget *parent) :
     EditWidgetInterface(parent),
     ui(new Ui::RequestEditWidget)
 {
     ui->setupUi(this);
+
+    m_equipmentModel = new QSqlQueryModel(this);
+    m_locationModel = new QSqlQueryModel(this);
+    m_itemModel = new QSqlQueryModel(this);
 
     connect(ui->btnSave, SIGNAL(clicked()), SLOT(save()));
     connect(ui->btnCancel, SIGNAL(clicked()), SIGNAL(rejected()));
@@ -27,13 +36,14 @@ QVariant RequestEditWidget::id() const
 
 bool RequestEditWidget::load(QVariant id)
 {
+    populate();
     m_id = id.isValid() ? id.toInt() : -1;
 
     if (m_id != -1) {
         QSqlQuery sql;
         sql.exec(QString("SELECT re_state,re_item,re_equipment_type,"
                          "re_user, re_date, re_qty, "
-                         "re_balance, re_storage, re_note ,"
+                         "re_balance, re_location, re_note ,"
                          "un_name "
                          "FROM requests "
                          "JOIN items ON re_item = it_id "
@@ -52,8 +62,8 @@ bool RequestEditWidget::load(QVariant id)
             return false;
         }
 
-        ui->edState->setText("Private");
-        ui->cmbStorage->setCurrentKey(sql.value("re_storage"));
+        ui->edState->setText(RequestModel::stateName(sql.value("re_state").toInt()));
+        ui->cmbLocation->setCurrentKey(sql.value("re_location"));
         ui->cmbEquipment->setCurrentKey(sql.value("re_equipment_type"));
         ui->cmbItem->setCurrentKey(sql.value("re_item"));
         ui->edQty->setValue(sql.value("re_qty").toDouble());
@@ -76,9 +86,9 @@ bool RequestEditWidget::save()
     if (m_id == -1) {
         sql.prepare("INSERT INTO requests (re_state,re_item,re_equipment_type,"
                     "re_user, re_date, re_qty, "
-                    "re_balance, re_storage, re_note) VALUES (:state,:item,:equipment_type,"
+                    "re_balance, re_location, re_note) VALUES (:state,:item,:equipment_type,"
                     "USER, CURRENT_DATE, :qty, "
-                    ":balance, :storage, :note)");
+                    ":balance, :location, :note)");
     } else {
         sql.prepare("UPDATE requests SET "
                     "re_state = :state,"
@@ -86,11 +96,18 @@ bool RequestEditWidget::save()
                     "re_equipment_type = :equipment_type,"
                     "re_qty = :qty, "
                     "re_balance = :balance, "
-                    "re_storage = :storage, "
+                    "re_location = :location, "
                     "re_note = :note "
                     "WHERE re_id = :id");
         sql.bindValue(":id", m_id);
     }
+    sql.bindValue(":state", Constants::STATE_HIDDEN);
+    sql.bindValue(":item", item());
+    sql.bindValue(":equipment_type",ui->cmbEquipment->currentKey().toInt());
+    sql.bindValue(":qty", ui->edQty->value());
+    sql.bindValue(":balance", ui->edBalance->value());
+    sql.bindValue(":location",ui->cmbLocation->currentKey().toInt());
+    sql.bindValue(":note",ui->edNote->toPlainText());
 
     if (!sql.exec()) {
         setErrorString(sql.lastError().text());
@@ -110,5 +127,49 @@ bool RequestEditWidget::save()
 
     emit saved();
     return true;
+}
+
+void RequestEditWidget::populate()
+{
+    m_locationModel->setQuery(QString("SELECT lo_id, lo_name FROM locations "
+                              "WHERE lo_id IN (%1)")
+                              .arg(Core::ICore::currentUser()->enabledLocations()));
+
+    if (m_locationModel->lastError().isValid()) {
+        qCritical() << m_locationModel->lastError();
+        QMessageBox::critical(this, "Error", m_locationModel->lastError().text());
+    }
+
+    ui->cmbLocation->setModel(m_locationModel, 0, 1);
+
+    m_equipmentModel->setQuery("SELECT et_id, et_name FROM equipment_types "
+                               "ORDER BY et_name");
+
+    if (m_equipmentModel->lastError().isValid()) {
+        qCritical() << m_equipmentModel->lastError();
+        QMessageBox::critical(this, "Error", m_equipmentModel->lastError().text());
+    }
+
+    ui->cmbEquipment->setModel(m_equipmentModel, 0, 1);
+
+
+
+    m_itemModel->setQuery("SELECT it_id, it_name || "
+                          "CASE it_article  WHEN '' THEN '' "
+                          "ELSE ' (art.:' || it_article || ')' END AS it_name "
+                          "FROM items "
+                          "ORDER BY it_name");
+
+    if (m_itemModel->lastError().isValid()) {
+        qCritical() << m_itemModel->lastError();
+        QMessageBox::critical(this, "Error", m_itemModel->lastError().text());
+    }
+
+    ui->cmbItem->setModel(m_itemModel, 0, 1);
+}
+
+int RequestEditWidget::item() const
+{
+    return 0;
 }
 

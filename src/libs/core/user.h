@@ -82,6 +82,8 @@ public:
 
     QString errorString() const { return m_errorString; }
 
+    QString enabledLocations() const;
+
 
 signals:
     
@@ -98,6 +100,7 @@ protected:
     QString m_gui;
     QString m_errorString;
     bool m_isExists;
+    QString m_enabledLocations;
     
 };
 

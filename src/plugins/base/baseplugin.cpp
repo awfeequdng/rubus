@@ -125,6 +125,11 @@ void BasePlugin::showItemTable()
     m_instance->m_itemDialog->activateWindow();
 }
 
+int BasePlugin::selectItem()
+{
+    return 0;
+}
+
 #if QT_VERSION < 0x050000
 Q_EXPORT_PLUGIN2(Base, BasePlugin)
 #else

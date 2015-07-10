@@ -2,6 +2,7 @@
 #define REQUESTMODEL_H
 
 #include "advitemmodel.h"
+#include <QSet>
 
 class QSqlQuery;
 
@@ -22,6 +23,9 @@ public:
 
     RequestModel(QObject *parent = 0);
 
+    void setLocation(int location);
+    void setStates(QSet<int> states);
+
     bool populate();
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
@@ -36,6 +40,10 @@ public slots:
 
 private:
     QSqlQuery *m_sql;
+    int m_location;
+    QSet<int> m_states;
+
+    void addWhere(QString &where, const QString added);
 };
 
 #endif // REQUESTMODEL_H

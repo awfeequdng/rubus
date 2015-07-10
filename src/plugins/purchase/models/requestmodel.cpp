@@ -1,5 +1,7 @@
 #include "requestmodel.h"
 #include "purchaseconstants.h"
+#include "core.h"
+#include "user.h"
 
 #include <QDebug>
 #include <QtSql>
@@ -10,6 +12,16 @@ RequestModel::RequestModel(QObject *parent) :
 {
 }
 
+void RequestModel::setLocation(int location)
+{
+    m_location = location;
+}
+
+void RequestModel::setStates(QSet<int> states)
+{
+    m_states = states;
+}
+
 bool RequestModel::populate()
 {
     emit beginResetModel();
@@ -18,8 +30,33 @@ bool RequestModel::populate()
         m_sql = new QSqlQuery();
     }
 
-    m_sql->exec("SELECT re_id, re_date, re_state, location, "
-                "item, equipment, re_qty, re_balance,unit FROM v_requests");
+    QString where;
+
+        addWhere(where, m_location > 0
+                 ? QString("re_location = %1").arg(m_location)
+                 : QString("re_location IN (%1)").arg(Core::ICore::currentUser()->enabledLocations()));
+
+
+    if (!m_states.isEmpty()) {
+        QString states;
+        QSetIterator<int> i(m_states);
+        while(i.hasNext()) {
+            if (!states.isEmpty()) {
+                states.append(',');
+            }
+            states.append(QString::number(i.next()));
+        }
+
+        addWhere(where, QString("re_state IN (%1)").arg(states));
+    }
+
+    if (!where.isEmpty()) {
+        where.prepend("WHERE ");
+    }
+
+    m_sql->exec(QString("SELECT re_id, re_date, re_state, location, "
+                "item, equipment, re_qty, re_balance,unit FROM v_requests %1")
+                .arg(where));
 
     if (m_sql->lastError().isValid()) {
         setErrorString(m_sql->lastError().text());
@@ -47,6 +84,15 @@ int RequestModel::columnCount(const QModelIndex &parent) const
 bool RequestModel::submit()
 {
     return false;
+}
+
+void RequestModel::addWhere(QString &where, const QString added)
+{
+    if (!where.isEmpty()) {
+        where.append(" AND ");
+    }
+
+    where.append(added);
 }
 
 QVariant RequestModel::headerData(int section, Qt::Orientation orientation, int role) const

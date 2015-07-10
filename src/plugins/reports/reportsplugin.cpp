@@ -31,6 +31,7 @@
 #include "reportsconstants.h"
 #include "reportmanager.h"
 #include "widgets/reportsdialog.h"
+#include "../../plugins/base/item.h"
 
 #include <QtPlugin>
 #include <QDebug>

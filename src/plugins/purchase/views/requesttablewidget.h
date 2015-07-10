@@ -10,7 +10,6 @@ class RequestTableWidget;
 class RequestModel;
 class RequestEditWidget;
 class EditDialog;
-class Controller;
 
 class RequestTableWidget : public QWidget
 {
@@ -21,12 +20,15 @@ public:
     ~RequestTableWidget();
 
     int currentId() const;
-    void refresh();
 
 public slots:
     void add();
     void editCurrent();
     void deleteSelected();
+    void refresh();
+
+private slots:
+    void applyFilter();
 
 protected:
     void showEvent(QShowEvent *e);
@@ -35,8 +37,12 @@ private:
     Ui::RequestTableWidget *ui;
     RequestModel *m_model;
     EditDialog *m_editDlg;
+    RequestEditWidget *m_editWdg;
+    QSqlQueryModel *m_locationModel;
 
-    Controller *m_controller;
+    void populate();
+
+
 };
 
 #endif // REQUESTTABLEWIDGET_H

@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include "widgets/editwidgetinterface.h"
+#include "purchase_global.h"
 
 class QSqlQueryModel;
 
@@ -10,7 +11,7 @@ namespace Ui {
 class RequestEditWidget;
 }
 
-class RequestEditWidget : public EditWidgetInterface
+class PURCHASE_EXPORT  RequestEditWidget : public EditWidgetInterface
 {
     Q_OBJECT
 public:
@@ -19,9 +20,16 @@ public:
 
     QVariant id() const;
 
+    void setLocation(int location);
+
 public slots:
     bool load(QVariant id);
     bool save();
+
+private slots:
+    void onItemChanged();
+    void selectItem();
+
 private:
     Ui::RequestEditWidget *ui;
     int m_id;
@@ -29,9 +37,12 @@ private:
     QSqlQueryModel *m_equipmentModel;
     QSqlQueryModel *m_locationModel;
     QSqlQueryModel *m_itemModel;
+    int m_location;
 
     void populate();
-    int item() const;
+    int item();
+
+    QString getUserInformation(QString role) const;
 
 };
 

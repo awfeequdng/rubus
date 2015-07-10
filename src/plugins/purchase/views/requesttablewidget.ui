@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>534</width>
-    <height>351</height>
+    <width>673</width>
+    <height>369</height>
    </rect>
   </property>
   <property name="font">
@@ -19,39 +19,122 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
-   <item>
-    <layout class="QHBoxLayout" name="horizontalLayout">
+  <layout class="QGridLayout" name="gridLayout">
+   <property name="leftMargin">
+    <number>6</number>
+   </property>
+   <property name="topMargin">
+    <number>6</number>
+   </property>
+   <property name="rightMargin">
+    <number>6</number>
+   </property>
+   <property name="bottomMargin">
+    <number>6</number>
+   </property>
+   <item row="0" column="0">
+    <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0,0">
      <item>
-      <widget class="QLabel" name="label">
-       <property name="text">
-        <string>Location:</string>
+      <layout class="QFormLayout" name="formLayout">
+       <item row="0" column="0">
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>Location:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="AdvComboBox" name="cmbLocation"/>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="groupBox">
+       <property name="title">
+        <string>State</string>
        </property>
+       <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,0,0,0">
+        <item>
+         <widget class="QCheckBox" name="ckHidden">
+          <property name="text">
+           <string>Hidden</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="ckPublic">
+          <property name="text">
+           <string>Public</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="ckOrdered">
+          <property name="text">
+           <string>Ordered</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="ckPaid">
+          <property name="text">
+           <string>Paid</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="ckReceived">
+          <property name="text">
+           <string>Received</string>
+          </property>
+          <property name="checked">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="ckDelivered">
+          <property name="text">
+           <string>Delivered</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </item>
      <item>
-      <widget class="QComboBox" name="comboBox"/>
-     </item>
-     <item>
-      <spacer name="horizontalSpacer">
+      <spacer name="verticalSpacer">
        <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+        <enum>Qt::Vertical</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>
-         <width>40</width>
-         <height>20</height>
+         <width>20</width>
+         <height>40</height>
         </size>
        </property>
       </spacer>
      </item>
     </layout>
    </item>
-   <item>
+   <item row="0" column="1">
     <widget class="AdvTableView" name="tableView">
      <property name="font">
       <font>
        <family>Tahoma</family>
+       <pointsize>10</pointsize>
       </font>
      </property>
      <property name="selectionBehavior">
@@ -62,7 +145,7 @@
      </property>
     </widget>
    </item>
-   <item>
+   <item row="1" column="0" colspan="2">
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
       <widget class="QPushButton" name="btnAdd">
@@ -119,8 +202,32 @@
     </layout>
    </item>
   </layout>
+  <action name="actionRefresh">
+   <property name="text">
+    <string>Refresh</string>
+   </property>
+   <property name="shortcut">
+    <string>F5</string>
+   </property>
+  </action>
+  <zorder>tableView</zorder>
+  <zorder>ckHidden</zorder>
+  <zorder>ckPublic</zorder>
+  <zorder>ckOrdered</zorder>
+  <zorder>ckPaid</zorder>
+  <zorder>ckDelivered</zorder>
+  <zorder>ckReceived</zorder>
+  <zorder>groupBox</zorder>
+  <zorder>label</zorder>
+  <zorder>cmbLocation</zorder>
+  <zorder></zorder>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>AdvComboBox</class>
+   <extends>QComboBox</extends>
+   <header>advcombobox.h</header>
+  </customwidget>
   <customwidget>
    <class>AdvTableView</class>
    <extends>QTableView</extends>

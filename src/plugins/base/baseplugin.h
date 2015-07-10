@@ -64,6 +64,8 @@ public slots:
     static void showContractorTable();
     static void showItemTable();
 
+    static int selectItem();
+
 
 private:
     QAction *m_acUserManager;

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>449</width>
-    <height>297</height>
+    <height>315</height>
    </rect>
   </property>
   <property name="font">
@@ -102,7 +102,7 @@
     </widget>
    </item>
    <item row="3" column="1">
-    <widget class="AdvComboBox" name="cmbEquipment"/>
+    <widget class="TreeComboBox" name="cmbEquipment"/>
    </item>
    <item row="4" column="0">
     <widget class="QLabel" name="label_2">
@@ -274,6 +274,11 @@
    <class>AdvComboBox</class>
    <extends>QComboBox</extends>
    <header>advcombobox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>TreeComboBox</class>
+   <extends>QComboBox</extends>
+   <header>treecombobox.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

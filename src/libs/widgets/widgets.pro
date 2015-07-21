@@ -35,7 +35,8 @@ HEADERS += \
     widgets/advheaderview.h \
     widgets/advtableview.h \
     widgets/tabledialog.h \
-    widgets/advschemetableview.h
+    widgets/advschemetableview.h \
+    widgets/treecombobox.h
 
 SOURCES += \
     widgets/advcombobox.cpp \
@@ -55,7 +56,8 @@ SOURCES += \
     widgets/advheaderview.cpp \
     widgets/advtableview.cpp \
     widgets/tabledialog.cpp \
-    widgets/advschemetableview.cpp
+    widgets/advschemetableview.cpp \
+    widgets/treecombobox.cpp
 
 FORMS += \
     widgets/standardtabledialog.ui

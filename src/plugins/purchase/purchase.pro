@@ -11,7 +11,9 @@ SOURCES += \
     purchaseplugin.cpp \
     views/requesttablewidget.cpp \
     views/requesteditwidget.cpp \
-    models/requestmodel.cpp
+    models/requestmodel.cpp \
+    models/equipmenttypemodel.cpp \
+    models/equipmenttypemodelitem.cpp
 
 HEADERS +=\
     purchaseplugin.h \    
@@ -19,7 +21,9 @@ HEADERS +=\
     purchaseconstants.h \
     views/requesttablewidget.h \
     views/requesteditwidget.h \
-    models/requestmodel.h
+    models/requestmodel.h \
+    models/equipmenttypemodel.h \
+    models/equipmenttypemodelitem.h
     
 
 unix {
@@ -30,4 +34,7 @@ unix {
 FORMS += \
     views/requesttablewidget.ui \
     views/requesteditwidget.ui
+
+RESOURCES += \
+    purchase.qrc
 

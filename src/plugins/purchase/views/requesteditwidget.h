@@ -6,6 +6,7 @@
 #include "purchase_global.h"
 
 class QSqlQueryModel;
+class EquipmentTypeModel;
 
 namespace Ui {
 class RequestEditWidget;
@@ -34,7 +35,7 @@ private:
     Ui::RequestEditWidget *ui;
     int m_id;
 
-    QSqlQueryModel *m_equipmentModel;
+    EquipmentTypeModel *m_equipmentModel;
     QSqlQueryModel *m_locationModel;
     QSqlQueryModel *m_itemModel;
     int m_location;

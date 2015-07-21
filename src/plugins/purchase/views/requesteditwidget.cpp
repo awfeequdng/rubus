@@ -6,10 +6,13 @@
 #include "models/requestmodel.h"
 #include "../../plugins/base/baseplugin.h"
 #include "../../plugins/base/item.h"
+#include "treecombobox.h"
+#include "models/equipmenttypemodel.h"
 
 #include <QtSql>
 #include <QDebug>
 #include <QMessageBox>
+#include <QDirModel>
 
 RequestEditWidget::RequestEditWidget(QWidget *parent) :
     EditWidgetInterface(parent),
@@ -17,7 +20,7 @@ RequestEditWidget::RequestEditWidget(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    m_equipmentModel = new QSqlQueryModel(this);
+    m_equipmentModel = new EquipmentTypeModel(this);
     m_locationModel = new QSqlQueryModel(this);
     m_itemModel = new QSqlQueryModel(this);
     m_location = -1;
@@ -74,7 +77,7 @@ bool RequestEditWidget::load(QVariant id)
 
         ui->edState->setText(RequestModel::stateName(sql.value("re_state").toInt()));
         ui->cmbLocation->setCurrentKey(sql.value("re_location"));
-        ui->cmbEquipment->setCurrentKey(sql.value("re_equipment_type"));
+        //ui->cmbEquipment->setCurrentKey(sql.value("re_equipment_type"));
         ui->cmbItem->setCurrentKey(sql.value("re_item"));
         ui->edQty->setValue(sql.value("re_qty").toDouble());
         ui->edBalance->setValue(sql.value("re_balance").toDouble());
@@ -83,7 +86,7 @@ bool RequestEditWidget::load(QVariant id)
         ui->labUnit->setText(sql.value("un_name").toString());
     } else {
         ui->labUser->setText(getUserInformation(Core::ICore::currentUser()->rolename()));
-        ui->cmbLocation->setCurrentKey(m_location);
+        //ui->cmbLocation->setCurrentKey(m_location);
         ui->labUnit->clear();
     }
 
@@ -124,7 +127,7 @@ bool RequestEditWidget::save()
 
     sql.bindValue(":state", Constants::STATE_HIDDEN);
     sql.bindValue(":item", it_id);
-    sql.bindValue(":equipment_type",ui->cmbEquipment->currentKey().toInt());
+    //sql.bindValue(":equipment_type",ui->cmbEquipment->currentKey().toInt());
     sql.bindValue(":qty", ui->edQty->value());
     sql.bindValue(":balance", ui->edBalance->value());
     sql.bindValue(":location",ui->cmbLocation->currentKey().toInt());
@@ -176,17 +179,9 @@ void RequestEditWidget::populate()
 
     ui->cmbLocation->setModel(m_locationModel, 0, 1);
 
-    m_equipmentModel->setQuery("SELECT et_id, et_name FROM equipment_types "
-                               "ORDER BY et_name");
 
-    if (m_equipmentModel->lastError().isValid()) {
-        qCritical() << m_equipmentModel->lastError();
-        QMessageBox::critical(this, "Error", m_equipmentModel->lastError().text());
-    }
-
-    ui->cmbEquipment->setModel(m_equipmentModel, 0, 1);
-
-
+    m_equipmentModel->populate();
+    ui->cmbEquipment->setModel(m_equipmentModel);
 
     m_itemModel->setQuery("SELECT it_id, it_name || "
                           "CASE it_article  WHEN '' THEN '' "

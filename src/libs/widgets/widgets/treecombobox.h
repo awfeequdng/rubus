@@ -14,10 +14,15 @@ public:
     virtual void showPopup();
     virtual void hidePopup();
 
+    void setCurrentIndex(int index);
+    void setCurrentIndex(QModelIndex &index);
+
 private:
     bool skipNextHide;
+    int m_keyCol;
+    QVariant m_currentKey;
+    int m_displayCol;
 
-signals:
 
 public slots:
 

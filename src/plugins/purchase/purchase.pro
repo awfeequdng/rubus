@@ -13,7 +13,8 @@ SOURCES += \
     views/requesteditwidget.cpp \
     models/requestmodel.cpp \
     models/equipmenttypemodel.cpp \
-    models/equipmenttypemodelitem.cpp
+    models/equipmenttypemodelitem.cpp \
+    views/chooseitemdialog.cpp
 
 HEADERS +=\
     purchaseplugin.h \    
@@ -23,7 +24,8 @@ HEADERS +=\
     views/requesteditwidget.h \
     models/requestmodel.h \
     models/equipmenttypemodel.h \
-    models/equipmenttypemodelitem.h
+    models/equipmenttypemodelitem.h \
+    views/chooseitemdialog.h
     
 
 unix {
@@ -33,7 +35,8 @@ unix {
 
 FORMS += \
     views/requesttablewidget.ui \
-    views/requesteditwidget.ui
+    views/requesteditwidget.ui \
+    views/chooseitemdialog.ui
 
 RESOURCES += \
     purchase.qrc

@@ -7,6 +7,7 @@
 
 class QSqlQueryModel;
 class EquipmentTypeModel;
+class ChooseItemDialog;
 
 namespace Ui {
 class RequestEditWidget;
@@ -29,7 +30,7 @@ public slots:
 
 private slots:
     void onItemChanged();
-    void selectItem();
+    void chooseItem();
 
 private:
     Ui::RequestEditWidget *ui;
@@ -38,7 +39,10 @@ private:
     EquipmentTypeModel *m_equipmentModel;
     QSqlQueryModel *m_locationModel;
     QSqlQueryModel *m_itemModel;
+    ChooseItemDialog *m_chooseItemDialog;
     int m_location;
+    int m_item;
+    int m_eqType;
 
     void populate();
     int item();

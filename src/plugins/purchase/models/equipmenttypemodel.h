@@ -26,6 +26,9 @@ public:
     QVariant data(const QModelIndex &index, int role) const;
     Qt::ItemFlags flags(const QModelIndex &index) const;
 
+    QModelIndex indexById(int id) const;
+
+
 private:
     EquipmentTypeModelItem *m_rootItem;
     QIcon m_itemIcon;

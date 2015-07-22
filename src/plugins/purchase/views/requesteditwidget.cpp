@@ -8,6 +8,7 @@
 #include "../../plugins/base/item.h"
 #include "treecombobox.h"
 #include "models/equipmenttypemodel.h"
+#include "chooseitemdialog.h"
 
 #include <QtSql>
 #include <QDebug>
@@ -16,19 +17,22 @@
 
 RequestEditWidget::RequestEditWidget(QWidget *parent) :
     EditWidgetInterface(parent),
-    ui(new Ui::RequestEditWidget)
+    ui(new Ui::RequestEditWidget),
+    m_chooseItemDialog(0),
+    m_location(-1),
+    m_item(-1),
+    m_eqType(-1)
 {
     ui->setupUi(this);
 
     m_equipmentModel = new EquipmentTypeModel(this);
     m_locationModel = new QSqlQueryModel(this);
     m_itemModel = new QSqlQueryModel(this);
-    m_location = -1;
+
 
     connect(ui->btnSave, SIGNAL(clicked()), SLOT(save()));
     connect(ui->btnCancel, SIGNAL(clicked()), SIGNAL(rejected()));
-    connect(ui->cmbItem, SIGNAL(keyChanged()), SLOT(onItemChanged()));
-    connect(ui->btnSelectItem, SIGNAL(clicked()), SLOT(selectItem()));
+    connect(ui->btnSelectItem, SIGNAL(clicked()), SLOT(chooseItem()));
 }
 
 RequestEditWidget::~RequestEditWidget()
@@ -56,11 +60,8 @@ bool RequestEditWidget::load(QVariant id)
         QSqlQuery sql;
         sql.exec(QString("SELECT re_state,re_item,re_equipment_type,"
                          "re_user, re_date, re_qty, "
-                         "re_balance, re_location, re_note ,"
-                         "un_name "
+                         "re_balance, re_location, re_note "
                          "FROM requests "
-                         "JOIN items ON re_item = it_id "
-                         "JOIN units ON it_unit = un_id "
                          "WHERE re_id = %1")
                  .arg(m_id));
 
@@ -77,18 +78,20 @@ bool RequestEditWidget::load(QVariant id)
 
         ui->edState->setText(RequestModel::stateName(sql.value("re_state").toInt()));
         ui->cmbLocation->setCurrentKey(sql.value("re_location"));
-        //ui->cmbEquipment->setCurrentKey(sql.value("re_equipment_type"));
-        ui->cmbItem->setCurrentKey(sql.value("re_item"));
+        m_item = sql.value("re_item").toInt();
+        m_eqType = sql.value("re_equipment_type").toInt();
         ui->edQty->setValue(sql.value("re_qty").toDouble());
         ui->edBalance->setValue(sql.value("re_balance").toDouble());
         ui->edNote->setText(sql.value("re_note").toString());
         ui->labUser->setText(getUserInformation(sql.value("re_user").toString()));
-        ui->labUnit->setText(sql.value("un_name").toString());
     } else {
         ui->labUser->setText(getUserInformation(Core::ICore::currentUser()->rolename()));
-        //ui->cmbLocation->setCurrentKey(m_location);
-        ui->labUnit->clear();
+        ui->cmbLocation->setCurrentKey(m_location);
+        m_item = -1;
+        m_eqType = -1;
     }
+
+    onItemChanged();
 
     ui->edId->setText(QString::number(m_id));
 
@@ -99,13 +102,11 @@ bool RequestEditWidget::load(QVariant id)
 
 bool RequestEditWidget::save()
 {
-    int it_id = item();
-    if (it_id == -1) {
+    if (item() == -1) {
         return false;
     }
 
     QSqlQuery sql;
-
     if (m_id == -1) {
         sql.prepare("INSERT INTO requests (re_state,re_item,re_equipment_type,"
                     "re_user, re_date, re_qty, "
@@ -126,8 +127,10 @@ bool RequestEditWidget::save()
     }
 
     sql.bindValue(":state", Constants::STATE_HIDDEN);
-    sql.bindValue(":item", it_id);
-    //sql.bindValue(":equipment_type",ui->cmbEquipment->currentKey().toInt());
+    sql.bindValue(":item", item());
+    sql.bindValue(":equipment_type", m_equipmentModel->index(ui->cmbEquipment->currentIndex(),
+                                                             0,
+                                                             ui->cmbEquipment->rootModelIndex()).data(Qt::EditRole).toInt());
     sql.bindValue(":qty", ui->edQty->value());
     sql.bindValue(":balance", ui->edBalance->value());
     sql.bindValue(":location",ui->cmbLocation->currentKey().toInt());
@@ -157,13 +160,52 @@ bool RequestEditWidget::save()
 
 void RequestEditWidget::onItemChanged()
 {
-    if (ui->cmbItem->currentKey().toInt() > 0) {
-        ui->labUnit->setText(m_itemModel->index(ui->cmbItem->currentIndex(), 2).data().toString());
+    ui->labUnit->clear();
+    ui->edItem->clear();
+
+    if (m_item < 0) {
+        return;
+    }
+
+    QSqlQuery sql;
+    sql.exec(QString("SELECT it_name, it_article, un_name FROM items "
+             "JOIN units ON un_id = it_unit "
+             "WHERE it_id = %1").arg(m_item));
+
+    if (sql.lastError().isValid()) {
+        qDebug() << sql.lastError();
+        return;
+    }
+
+    if (!sql.next()) {
+        qDebug() << "Can't find item id " << m_item;
+    }
+
+    QString name = sql.value(0).toString();
+    if (!sql.value(1).toString().simplified().isEmpty()){
+        name.append(" (" + sql.value(1).toString() + ")");
+    }
+    ui->edItem->setText(name);
+    ui->labUnit->setText(sql.value(2).toString());
+
+    QModelIndex index = m_equipmentModel->indexById(m_eqType);
+    if (index.isValid()) {
+        ui->cmbEquipment->setRootModelIndex(index.parent());
+        ui->cmbEquipment->setCurrentIndex(index.row());
     }
 }
 
-void RequestEditWidget::selectItem()
+void RequestEditWidget::chooseItem()
 {
+    if (!m_chooseItemDialog) {
+        m_chooseItemDialog = new ChooseItemDialog(this);
+    }
+
+    if (m_chooseItemDialog->exec(m_item) == QDialog::Accepted)  {
+        m_item = m_chooseItemDialog->selectedItemId();
+        onItemChanged();
+    }
+
 }
 
 void RequestEditWidget::populate()
@@ -182,48 +224,11 @@ void RequestEditWidget::populate()
 
     m_equipmentModel->populate();
     ui->cmbEquipment->setModel(m_equipmentModel);
-
-    m_itemModel->setQuery("SELECT it_id, it_name || "
-                          "CASE it_article  WHEN '' THEN '' "
-                          "ELSE ' (art.:' || it_article || ')' END AS it_name, un_name "
-                          "FROM items "
-                          "JOIN units ON un_id = it_unit "
-                          "ORDER BY it_name");
-
-    if (m_itemModel->lastError().isValid()) {
-        qCritical() << m_itemModel->lastError();
-        QMessageBox::critical(this, "Error", m_itemModel->lastError().text());
-    }
-
-    ui->cmbItem->setModel(m_itemModel, 0, 1);
 }
 
 int RequestEditWidget::item()
 {
-    if (ui->cmbItem->currentText().compare(m_itemModel->index(ui->cmbItem->currentIndex(), 1)
-                                           .data().toString().simplified(), Qt::CaseInsensitive) != 0) {
-        QSqlQuery sql;
-        sql.exec(QString("INSERT INTO items(it_name, it_unit, it_type, it_active, it_article) VALUES ('%1', 'EA', 'P', true, '')")
-                 .arg(ui->cmbItem->currentText().simplified()));
-
-        if (sql.lastError().isValid()) {
-            qCritical() << m_itemModel->lastError();
-            QMessageBox::critical(this, "Error", sql.lastError().text());
-            return -1;
-        }
-
-        sql.exec("SELECT currval(pg_get_serial_sequence('items', 'it_id'))");
-
-        if (sql.next()) {
-            return sql.value(0).toInt();
-        } else {
-            qWarning() << sql.lastError();
-            QMessageBox::warning(this, "Error", sql.lastError().text());
-            return -1;
-        }
-    }
-
-    return ui->cmbItem->currentKey().toInt();
+    return m_item;
 }
 
 QString RequestEditWidget::getUserInformation(QString role) const

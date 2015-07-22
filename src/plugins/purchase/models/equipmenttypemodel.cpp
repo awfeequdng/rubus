@@ -149,3 +149,16 @@ Qt::ItemFlags EquipmentTypeModel::flags(const QModelIndex &index) const
 {
     return QAbstractItemModel::flags(index);
 }
+
+QModelIndex EquipmentTypeModel::indexById(int id) const
+{
+    QModelIndexList items = match(
+                index(0, 0),
+                Qt::EditRole,
+                QVariant::fromValue(id),
+                2, // look *
+                Qt::MatchRecursive | Qt::MatchFixedString);
+
+
+    return items.count() > 0 ? items.at(0) : QModelIndex();
+}
